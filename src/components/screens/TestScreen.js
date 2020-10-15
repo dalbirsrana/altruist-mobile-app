@@ -11,7 +11,7 @@ const TestScreen = ( {navigation} ) => (
       
         <Button 
             title="Open Drawer"
-            onPress={() => navigation.toggleDrawer()}
+            onPress={() => navigation.navigate('Home')}
         />
         <StatusBar style="auto" />
     </View>
