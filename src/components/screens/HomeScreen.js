@@ -1,24 +1,36 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Image, Button, StyleSheet, Text, View } from 'react-native'
+import FormButton from '../../common/FormButton'
+import { AuthContext } from '../navigation/AuthProvider'
+
 import logo from '../../../assets/icon.png'
 
-const HomeScreen = ({ navigation }) => (
-    <View style={styles.container}>
-        <view>
-            <Image source={logo} style={{width: 300, height: 80}} />
+const HomeScreen = ({ navigation }) => {
+    
+    const { user, logout } = useContext(AuthContext)
 
-            <Button 
-            title="Open Drawer"
-            onPress={() => navigation.navigate('Test')}
-            />
+    return (
+        <View style={styles.container}>
+            <view>
+                <Image source={logo} style={{width: 300, height: 80}} />
 
-            <Text style={styles.para}>
-                This is home page
-            </Text>
+                <Text>Welcome { user.name } </Text>
 
-        </view>
-    </View>
-)
+                <FormButton buttonTitle='LogOut' onPress={() => logout()} />
+    
+                <Button 
+                title="Open Drawer"
+                onPress={() => navigation.navigate('Test')}
+                />
+    
+                <Text style={styles.para}>
+                    This is home page
+                </Text>
+    
+            </view>
+        </View>
+    )
+} 
 
 export default HomeScreen
 
