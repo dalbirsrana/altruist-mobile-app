@@ -21,17 +21,17 @@ A quick look at the top-level files and directories you'll see in a React Native
     .
     ├── node_modules
     ├── assets
-    ├── components
-        ├─ screens
-        ├─ navigation
-        ├─ common
-    ├── modules
-    ├── services
+    ├── src
+        ├── common
+        ├── components
+        |    ├── screens
+        |    └── login
+        ├── config
+        └── sevices
     ├── .gitignore
     ├── App.js
     ├── app.json
     ├── babel.config.js
-    ├── .gitignore
     ├── package-lock.json
     ├── package.json
     └── README.md
@@ -44,7 +44,8 @@ A quick look at the top-level files and directories you'll see in a React Native
 
 4. **`components/screens`**: Application screens, This directory will contain all of the code related to what you will see on the front-end of your app. The ones that we navigate from one to another. these are containers - they contain their own state.
 
-5. **`/modules`**: without view part
+
+
 
 6. **`/services`**: funcions that wrap the API calls.
 
