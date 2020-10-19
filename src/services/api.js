@@ -13,15 +13,18 @@ function makeGetRequest(path, userData) {
 
         fetch(`${api_server}${path}`, {
             method: 'POST',
-            mode: 'no-cors',
+            // mode: 'no-cors',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
+        .then(response => {
+            console.log(response)
+            return response.json()
+        })
+        .then(res => console.log(res))
 
         // let responseJson = await response.json()
 
