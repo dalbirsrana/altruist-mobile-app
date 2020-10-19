@@ -25,8 +25,8 @@ A quick look at the top-level files and directories you'll see in a React Native
         ├── common
         ├── components
         |    ├── screens
-        |    └── login
-        ├── config
+        |    └── navigation
+        ├── utils
         └── sevices
     ├── .gitignore
     ├── App.js
@@ -44,14 +44,9 @@ A quick look at the top-level files and directories you'll see in a React Native
 
 4. **`components/screens`**: Application screens, This directory will contain all of the code related to what you will see on the front-end of your app. The ones that we navigate from one to another. these are containers - they contain their own state.
 
-
-
-
 6. **`/services`**: funcions that wrap the API calls.
 
 7.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
-
-8.  **`.prettierrc`**: This is a configuration file for [Prettier](https://prettier.io/). Prettier is a tool to help keep the formatting of your code consistent.
 
 9. **`package-lock.json`** (See `package.json` below, first). This is an automatically generated file based on the exact versions of your npm dependencies that were installed for your project. **(You won’t change this file directly).**
 
