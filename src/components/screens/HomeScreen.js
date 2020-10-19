@@ -11,7 +11,6 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <view>
                 <Image source={logo} style={{width: 300, height: 80}} />
 
                 <Text>Welcome { user.name } </Text>
@@ -26,8 +25,6 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.para}>
                     This is home page
                 </Text>
-    
-            </view>
         </View>
     )
 } 

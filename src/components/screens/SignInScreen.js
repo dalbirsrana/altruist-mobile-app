@@ -11,7 +11,7 @@ const SignInScreen = ({ navigation }) => {
         
         const [email, setEmail] = useState('');
         const [password, setPassword] = useState('');
-        const { login } = useContext(AuthContext);
+        const { login, skipLogin } = useContext(AuthContext);
         
         return (
             <View style={styles.container}>
@@ -47,7 +47,12 @@ const SignInScreen = ({ navigation }) => {
                     <Text style={styles.signup}>SignUp</Text>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity style={styles.button} 
+                    onPress={() => {
+                        if (skipLogin()) return navigation.navigate('Home')
+                        else undefined
+                        }
+                    }>
                     <Text style={styles.buttonText}>Skip</Text>
                 </TouchableOpacity>
 

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import { AuthContext } from './AuthProvider';
@@ -20,8 +19,7 @@ export default function Routes() {
   }
 
   useEffect(() => {
-    const subscriber = stateChanged();
-    return subscriber; // unsubscribe on unmount
+    return stateChanged();
   }, []);
 
   if (loading) {
