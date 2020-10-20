@@ -3,7 +3,7 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 
 
-const TestScreen = ( {navigation} ) => (
+const ListAllHelpsScreen = ( {navigation} ) => (
     <View style={styles.container}>
 
         {/* <View>Screen Page</View> */}
@@ -17,7 +17,7 @@ const TestScreen = ( {navigation} ) => (
     </View>
 )
 
-export default TestScreen
+export default ListAllHelpsScreen
 
 
 const styles = StyleSheet.create({
