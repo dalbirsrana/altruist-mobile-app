@@ -32,7 +32,7 @@ const signInWithEmailAndPassword = (email, pass) => {
             console.log(e)
           }
         },
-        register: async (email, password) => {
+        register: (email, password) => {
           try {
 
             let StudentAppUser = { 
@@ -43,7 +43,7 @@ const signInWithEmailAndPassword = (email, pass) => {
               password: password
             }
 
-            API.signUp(StudentAppUser)
+          return API.signUp(StudentAppUser)
 
           } catch (e) {
             console.log(e)

@@ -4,32 +4,30 @@ function makeGetRequest(path, userData) {
 
 }
 
- function  makePostRequest(path, userData) {
+async function makePostRequest(path, userData) {
+
         const data = {
             StudentAppUser: userData
         }
-        
-        // console.log(data)
 
-        fetch(`${api_server}${path}`, {
+        let result = {};
+
+        await fetch(`${api_server}${path}`, {
             method: 'POST',
-            // mode: 'no-cors',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         })
-        .then(response => {
-            console.log(response)
-            return response.json()
+        .then(response => response.json())
+        .then(resData => { 
+            result = resData
         })
-        .then(res => console.log(res))
+        .catch( error => console.error('Error:', error))
 
-        // let responseJson = await response.json()
-
-        // console.log(responseJson)
-}
+        return result
+    }
 
 function makePutRequest() {  }
 
@@ -37,9 +35,7 @@ function makePutRequest() {  }
 const API =
     {
         signUp: (userData) => {
-            const path = `/signup`;
-            makePostRequest(path, userData);
-            console.log(data)
+            return makePostRequest('/signup', userData)
         },
         signIn: () => {}
     }
