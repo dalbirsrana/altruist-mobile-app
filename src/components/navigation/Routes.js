@@ -7,13 +7,13 @@ import { AuthContext } from './AuthProvider';
 import Loading from '../../common/Loading';
 
 export default function Routes() {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
   // Handle user state changes
   function stateChanged(user) {
-    setUser(user);
+    dispatch(user);
     if (initializing) setInitializing(false);
     setLoading(false);
   }
