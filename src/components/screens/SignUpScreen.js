@@ -5,18 +5,36 @@ import FormInput from '../../common/FormInput'
 import { AuthContext } from '../navigation/AuthProvider'
 
 export default function SignUpScreen({ navigation }) {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
   const [msg, setMsg] = useState('')
 
   const { register } = useContext(AuthContext);
-
 
   return (
     <View style={styles.container}>
       {/* error messages  */}
       <Text style={styles.errorMsg}>{msg}</Text>
       <Text style={styles.text}>Create an account</Text>
+      <FormInput
+        value={firstName}
+        placeholderText='First Name'
+        onChangeText={userFirstName => setFirstName(userFirstName)}
+        autoCapitalize='none'
+        keyboardType='first-name'
+        autoCorrect={false}
+      />
+      <FormInput
+        value={lastName}
+        placeholderText='Email'
+        onChangeText={userLastName => setLastName(userLastName)}
+        autoCapitalize='none'
+        keyboardType='last-name'
+        autoCorrect={false}
+      />
       <FormInput
         value={email}
         placeholderText='Email'
@@ -34,15 +52,15 @@ export default function SignUpScreen({ navigation }) {
       <FormButton
         buttonTitle='Signup'
         onPress={async () => { 
-          let signUp = await register(email, password)
-          // console.log(signUp)
+          let signUp = await register({user_role_id:'1', firstName, lastName, email, password})
+
           if (signUp.success) {
             
             setMsg(`Sign Up Success with user ID: ${signUp.data[0].id} \nRedirecting to login page...`)
             
             console.log('success '+ signUp.data[0].id)
             
-            setTimeout(navigation.navigate('SignIn'), 3000)
+            navigation.navigate('SignIn')
             
           } else {
             setMsg(`SignUp failed: \n${signUp.data[0].email} \n${signUp.data[0].password}`)
