@@ -12,10 +12,10 @@ export const AuthProvider = ({ children }) => {
   
 const [user, dispatch] = useReducer(
   
-  (prevState, action) => {
+  (prevState, ...action) => {
 
-    switch (true) {
-      case (action.type == 'RESTORE_TOKEN'): 
+    switch (action.type) {
+      case 'RESTORE_TOKEN': 
         return {
           ...prevState,
           userToken: action.token,
@@ -26,6 +26,10 @@ const [user, dispatch] = useReducer(
           ...prevState,
           isSignout: false,
           userToken: action.token,
+          userId: action.id,
+          userName: action.firstName,
+          userEmail: action.email,
+          userPhone: action.phone,
         };
       case 'SIGN_OUT':
         return {
@@ -39,6 +43,10 @@ const [user, dispatch] = useReducer(
     isLoading: true,
     isSignout: false,
     userToken: null,
+    userId: '',
+    userName: '',
+    userEmail: '',
+    userPhone: '',
   }
 );
 
@@ -68,20 +76,23 @@ useEffect(() => {
       value={{
         user,
         dispatch,
-        login: async (email, password) => {
+        login: async (data) => {
           try {
+            let signIn = await API.signIn(data)
 
-            signInWithEmailAndPassword(email, password)
+            if (signIn.success) {
+              dispatch({ type: 'SIGN_IN', token: signIn.data[0].data.token, id: signIn.data[0].data.id, firstName: signIn.data[0].data.firstName, email: signIn.data[0].data.email, phone: signIn.data[0].data.phone })
+            }
+
+            return signIn
 
           } catch (e) {
             console.log(e)
           }
         },
-        register: (StudentAppUser) => {
+        register: (data) => {
           try {
-
-          return API.signUp(StudentAppUser)
-
+          return API.signUp(data)
           } catch (e) {
             console.log(e)
           }

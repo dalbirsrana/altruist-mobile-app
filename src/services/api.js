@@ -1,17 +1,15 @@
 const api_server = 'http://ec2-34-211-51-75.us-west-2.compute.amazonaws.com'
 
-function makeGetRequest(path, userData) {
 
-}
+// function makeGetRequest(path, userData) {}
 
 async function makePostRequest(path, userData) {
-
         const data = {
             StudentAppUser: userData
         }
-
+        console.log(data)
+        
         let result = {};
-
         await fetch(`${api_server}${path}`, {
             method: 'POST',
             headers: {
@@ -25,11 +23,10 @@ async function makePostRequest(path, userData) {
             result = resData
         })
         .catch( error => console.error('Error:', error))
-
         return result
     }
 
-function makePutRequest() {  }
+// function makePutRequest() {  }
 
 
 const API =
@@ -37,7 +34,15 @@ const API =
         signUp: (userData) => {
             return makePostRequest('/signup', userData)
         },
-        signIn: () => {}
+        signIn: (userData) => {
+            return makePostRequest('/login', userData)
+        },
+        verifyUser: (userData) => {
+            return makePostRequest('/reset-password-check', userData)
+        },
+        changePassword: (userData) => {
+            return makePostRequest('/reset-password', userData)
+        }
     }
 
 export default API

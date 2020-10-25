@@ -29,7 +29,7 @@ export default function SignUpScreen({ navigation }) {
       />
       <FormInput
         value={lastName}
-        placeholderText='Email'
+        placeholderText='Last Name'
         onChangeText={userLastName => setLastName(userLastName)}
         autoCapitalize='none'
         keyboardType='last-name'
@@ -52,18 +52,25 @@ export default function SignUpScreen({ navigation }) {
       <FormButton
         buttonTitle='Signup'
         onPress={async () => { 
-          let signUp = await register({user_role_id:'1', firstName, lastName, email, password})
+
+          const data = {
+            firstName: firstName,
+            lastName: lastName,
+            username: email,
+            password: password
+          }
+
+          let signUp = await register(data)
 
           if (signUp.success) {
-            
-            setMsg(`Sign Up Success with user ID: ${signUp.data[0].id} \nRedirecting to login page...`)
-            
-            console.log('success '+ signUp.data[0].id)
+            setMsg(`Sign Up Success with user ID: ${signUp.data.id} \nRedirecting to login page...`)
+
+            console.log('success '+ signUp.data.id)
             
             navigation.navigate('SignIn')
-            
           } else {
-            setMsg(`SignUp failed: \n${signUp.data[0].email} \n${signUp.data[0].password}`)
+            setMsg(`SignUp failed: \n${signUp.data.email} \n${signUp.data.firstName} \n${signUp.data.lastName} \n${signUp.data.password} \n${signUp.data.username}`)
+            console.log(signUp.data)
           }
         } }
       />

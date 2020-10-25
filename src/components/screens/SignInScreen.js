@@ -11,12 +11,15 @@ const SignInScreen = ({ navigation }) => {
         
         const [email, setEmail] = useState('');
         const [password, setPassword] = useState('');
-        const { login, skipLogin } = useContext(AuthContext);
+        const [msg, setMsg] = useState('');
+        const { user, login, skipLogin } = useContext(AuthContext);
         
         return (
             <View style={styles.container}>
             
-                <Image source={logo} style={{width: 300, height: 80, marginBottom: 20 }} />
+                <Image source={logo} style={{width: 200, height: 200, marginBottom: 20 }} />
+
+                <Text>{msg}</Text>
 
                 <FormInput
                     value={email}
@@ -34,7 +37,28 @@ const SignInScreen = ({ navigation }) => {
                     secureTextEntry={true}
                 />
                 
-                <FormButton buttonTitle='Login' onPress={() => login(email, password)} />
+                <FormButton buttonTitle='Login' onPress={ async () => {
+                    
+                    let data = {
+                        username: email,
+                        password: password
+                    }
+
+                    let signIn = await login(data)
+
+                    if (signIn.success) {
+                        navigation.navigate('Home')
+                    } else {
+                        if (signIn.data.username)
+                            setMsg(signIn.data.username)
+
+                        if(signIn.data.verification_token)
+                            setMsg(signIn.data.verification_token)
+
+                        if(signIn.data.message)
+                            setMsg(signIn.data.message)
+                    }
+                }} />
 
                 
                 <TouchableOpacity
