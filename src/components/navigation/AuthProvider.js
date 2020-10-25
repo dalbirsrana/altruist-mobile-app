@@ -1,5 +1,6 @@
-import React, { createContext, useState } from 'react';
-import API from '../../services/api'
+import React, { createContext, useReducer, useEffect } from 'react';
+import AsyncStorage  from '@react-native-community/async-storage';
+import API from '../../services/api';
 /**
  * This provider is created
  * to access user in whole app
@@ -8,21 +9,65 @@ import API from '../../services/api'
 export const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  
+const [user, dispatch] = useReducer(
+  
+  (prevState, action) => {
 
-const signInWithEmailAndPassword = (email, pass) => {
-  const u = {
-    id: email,
-    password: pass
+    switch (true) {
+      case (action.type == 'RESTORE_TOKEN'): 
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'SIGN_IN': 
+        return {
+          ...prevState,
+          isSignout: false,
+          userToken: action.token,
+        };
+      case 'SIGN_OUT':
+        return {
+          ...prevState,
+          isSignout: true,
+          userToken: null,
+        };
+    }
+  },
+  {
+    isLoading: true,
+    isSignout: false,
+    userToken: null,
   }
-  setUser(u)
-}
+);
+
+
+useEffect(() => {
+  const bootstrapAsync = async () => {
+    let userToken;
+
+    try {
+      userToken = await AsyncStorage.getItem('userToken');
+    } catch (e) {
+    }
+    
+    //Validate the userToken before restore
+
+    dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+  }
+
+  bootstrapAsync();
+}, []);
+
+// AsyncStorage.setItem(item, selectedValue)
+// AsyncStorage.removeItem('userToken')
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        setUser,
+        dispatch,
         login: async (email, password) => {
           try {
 
@@ -32,30 +77,16 @@ const signInWithEmailAndPassword = (email, pass) => {
             console.log(e)
           }
         },
-        register: async (email, password) => {
+        register: (StudentAppUser) => {
           try {
 
-            let StudentAppUser = { 
-              user_role_id: '1',
-              firstName: 'dalbir',
-              lastName: 'singh',
-              email: email, 
-              password: password
-            }
-
-            API.signUp(StudentAppUser)
+          return API.signUp(StudentAppUser)
 
           } catch (e) {
             console.log(e)
           }
         },
-        logout: async () => {
-          try {
-            setUser(null)
-          } catch (e) {
-            console.error(e)
-          }
-        },
+        logout: () => dispatch({ type: 'SIGN_OUT' }),
         userStateChanged: () => {
           try {
             return user
@@ -68,7 +99,7 @@ const signInWithEmailAndPassword = (email, pass) => {
             const u = {
               id: 'skip'
             }
-            return setUser(u)
+
           } catch (e) {
             console.error(e)
           }
