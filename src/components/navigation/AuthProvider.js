@@ -13,26 +13,27 @@ export const AuthProvider = ({ children }) => {
 const [user, dispatch] = useReducer(
   
   (prevState, action) => {
-
-    switch (true) {
-      case (action.type == 'RESTORE_TOKEN'): 
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case 'SIGN_IN': 
-        return {
-          ...prevState,
-          isSignout: false,
-          userToken: action.token,
-        };
-      case 'SIGN_OUT':
-        return {
-          ...prevState,
-          isSignout: true,
-          userToken: null,
-        };
+    if( typeof action !== "undefined" ){
+      switch (true) {
+        case (action.type == 'RESTORE_TOKEN'):
+          return {
+            ...prevState,
+            userToken: action.token,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            userToken: action.token,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            isSignout: true,
+            userToken: null,
+          };
+      }
     }
   },
   {
@@ -99,7 +100,7 @@ useEffect(() => {
             const u = {
               id: 'skip'
             }
-
+            return u;
           } catch (e) {
             console.error(e)
           }

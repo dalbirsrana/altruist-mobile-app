@@ -4,10 +4,19 @@ import FormButton from '../../common/FormButton'
 import { AuthContext } from '../navigation/AuthProvider'
 
 import logo from '../../../assets/icon.png'
+import BR from "../helper/BR";
+import FileUploadExampleScreen from "./FileUploadExampleScreen";
+import AsyncStorageHelper from "./../../services/AsyncStorageHelper";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const HomeScreen = ({ navigation }) => {
     
     const { user, logout } = useContext(AuthContext)
+
+    const alertItem = async function () {
+        let valueSaved = await AsyncStorageHelper.getMyObject('home');
+        console.log( valueSaved );
+    }
 
     return (
         <View style={styles.container}>
@@ -16,12 +25,24 @@ const HomeScreen = ({ navigation }) => {
                 <Text>Welcome { user.name } </Text>
 
                 <FormButton buttonTitle='LogOut' onPress={() => logout()} />
-    
+
+            <Button
+                title="Alert Asyncstorage"
+                onPress={() => alertItem()}
+            />
+
                 <Button 
                 title="Open Drawer"
                 onPress={() => navigation.navigate('Test')}
                 />
-    
+
+                <BR/>
+
+                <FileUploadExampleScreen location={"home"} />
+
+                <BR/>
+
+
                 <Text style={styles.para}>
                     This is home page
                 </Text>
