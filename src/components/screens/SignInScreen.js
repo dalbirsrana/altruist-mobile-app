@@ -7,59 +7,80 @@ import {AuthContext} from '../navigation/AuthProvider';
 
 import logo from '../../../assets/icon.png'
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
+        
+        const [email, setEmail] = useState('');
+        const [password, setPassword] = useState('');
+        const [msg, setMsg] = useState('');
+        const { user, login, skipLogin } = useContext(AuthContext);
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const {login, skipLogin} = useContext(AuthContext);
+        return (
+            <View style={styles.container}>
 
-    return (
-        <View style={styles.container}>
+                <Image source={logo} style={{width: 200, height: 200, marginBottom: 20 }} />
 
-            <Image source={logo} style={{width: 300, height: 80, marginBottom: 20}}/>
+                <Text>{msg}</Text>
 
-            <FormInput
-                value={email}
-                placeholderText='Email'
-                onChangeText={userEmail => setEmail(userEmail)}
-                autoCapitalize='none'
-                keyboardType='email-address'
-                autoCorrect={false}
-            />
+                <FormInput
+                    value={email}
+                    placeholderText='Email'
+                    onChangeText={userEmail => setEmail(userEmail)}
+                    autoCapitalize='none'
+                    keyboardType='email-address'
+                    autoCorrect={false}
+                />
+                
+                <FormInput
+                    value={password}
+                    placeholderText='Password'
+                    onChangeText={userPassword => setPassword(userPassword)}
+                    secureTextEntry={true}
+                />
+                
+                <FormButton buttonTitle='Login' onPress={ async () => {
 
-            <FormInput
-                value={password}
-                placeholderText='Password'
-                onChangeText={userPassword => setPassword(userPassword)}
-                secureTextEntry={true}
-            />
+                    let data = {
+                        username: email,
+                        password: password
+                    }
 
-            <FormButton buttonTitle='Login' onPress={() => login(email, password)}/>
+                    let signIn = await login(data)
 
+                    if (signIn.success) {
+                        navigation.navigate('Home')
+                    } else {
+                        if (signIn.data.username)
+                            setMsg(signIn.data.username)
 
-            <TouchableOpacity
-                onPress={() => navigation.navigate('ResetPassword')}>
-                <Text style={styles.forgot}>Forget Password?</Text>
-            </TouchableOpacity>
+                        if(signIn.data.verification_token)
+                            setMsg(signIn.data.verification_token)
 
-            <TouchableOpacity
-                onPress={() => navigation.navigate('SignUp')}>
-                <Text style={styles.signup}>SignUp</Text>
-            </TouchableOpacity>
+                        if(signIn.data.message)
+                            setMsg(signIn.data.message)
+                    }
+                }} />
 
-            <TouchableOpacity style={styles.button}
-                              onPress={() => {
-                                  if (skipLogin()) {
-                                      return navigation.navigate('Home')
-                                  } else {
-                                      undefined
-                                  }
-                              }
-                              }>
-                <Text style={styles.buttonText}>Skip</Text>
-            </TouchableOpacity>
+                
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('ResetPassword')}>
+                    <Text style={styles.forgot}>Forget Password?</Text>
+                </TouchableOpacity>
 
-        </View>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('SignUp')}>
+                    <Text style={styles.signup}>SignUp</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.button} 
+                    onPress={() => {
+                        if (skipLogin()) return navigation.navigate('Home')
+                        else undefined
+                        }
+                    }>
+                    <Text style={styles.buttonText}>Skip</Text>
+                </TouchableOpacity>
+
+            </View>
     )
 
 }
@@ -95,7 +116,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: 10,
     },
-    buttonText: {
+    buttonText:{
         fontFamily: 'Baskerville',
         fontSize: 20,
         alignItems: 'center',
