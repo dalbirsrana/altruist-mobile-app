@@ -34,6 +34,9 @@ const API =
         signIn: (userData) => {
             return makePostRequest('/login', userData)
         },
+        validateToken: (userData) => {
+            return makePostRequest('/validate-token', userData)
+        },
         resetPasswordCheck: (userData) => {
             return makePostRequest('/reset-password-check', userData)
         },

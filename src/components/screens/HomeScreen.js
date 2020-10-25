@@ -26,7 +26,7 @@ const HomeScreen = ({navigation}) => {
 
             { isGuestUser() ?
                 null
-                : <Text>Welcome {user.name} </Text>
+                : <Text>Welcome {user.userName} </Text>
             }
 
             <FormButton buttonTitle='LogOut' onPress={() => logout()}/>

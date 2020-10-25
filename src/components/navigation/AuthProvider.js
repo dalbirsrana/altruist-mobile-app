@@ -20,24 +20,42 @@ export const AuthProvider = ({children , navigation}) => {
                     case 'RESTORE_TOKEN':
                         return {
                             ...prevState,
-                            userToken: action.token,
+                            token: action.token,
+                            id: action.id,
+                            username: action.username,
+                            firstName: action.firstName,
+                            lastName: action.lastName,
+                            email: action.email,
+                            phone: action.phone,
+                            profileImage: action.profile_picture,
                             isLoading: false,
+                            isSignout: false,
                         };
                     case 'SIGN_IN':
                         return {
                             ...prevState,
                             isSignout: false,
-                            userToken: action.token,
-                            userId: action.id,
-                            userName: action.firstName,
-                            userEmail: action.email,
-                            userPhone: action.phone,
+                            token: action.token,
+                            id: action.id,
+                            username: action.username,
+                            firstName: action.firstName,
+                            lastName: action.lastName,
+                            email: action.email,
+                            phone: action.phone,
+                            profileImage: action.profile_picture
                         };
                     case 'SIGN_OUT':
                         return {
                             ...prevState,
                             isSignout: true,
-                            userToken: null,
+                            token: null,
+                            id: null,
+                            username: null,
+                            firstName: null,
+                            lastName: null,
+                            email: null,
+                            phone: null,
+                            profileImage: null
                         };
                 }
             }
@@ -45,11 +63,14 @@ export const AuthProvider = ({children , navigation}) => {
         {
             isLoading: true,
             isSignout: false,
-            userToken: null,
-            userId: '',
-            userName: '',
-            userEmail: '',
-            userPhone: '',
+            token: null,
+            id: null,
+            username: null,
+            firstName: null,
+            lastName: null,
+            email: null,
+            phone: null,
+            profileImage: null,
         }
     );
 
@@ -60,18 +81,27 @@ export const AuthProvider = ({children , navigation}) => {
             try {
                 //userToken = await AsyncStorage.getItem('userToken');
                 signIn = await AsyncStorageHelper.getMyObject('user');
-                //Validate the userToken before restore
 
                 if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
-                    //dispatch({ type: 'RESTORE_TOKEN', token: userToken });
-                    dispatch({
-                        type: 'SIGN_IN',
-                        token: signIn.data.token,
-                        id: signIn.data.id,
-                        firstName: signIn.data.firstName,
-                        email: signIn.data.email,
-                        phone: signIn.data.phone
-                    })
+
+                    //Validate the userToken before restore
+                    let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
+                    if( validateToken.success ){
+                        //dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+                        dispatch({
+                            type: 'RESTORE_TOKEN',
+                            token: validateToken.data.token,
+                            id: validateToken.data.id,
+                            username: validateToken.data.username,
+                            firstName: validateToken.data.firstName,
+                            lastName: validateToken.data.lastName,
+                            email: validateToken.data.email,
+                            phone: validateToken.data.phone,
+                            profileImage: validateToken.data.profile_picture
+                        })
+
+                        await AsyncStorageHelper.setObjectValue('user',validateToken)
+                    }
                 }
 
             } catch (e) {
@@ -97,9 +127,12 @@ export const AuthProvider = ({children , navigation}) => {
                                 type: 'SIGN_IN',
                                 token: signIn.data.token,
                                 id: signIn.data.id,
+                                username: signIn.data.username,
                                 firstName: signIn.data.firstName,
+                                lastName: signIn.data.lastName,
                                 email: signIn.data.email,
-                                phone: signIn.data.phone
+                                phone: signIn.data.phone,
+                                profileImage: signIn.data.profile_picture
                             })
                             AsyncStorageHelper.setObjectValue('user', signIn);
                         }
