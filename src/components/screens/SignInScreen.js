@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
 
 import FormButton from "../../common/FormButton";
@@ -14,6 +14,10 @@ const SignInScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const { user, login, skipLogin } = useContext(AuthContext);
+
+  useEffect(() => {
+        console.log( user );
+  });
 
   return (
     <View style={styles.container}>
@@ -66,6 +70,9 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")}>
         <Text style={styles.forgot}>Forget Password?</Text>
       </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("VerifyAccount")}>
+            <Text style={styles.forgot}>Verify Account?</Text>
+        </TouchableOpacity>
       <View style={styles.container2}>
         <Text style={styles.forgot}>Don't have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
@@ -125,7 +132,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-
     color: colors.black,
   },
 });

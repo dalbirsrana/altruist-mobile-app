@@ -26,9 +26,6 @@ async function makePostRequest(path, userData) {
         return result
     }
 
-// function makePutRequest() {  }
-
-
 const API =
     {
         signUp: (userData) => {
@@ -37,11 +34,14 @@ const API =
         signIn: (userData) => {
             return makePostRequest('/login', userData)
         },
-        verifyUser: (userData) => {
+        resetPasswordCheck: (userData) => {
             return makePostRequest('/reset-password-check', userData)
         },
         changePassword: (userData) => {
             return makePostRequest('/reset-password', userData)
+        },
+        verifyAccount: (userData) => {
+            return makePostRequest('/verify-email', userData)
         },
         uploadImageAsync: async (uri) => {
             let apiUrl = api_server+'/upload-file';
