@@ -22,14 +22,22 @@ const HomeScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Image source={logo} style={{width: 300, height: 80}}/>
+
+            <Image source={logo} style={{width: 200, height: 200}}/>
 
             { isGuestUser() ?
                 null
-                : <Text>Welcome {user.userName} </Text>
+                : 
+                <Text>
+                    Welcome {user.firstName} {user.lastName}
+                </Text>
             }
 
-            <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
+            { typeof user === 'undefined' || user.isSignout ?
+                <FormButton buttonTitle='SignIn' onPress={ () => navigation.navigate("SignIn") } /> 
+                : 
+                <FormButton buttonTitle='LogOut' onPress={() => logout()}/> 
+            }
 
         </View>
     )

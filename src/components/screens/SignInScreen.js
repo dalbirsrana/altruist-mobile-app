@@ -82,7 +82,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          if (skipLogin()) return navigation.navigate("Home");
+          if (skipLogin()) return navigation.navigate("HomeTabs");
           else undefined;
         }}
       >
