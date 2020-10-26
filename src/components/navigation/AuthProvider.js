@@ -148,10 +148,19 @@ export const AuthProvider = ({children , navigation}) => {
                         console.log(e)
                     }
                 },
-                logout: () => dispatch({type: 'SIGN_OUT'}),
+
                 userStateChanged: () => {
                     try {
                         return user
+                    } catch (e) {
+                        console.error(e)
+                    }
+                },
+                logout: async () => {
+                    try {
+                        await AsyncStorageHelper.removeValue("user")
+                        dispatch({type: 'SIGN_OUT'});
+                        return  null
                     } catch (e) {
                         console.error(e)
                     }
