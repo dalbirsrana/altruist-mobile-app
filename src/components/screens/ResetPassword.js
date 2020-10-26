@@ -110,7 +110,7 @@ const ResetPassword = ({ navigation }) => {
                                         username: userName
                                     }
 
-                                let verify = await API.verifyUser(data)
+                                let verify = await API.resetPasswordCheck(data)
 
                                 console.log(verify)
                                 

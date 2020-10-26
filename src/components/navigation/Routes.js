@@ -28,7 +28,7 @@ export default function Routes() {
 
   return (
     <NavigationContainer>
-      {user ? <HomeStack /> : <AuthStack />}
+      {  (  typeof user !== "undefined" && user !=  null ) ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

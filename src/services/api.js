@@ -8,7 +8,7 @@ async function makePostRequest(path, userData) {
             StudentAppUser: userData
         }
         console.log(data)
-        
+
         let result = {};
         await fetch(`${api_server}${path}`, {
             method: 'POST',
@@ -26,9 +26,6 @@ async function makePostRequest(path, userData) {
         return result
     }
 
-// function makePutRequest() {  }
-
-
 const API =
     {
         signUp: (userData) => {
@@ -37,11 +34,40 @@ const API =
         signIn: (userData) => {
             return makePostRequest('/login', userData)
         },
-        verifyUser: (userData) => {
+        validateToken: (userData) => {
+            return makePostRequest('/validate-token', userData)
+        },
+        resetPasswordCheck: (userData) => {
             return makePostRequest('/reset-password-check', userData)
         },
         changePassword: (userData) => {
             return makePostRequest('/reset-password', userData)
+        },
+        verifyAccount: (userData) => {
+            return makePostRequest('/verify-email', userData)
+        },
+        uploadImageAsync: async (uri) => {
+            let apiUrl = api_server+'/upload-file';
+            let uriParts = uri.split('.');
+            let fileType = uriParts[uriParts.length - 1];
+
+            let formData = new FormData();
+            formData.append('photo', {
+                uri,
+                name: `photo.${fileType}`,
+                type: `image/${fileType}`,
+            });
+            //formData.append('XDEBUG_SESSION_START', '19854');
+            console.log(formData);
+            let options = {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                },
+            };
+            return fetch(apiUrl, options);
         }
     }
 
