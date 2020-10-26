@@ -19,7 +19,7 @@ export default function Routes() {
   }
 
   useEffect(() => {
-    return stateChanged();
+    return stateChanged(user);
   }, []);
 
   if (loading) {

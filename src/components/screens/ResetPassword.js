@@ -75,7 +75,7 @@ const ResetPassword = ({ navigation }) => {
                                 console.log(confirmChange)
 
                                 if (confirmChange.success) {
-                                    setMsg('Password Reset Successfull')
+                                    setMsg('Password Reset Successfull, Go Back to login')
                                 } else {
                                     setMsg(JSON.stringify(confirmChange.data))
                                 }
@@ -116,6 +116,7 @@ const ResetPassword = ({ navigation }) => {
                                 
                                 if(verify.success) {
                                     setValidUser(true)
+                                    setMsg('')
                                 } else {
                                     setMsg('Invalid Username')
                                 }
