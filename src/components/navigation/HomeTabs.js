@@ -1,4 +1,6 @@
 import React from 'react'
+import { Image } from "react-native";
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -12,16 +14,17 @@ import UserActivityScreen from '../screens/UserActivityScreen'
 import UserPostHelpScreen from '../screens/UserPostHelpScreen'
 import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
+import HomeIcon from '../../../assets/icons_png/Icons_Altruist_Home.png'
 
 
-const HelpStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
-function HelpStackScreens() {
+function HomeStackScreens() {
     return (
-        <HelpStack.Navigator>
-            <HelpStack.Screen name="Home" component={HomeScreen}  options={{ header: () => null }} />
-            <HelpStack.Screen name="SingleHelpScreen" component={HelpScreen} />
-        </HelpStack.Navigator>
+        <HomeStack.Navigator>
+            <HomeStack.Screen name="Home" component={HomeScreen}  options={{ header: () => null }} />
+            <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
+        </HomeStack.Navigator>
     )
 }
 
@@ -41,8 +44,20 @@ const Tab = createBottomTabNavigator();
 
 export default function homeTabs() {
     return (
-    <Tab.Navigator>
-        <Tab.Screen name='HomeStack' component={HelpStackScreens}  options={{ header: () => null }} />
+    <Tab.Navigator
+        tabBarOptions={
+            {
+                activeTintColor: 'tomato',
+                inactiveTintColor: 'gray',
+                showIcon: true,
+            }
+        }
+    >
+        <Tab.Screen name='HomeStack' component={HomeStackScreens}  options={{ 
+            header: () => null, 
+            tabBarIcon: () => (<Image source={HomeIcon} style={{ width: 30, height: 30 }} />), 
+            tabBarLabel: 'Home' }} 
+        />
         <Tab.Screen name='UserProfileStack' component={UserProfileScreens} />
         <Tab.Screen name='Notifications' component={UserActivityScreen} />
         <Tab.Screen name='UserPostHelp' component={UserPostHelpScreen} />
