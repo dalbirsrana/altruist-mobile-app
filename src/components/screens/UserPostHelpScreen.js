@@ -4,9 +4,10 @@ import {AuthContext} from "../navigation/AuthProvider";
 import colors from "../../colors/colors";
 import { color } from 'react-native-reanimated';
 
-import readIcon from "../../../assets/favicon.png"
 import userImage from "../../../assets/favicon.png"
 import postImage from "../../../assets/splash.png";
+import reportIcon from "../../../assets/Icons_Altruist_Report.png"
+
 
 
 const UserPostHelp = ( {navigation} ) => (
@@ -19,13 +20,13 @@ const UserPostHelp = ( {navigation} ) => (
   
     <Image source={postImage} style={styles.postImage} />
 
-    <View style={styles.profileBar}>
+    <View style={styles.postContent}>
         <Image source={userImage} />
         <View style={styles.userInfo}>
             <Text style={styles.userName}> Pawandeep </Text>
             <Text style ={styles.postCategory}> Study-Doubts </Text>
         </View>
-        <Image source={readIcon} styles={styles.readIcon} />
+        <Image source={reportIcon} styles={styles.reportIcon} />
     
     </View>
 
@@ -57,14 +58,15 @@ const styles = StyleSheet.create({
     postImage: {
        marginHorizontal: 10,
        marginVertical: 0,
-       width: '100%',
-       height: '100%', 
+       width: '50%',
+       height: '50%', 
     },
 
-    profileBar: {
+    postContent: {
         flex: 1,
         flexDirection: "row",
-        flexWrap: 'wrap',
+        flexWrap: 'nowrap',
+        margin: 30,
 
     },
 
@@ -78,8 +80,7 @@ const styles = StyleSheet.create({
     userInfo: {
         margin: 15, 
         flex: 2,
-        // display: flex,
-        // flexDirection: "column",
+        flexDirection: "column",
         padding:10,
     },
 
@@ -91,9 +92,11 @@ const styles = StyleSheet.create({
         flex:1,
     },
 
-    readIcon: {
-        flex:1,
+    reportIcon: {
+        flex:0,
         justifyContent:"flex-end",
+        height: 5,
+        width: 5,
     },
 
 });
