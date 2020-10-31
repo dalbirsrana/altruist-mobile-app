@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View } from "react-native";
+import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import FormButton from "../../../../common/FormButton";
 import colors from "../../../../colors/colors";
 import BR from "../../../helper/BR";
 import API from "../../../../services/api";
 import logo from "../../../../../assets/icon.png";
 
-const PostCategorySelection = ({navigation}) => {
+const PostCategorySelection = ({navigation, selection}) => {
 
     const [catList, setCatList] = useState([]);
 
@@ -23,18 +23,15 @@ const PostCategorySelection = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-
-            <View style={styles.headerView}>
-                <Text style={styles.headerViewText} >Category Selection</Text>
-            </View>
-
             { catList.map( function ( cat ) {
                 return (
-                    <View style={styles.catBox} key={cat.key} >
-                        <Image source={cat.s3_path} style={{width: 100, height: 100}}/>
-                        <BR/>
-                        <Text style={styles.textColour} >{cat.title}</Text>
-                    </View>
+                    <TouchableOpacity style={styles.catBox}  onPress={() => selection( cat.id )}   key={cat.key}  >
+                        <View >
+                            <Image source={cat.s3_path} style={{width: 100, height: 100}}/>
+                            <BR/>
+                            <Text style={styles.textColour} >{cat.title}</Text>
+                        </View>
+                    </TouchableOpacity>
                  )
             } ) }
         </View>
