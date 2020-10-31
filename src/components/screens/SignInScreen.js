@@ -68,8 +68,7 @@ const SignInScreen = ({ navigation }) => {
           };
 
           let signIn = await login(data);
-
-          if (signIn.success) {
+          if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
               setPassword("");
               navigation.navigate("HomeTabs");
           } else {
@@ -96,8 +95,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          if (skipLogin()) return navigation.navigate("HomeTabs");
-          else undefined;
+            return navigation.navigate("UnauthenticatedHomeScreen");
         }}
       >
         <Text style={styles.buttonText}>Skip</Text>

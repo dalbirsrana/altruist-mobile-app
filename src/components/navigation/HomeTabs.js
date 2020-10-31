@@ -16,6 +16,9 @@ import UserPostHelpScreen from '../screens/UserPostHelpScreen'
 import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
 
+import CreatePost from '../screens/Posts/Create/Create'
+
+
 
 const HelpStack = createStackNavigator();
 
@@ -52,25 +55,22 @@ export default function homeTabs() {
                 let iconName;
 
                 if (route.name === 'HomeStack') {
-                    iconName = focused
-                        ? 'ios-home'
-                        : 'ios-home-outline';
-                    // You can return any component that you like here!
-                    return <Ionicons name={iconName} size={size} color={color} />;
+                    if( focused ){
+                        return <Ionicons name='ios-home' size={size} color={color} />;
+                    }else{
+                        return <AntDesign name="home" size={size} color={color} />;
+                    }
                 } else if (route.name === 'Chat') {
                     iconName = focused ? 'wechat' : 'wechat';
                     return <AntDesign name={iconName} size={size} color={color} />;
                 } else if (route.name === 'CreatePost') {
                     iconName = focused ? 'ios-add-circle' : 'ios-add-circle-outline';
-                    // You can return any component that you like here!
                     return <Ionicons name={iconName} size={size} color={color} />;
                 } else if (route.name === 'Notifications') {
                     iconName = focused ? 'ios-notifications' : 'ios-notifications-outline';
-                    // You can return any component that you like here!
                     return <Ionicons name={iconName} size={size} color={color} />;
                 } else if (route.name === 'UserProfile') {
                     iconName = focused ? 'user' : 'user';
-                    // You can return any component that you like here!
                     return <SimpleLineIcons name={iconName} size={22} color={color} />;
                 }
             },
@@ -84,7 +84,16 @@ export default function homeTabs() {
     >
         <Tab.Screen name='HomeStack' component={HelpStackScreens}  options={{ title: '', header: () => null }} />
         <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
-        <Tab.Screen name='CreatePost' component={UserActivityScreen} options={{ title: '', header: () => null }} />
+        <Tab.Screen name='CreatePost' component={CreatePost} options={{
+            title: '',
+            headerStyle: {
+                backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            }
+        }} />
         <Tab.Screen name='Notifications' component={UserPostHelpScreen} options={{ title: '', header: () => null }} />
         <Tab.Screen name="UserProfile" component={FileUploadExampleScreen} options={{ title: '', header: () => null }} />
     </Tab.Navigator>

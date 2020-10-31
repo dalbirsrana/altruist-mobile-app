@@ -1,43 +1,61 @@
-const api_server = 'http://ec2-34-211-51-75.us-west-2.compute.amazonaws.com'
+import AsyncStorageHelper from "./AsyncStorageHelper";
 
-async function makePostRequest(path, data) {
+const api_server = 'http://ec2-34-211-51-75.us-west-2.compute.amazonaws.com'
+const GET = "GET" ;
+const POST = "POST" ;
+
+async function makeRequest(path, data, method="POST" ) {
         console.log(data)
         let result = {};
-        await fetch(`${api_server}${path}`, {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
+        let defaultHeaders = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        };
+
+        let signIn = await AsyncStorageHelper.getMyObject('user');
+        if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
+            defaultHeaders.Authorization = "Bearer "+signIn.data.token;
+        }
+
+        let options = {
+            method: method ,
+            headers: defaultHeaders,
+        } ;
+        if( method === POST ){
+            options.body = JSON.stringify(data);
+        }
+        await fetch(`${api_server}${path}`,  options )
         .then(response => response.json())
         .then(resData => { 
             result = resData
         })
-        .catch( error => console.error('Error:', error))
+        .catch(  ( error ) => function(){
+            console.error('Error:', error);
+            return error;
+        });
+
         return result
     }
 
 const API =
     {
         signUp: (userData) => {
-            return makePostRequest('/signup', {StudentAppUser: userData})
+            return  makeRequest('/signup', {StudentAppUser: userData})
         },
-        signIn: (userData) => {
-            return makePostRequest('/login', {StudentAppUser: userData})
+        signIn: async (userData) => {
+            return await makeRequest('/login', {StudentAppUser: userData})
         },
         validateToken: (userData) => {
-            return makePostRequest('/validate-token', {StudentAppUser: userData})
+            return makeRequest('/validate-token', {StudentAppUser: userData})
         },
         resetPasswordCheck: (userData) => {
-            return makePostRequest('/reset-password-check', {StudentAppUser: userData})
+            return makeRequest('/reset-password-check', {StudentAppUser: userData})
         },
         changePassword: (userData) => {
-            return makePostRequest('/reset-password', {StudentAppUser: userData})
+            return makeRequest('/reset-password', {StudentAppUser: userData})
         },
         verifyAccount: (userData) => {
-            return makePostRequest('/verify-email', {StudentAppUser: userData})
+            return makeRequest('/verify-email', {StudentAppUser: userData})
         },
         uploadImageAsync: async (uri) => {
             let apiUrl = api_server+'/upload-file';
@@ -66,7 +84,19 @@ const API =
 
         Post : {
             create : ( data ) => {
-                return makePostRequest('/posts', {Posts: data})
+                return makeRequest('/posts', {Posts: data})
+            }
+        },
+
+        PostTypes : {
+            list : ( data ) => {
+                return makeRequest('/post-types', {Posts: data}, GET)
+            }
+        },
+
+        PostCategories : {
+            list : () => {
+                return makeRequest('/post-categories', {}, GET)
             }
         }
 

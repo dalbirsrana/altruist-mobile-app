@@ -87,7 +87,7 @@ export const AuthProvider = ({children , navigation}) => {
                 signIn = await AsyncStorageHelper.getMyObject('user');
                 // console.log( signIn );
 
-                if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
+                if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
 
                     //Validate the userToken before restore
                     let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
@@ -144,7 +144,7 @@ export const AuthProvider = ({children , navigation}) => {
                 login: async (data) => {
                     try {
                         let signIn = await API.signIn(data)
-                        if (signIn.success) {
+                        if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
                             dispatch({
                                 type: 'SIGN_IN',
                                 isSignout: false,
