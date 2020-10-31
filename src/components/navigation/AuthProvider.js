@@ -30,6 +30,7 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: action.profile_picture,
                             isLoading: false,
                             isSignout: false,
+                            logoutMsg:false
                         };
                     case 'SIGN_IN':
                         return {
@@ -42,7 +43,8 @@ export const AuthProvider = ({children , navigation}) => {
                             lastName: action.lastName,
                             email: action.email,
                             phone: action.phone,
-                            profileImage: action.profile_picture
+                            profileImage: action.profile_picture,
+                            logoutMsg:false
                         };
                     case 'SIGN_OUT':
                         return {
@@ -55,14 +57,15 @@ export const AuthProvider = ({children , navigation}) => {
                             lastName: null,
                             email: null,
                             phone: null,
-                            profileImage: null
+                            profileImage: null,
+                            logoutMsg:false
                         };
                 }
             }
         },
         {
             isLoading: true,
-            isSignout: false,
+            isSignout: true,
             token: null,
             id: null,
             username: null,
@@ -71,6 +74,7 @@ export const AuthProvider = ({children , navigation}) => {
             email: null,
             phone: null,
             profileImage: null,
+            logoutMsg:false
         }
     );
 
@@ -81,15 +85,18 @@ export const AuthProvider = ({children , navigation}) => {
             try {
                 //userToken = await AsyncStorage.getItem('userToken');
                 signIn = await AsyncStorageHelper.getMyObject('user');
+                // console.log( signIn );
 
                 if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
 
                     //Validate the userToken before restore
                     let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
+                    // console.log( validateToken );
                     if( validateToken.success ){
                         //dispatch({ type: 'RESTORE_TOKEN', token: userToken });
                         dispatch({
                             type: 'RESTORE_TOKEN',
+                            isSignout: false,
                             token: validateToken.data.token,
                             id: validateToken.data.id,
                             username: validateToken.data.username,
@@ -100,7 +107,22 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: validateToken.data.profile_picture
                         })
 
+                        console.log( "RESTORE_TOKEN" );
                         await AsyncStorageHelper.setObjectValue('user',validateToken)
+                    }else{
+                        dispatch({
+                            type: 'SIGN_OUT',
+                            token: null,
+                            id: null,
+                            username: null,
+                            firstName: null,
+                            lastName: null,
+                            email: null,
+                            phone: null,
+                            profileImage: null,
+                            isSignout: true,
+                            logoutMsg: "Token has been expired. Please re-login!"
+                        });
                     }
                 }
 
@@ -125,6 +147,7 @@ export const AuthProvider = ({children , navigation}) => {
                         if (signIn.success) {
                             dispatch({
                                 type: 'SIGN_IN',
+                                isSignout: false,
                                 token: signIn.data.token,
                                 id: signIn.data.id,
                                 username: signIn.data.username,
@@ -148,20 +171,29 @@ export const AuthProvider = ({children , navigation}) => {
                         console.log(e)
                     }
                 },
-                logout: () => dispatch({type: 'SIGN_OUT'}),
-                userStateChanged: () => {
+                logout: async () => {
                     try {
-                        return user
+                        await AsyncStorageHelper.removeValue('user' )
+                        dispatch({
+                            type: 'SIGN_OUT',
+                            token: null,
+                            id: null,
+                            username: null,
+                            firstName: null,
+                            lastName: null,
+                            email: null,
+                            phone: null,
+                            isSignout: true,
+                            profileImage: null
+                        });
+                        return null;
                     } catch (e) {
                         console.error(e)
                     }
                 },
-                skipLogin: () => {
+                userStateChanged: () => {
                     try {
-                        const u = {
-                            id: 'skip'
-                        }
-                        return u;
+                        return user
                     } catch (e) {
                         console.error(e)
                     }

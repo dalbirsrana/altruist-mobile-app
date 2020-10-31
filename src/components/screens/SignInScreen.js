@@ -15,9 +15,19 @@ const SignInScreen = ({ navigation }) => {
   const [msg, setMsg] = useState("");
   const { user, login, skipLogin } = useContext(AuthContext);
 
-  useEffect(() => {
-        console.log( user );
-  });
+    const isUserSignedOut = () => {
+        return  typeof user === "undefined" || ( typeof user !== "undefined" && user.isSignout === true );
+    }
+
+    useEffect(() => {
+        function checkUserLoggedIn(){
+            if( !isUserSignedOut() ){
+                console.log('HomeTabs');
+                navigation.navigate("HomeTabs");
+            }
+        }
+        checkUserLoggedIn();
+    } , [] );
 
   return (
     <View style={styles.container}>
@@ -27,6 +37,11 @@ const SignInScreen = ({ navigation }) => {
       />
 
       <Text>{msg}</Text>
+
+        { ( typeof user !== "undefined" && user.hasOwnProperty('logoutMsg') && user.logoutMsg !== false ) ?
+            <Text>{user.logoutMsg}</Text>
+            : null
+        }
 
       <FormInput
         value={email}
@@ -55,13 +70,12 @@ const SignInScreen = ({ navigation }) => {
           let signIn = await login(data);
 
           if (signIn.success) {
-            navigation.navigate("Home");
+              setPassword("");
+              navigation.navigate("HomeTabs");
           } else {
             if (signIn.data.username) setMsg(signIn.data.username);
-
             if (signIn.data.verification_token)
               setMsg(signIn.data.verification_token);
-
             if (signIn.data.message) setMsg(signIn.data.message);
           }
         }}

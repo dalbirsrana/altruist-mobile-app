@@ -1,14 +1,7 @@
 const api_server = 'http://ec2-34-211-51-75.us-west-2.compute.amazonaws.com'
 
-
-// function makeGetRequest(path, userData) {}
-
-async function makePostRequest(path, userData) {
-        const data = {
-            StudentAppUser: userData
-        }
+async function makePostRequest(path, data) {
         console.log(data)
-
         let result = {};
         await fetch(`${api_server}${path}`, {
             method: 'POST',
@@ -29,22 +22,22 @@ async function makePostRequest(path, userData) {
 const API =
     {
         signUp: (userData) => {
-            return makePostRequest('/signup', userData)
+            return makePostRequest('/signup', {StudentAppUser: userData})
         },
         signIn: (userData) => {
-            return makePostRequest('/login', userData)
+            return makePostRequest('/login', {StudentAppUser: userData})
         },
         validateToken: (userData) => {
-            return makePostRequest('/validate-token', userData)
+            return makePostRequest('/validate-token', {StudentAppUser: userData})
         },
         resetPasswordCheck: (userData) => {
-            return makePostRequest('/reset-password-check', userData)
+            return makePostRequest('/reset-password-check', {StudentAppUser: userData})
         },
         changePassword: (userData) => {
-            return makePostRequest('/reset-password', userData)
+            return makePostRequest('/reset-password', {StudentAppUser: userData})
         },
         verifyAccount: (userData) => {
-            return makePostRequest('/verify-email', userData)
+            return makePostRequest('/verify-email', {StudentAppUser: userData})
         },
         uploadImageAsync: async (uri) => {
             let apiUrl = api_server+'/upload-file';
@@ -68,7 +61,15 @@ const API =
                 },
             };
             return fetch(apiUrl, options);
+        },
+
+
+        Post : {
+            create : ( data ) => {
+                return makePostRequest('/posts', {Posts: data})
+            }
         }
+
     }
 
 export default API

@@ -11,33 +11,30 @@ import AsyncStorageHelper from "./../../services/AsyncStorageHelper";
 const HomeScreen = ({navigation}) => {
     const {user, logout} = useContext(AuthContext);
 
-    const isGuestUser = () => {
-        return  typeof user === "undefined";
+    const isUserSignedOut = () => {
+        return  typeof user === "undefined" || ( typeof user !== "undefined" && user.isSignout === true );
     }
 
-    const alertItem = async function () {
-        let valueSaved = await AsyncStorageHelper.getMyObject('home');
-        console.log(valueSaved);
-    }
+    useEffect(() => {
+        if( isUserSignedOut() ){
+            navigation.navigate("SignIn");
+        }
+    });
 
     return (
         <View style={styles.container}>
 
             <Image source={logo} style={{width: 200, height: 200}}/>
 
-            { isGuestUser() ?
-                null
-                : 
+
                 <Text>
                     Welcome {user.firstName} {user.lastName}
                 </Text>
-            }
 
-            { typeof user === 'undefined' || user.isSignout ?
-                <FormButton buttonTitle='SignIn' onPress={ () => navigation.navigate("SignIn") } /> 
-                : 
-                <FormButton buttonTitle='LogOut' onPress={() => logout()}/> 
-            }
+
+
+                <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
+
 
         </View>
     )
