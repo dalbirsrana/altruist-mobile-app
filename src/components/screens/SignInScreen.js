@@ -13,20 +13,27 @@ const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
-  const { user, login, skipLogin } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
 
     const isUserSignedOut = () => {
         return  typeof user === "undefined" || ( typeof user !== "undefined" && user.isSignout === true );
     }
 
-    useEffect(() => {
-        function checkUserLoggedIn(){
-            if( !isUserSignedOut() ){
-                console.log('HomeTabs');
-                navigation.navigate("HomeTabs");
-            }
+    async function checkUserLoggedIn(){
+        if( !isUserSignedOut() ){
+            console.log('HomeTabs');
+            await navigation.navigate("HomeTabs");
         }
-        checkUserLoggedIn();
+    }
+
+    useEffect(() => {
+        let isUnMount = false;
+        if( !isUnMount  ){
+            checkUserLoggedIn();
+        }
+        return () => {
+          isUnMount = true ;
+        }
     } , [] );
 
   return (

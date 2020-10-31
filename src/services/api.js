@@ -12,9 +12,9 @@ async function makeRequest(path, data, method="POST" ) {
             'Content-Type': 'application/json',
         };
 
-        let signIn = await AsyncStorageHelper.getMyObject('user');
-        if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
-            defaultHeaders.Authorization = "Bearer "+signIn.data.token;
+        let userData = await AsyncStorageHelper.getUserData();
+        if ( userData !== false ) {
+            defaultHeaders.Authorization = "Bearer "+userData.token;
         }
 
         let options = {
