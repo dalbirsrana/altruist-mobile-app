@@ -5,8 +5,14 @@ import postImage from "../../../assets/splash.png";
 import colors from "../../colors/colors";
 import { color } from 'react-native-reanimated';
 
-import optionIcon from "../../../assets/favicon.png"
-import userImage from "../../../assets/favicon.png"
+import editPostIcon from "../../../assets/Icons_Altruist_Edit.png"
+import settingIcon from "../../../assets/Icons_Altruist_Settings.png"
+import contactIcon from "../../../assets/Icons_Altruist_Help.png"
+import logoutIcon from "../../../assets/Icons_Altruist_Logout.png"
+import nextIcon from "../../../assets/Icons_Altruist_next.png"
+
+
+
 
 
 const UserProfile = ( {navigation} ) => (
@@ -22,28 +28,30 @@ const UserProfile = ( {navigation} ) => (
         <View style ={styles.optionsList}>
 
             <View style={styles.option}>
-              <Image source={optionIcon} style={styles.optionIcon}/>
+              <Image source={editPostIcon} style={styles.optionIcon}/>
               <Text style={styles.optionTitle}>Posts</Text>
-              <Text style={styles.optionArrow}> - </Text>
+              <Image source={nextIcon} style={styles.optionArrow}/> 
             </View>
 
             <View style={styles.option} >
-              <Image source={optionIcon} style={styles.optionIcon}/>
+              <Image source={settingIcon} style={styles.optionIcon}/>
               <Text style={styles.optionTitle}>Settings</Text>
-              <Text style={styles.optionArrow}> - </Text>
+              <Image source={nextIcon} style={styles.optionArrow}/> 
             </View>
 
             <View style={styles.option}>
-              <Image source={optionIcon} style={styles.optionIcon}/>
+              <Image source={contactIcon} style={styles.optionIcon}/>
               <Text style={styles.optionTitle}>Contact Us</Text>
-              <Text style={styles.optionArrow}> - </Text>
+              <Image source={nextIcon} style={styles.optionArrow}/> 
             </View>
             
         </View>
       
-        <View>
-            
+        <View style={styles.logout}>
+              <Image source={logoutIcon} style={styles.logoutIcon}/>
+              <Text style={styles.logoutTitle}>Log Out</Text>
         </View>
+
 
     </View>
 )
@@ -56,9 +64,7 @@ const styles = StyleSheet.create({
 
     container: {
       flex:1,
-      flexDirection:"column",     
-    //   justifyContent: 'center',   
-    //   backgroundColor: colors.white,
+      flexDirection:"column",
     },
 
     thumbnail: {
@@ -100,15 +106,39 @@ const styles = StyleSheet.create({
    
     optionIcon: {
         flex: 0,
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 35,
     },
+
     optionTitle:{
         flex:3,
         paddingLeft: 20,
+        fontWeight: "bold",
     },
+
     optionArrow: {
         flex: 0,
+        width: 20,
+        height: 20,
+    },
+
+    logout: {
+        flex:1,
+        flexDirection: "row",
+        flexWrap:"nowrap",
+        justifyContent: "space-between",
+        padding: 30,
+    },
+
+    logoutIcon: {
+        flex: 0,
+        width: 35,
+        height: 35,
+    },
+
+    logoutTitle: {
+        flex: 1,
+        fontWeight: "bold",
     },
 
 });
