@@ -1,4 +1,6 @@
 import React from 'react'
+import { Image } from "react-native";
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -15,19 +17,20 @@ import UserActivityScreen from '../screens/UserActivityScreen'
 import UserPostHelpScreen from '../screens/UserPostHelpScreen'
 import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
+import HomeIcon from '../../../assets/icons_png/Icons_Altruist_Home.png'
 
 import CreatePost from '../screens/Posts/Create/Create'
 
 
 
-const HelpStack = createStackNavigator();
+const HomeStack = createStackNavigator();
 
-function HelpStackScreens() {
+function HomeStackScreens() {
     return (
-        <HelpStack.Navigator>
-            <HelpStack.Screen name="Home" component={HomeScreen}  options={{ header: () => null }} />
-            <HelpStack.Screen name="SingleHelpScreen" component={HelpScreen} />
-        </HelpStack.Navigator>
+        <HomeStack.Navigator>
+            <HomeStack.Screen name="Home" component={HomeScreen}  options={{ header: () => null }} />
+            <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
+        </HomeStack.Navigator>
     )
 }
 
@@ -75,10 +78,13 @@ export default function homeTabs() {
                 }
             },
         })}
-        tabBarOptions={{
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray',
-        }}
+        tabBarOptions={
+            {
+                activeTintColor: 'tomato',
+                inactiveTintColor: 'gray',
+                showIcon: true,
+            }
+        }
 
 
     >
