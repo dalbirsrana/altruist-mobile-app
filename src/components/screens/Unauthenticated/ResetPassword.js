@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import API from '../../services/api'
+import API from '../../../services/api'
 
-import FormButton from '../../common/FormButton'
-import FormInput from '../../common/FormInput'
+import FormButton from '../../../common/FormButton'
+import FormInput from '../../../common/FormInput'
 
 // import { AuthContext } from '../navigation/AuthProvider'
 

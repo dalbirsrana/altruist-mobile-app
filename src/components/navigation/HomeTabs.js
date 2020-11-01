@@ -17,7 +17,6 @@ import UserActivityScreen from '../screens/UserActivityScreen'
 import UserPostHelpScreen from '../screens/UserPostHelpScreen'
 import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
-import HomeIcon from '../../../assets/icons_png/Icons_Altruist_Home.png'
 
 import createPostStack from './createPostStack'
 
@@ -48,7 +47,7 @@ function UserProfileScreens() {
 
 const Tab = createBottomTabNavigator();
 
-export default function homeTabs() {
+export default function HomeTabs() {
     return (
     <Tab.Navigator
 
@@ -90,7 +89,7 @@ export default function homeTabs() {
     >
         <Tab.Screen name='HomeStack' component={HomeStackScreens}  options={{ title: '', header: () => null }} />
         <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
-        <Tab.Screen name='CreatePost' component={CreatePost} options={{
+        <Tab.Screen name='CreatePost' component={createPostStack} options={{
             tabBarVisible : false,
             title: '',
         }} />

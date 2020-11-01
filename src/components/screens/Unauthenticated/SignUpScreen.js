@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import colors from "../../colors/colors";
-import FormButton from "../../common/FormButton";
-import FormInput from "../../common/FormInput";
-import { AuthContext } from "../navigation/AuthProvider";
+import colors from "../../../colors/colors";
+import FormButton from "../../../common/FormButton";
+import FormInput from "../../../common/FormInput";
+import { AuthContext } from "../../navigation/AuthProvider";
 
 export default function SignUpScreen({ navigation }) {
   const [firstName, setFirstName] = useState("");
