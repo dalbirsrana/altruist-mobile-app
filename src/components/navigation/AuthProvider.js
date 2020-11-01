@@ -12,6 +12,8 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = ({children , navigation}) => {
 
+    let newLogOutMessage = false ;
+
     const [user, dispatch] = useReducer(
         (prevState, ...actions) => {
             if( typeof actions !== "undefined" && Array.isArray( actions ) && actions.length > 0 && typeof actions[0] !== "undefined" ){
@@ -58,7 +60,7 @@ export const AuthProvider = ({children , navigation}) => {
                             email: null,
                             phone: null,
                             profileImage: null,
-                            logoutMsg:false
+                            logoutMsg:newLogOutMessage
                         };
                 }
             }
@@ -74,7 +76,7 @@ export const AuthProvider = ({children , navigation}) => {
             email: null,
             phone: null,
             profileImage: null,
-            logoutMsg:false
+            logoutMsg: newLogOutMessage
         }
     );
 
@@ -89,8 +91,9 @@ export const AuthProvider = ({children , navigation}) => {
 
                 if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
 
+                    let validateToken = signIn;
                     //Validate the userToken before restore
-                    let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
+                    //let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
                     // console.log( validateToken );
                     if( validateToken.success ){
                         //dispatch({ type: 'RESTORE_TOKEN', token: userToken });
@@ -108,8 +111,10 @@ export const AuthProvider = ({children , navigation}) => {
                         })
 
                         console.log( "RESTORE_TOKEN" );
+                        newLogOutMessage = "" ;
                         await AsyncStorageHelper.setObjectValue('user',validateToken)
                     }else{
+                        newLogOutMessage = "Token has been expired. Please re-login!";
                         dispatch({
                             type: 'SIGN_OUT',
                             token: null,
@@ -121,7 +126,7 @@ export const AuthProvider = ({children , navigation}) => {
                             phone: null,
                             profileImage: null,
                             isSignout: true,
-                            logoutMsg: "Token has been expired. Please re-login!"
+                            logoutMsg: newLogOutMessage
                         });
                     }
                 }
@@ -157,6 +162,7 @@ export const AuthProvider = ({children , navigation}) => {
                                 phone: signIn.data.phone,
                                 profileImage: signIn.data.profile_picture
                             })
+                            newLogOutMessage = "" ;
                             AsyncStorageHelper.setObjectValue('user', signIn);
                         }
                         return signIn
@@ -166,15 +172,17 @@ export const AuthProvider = ({children , navigation}) => {
                 },
                 register: (data) => {
                     try {
+                        newLogOutMessage = "" ;
                         return API.signUp(data)
                     } catch (e) {
                         console.log(e)
                     }
                 },
-                logout: async () => {
+                logout: async ( hasLogOutMessage = false ) => {
                     try {
+                        newLogOutMessage = hasLogOutMessage ;
                         await AsyncStorageHelper.removeValue('user' )
-                        dispatch({
+                        let newUserdata = {
                             type: 'SIGN_OUT',
                             token: null,
                             id: null,
@@ -184,15 +192,18 @@ export const AuthProvider = ({children , navigation}) => {
                             email: null,
                             phone: null,
                             isSignout: true,
-                            profileImage: null
-                        });
-                        return null;
+                            profileImage: null,
+                            logoutMsg: newLogOutMessage
+                        };
+                        dispatch( newUserdata );
+                        return newUserdata;
                     } catch (e) {
                         console.error(e)
                     }
                 },
                 userStateChanged: () => {
                     try {
+                        newLogOutMessage = "" ;
                         return user
                     } catch (e) {
                         console.error(e)

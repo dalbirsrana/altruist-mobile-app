@@ -34,6 +34,13 @@ async function makeRequest(path, data, method="POST" ) {
             return error;
         });
 
+        result.tokenExpired = false ;
+        if( result.success === false ){
+            if( result.data.hasOwnProperty('name') && result.data.name === "Unauthorized" ){
+                result.tokenExpired = true ;
+            }
+        }
+
         return result
     }
 
@@ -85,17 +92,23 @@ const API =
         Post : {
             create : ( data ) => {
                 return makeRequest('/posts', {Posts: data})
+            },
+            getCityName: ( data ) => {
+                return makeRequest('/city-name', {Posts: data})
+            },
+            list : ( data ) => {
+                return makeRequest('/post-types', {}, GET)
             }
         },
 
         PostTypes : {
             list : ( data ) => {
-                return makeRequest('/post-types', {Posts: data}, GET)
+                return makeRequest('/post-types', {}, GET)
             }
         },
 
         PostCategories : {
-            list : () => {
+            list : async () => {
                 return makeRequest('/post-categories', {}, GET)
             }
         }

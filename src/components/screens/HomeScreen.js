@@ -1,5 +1,5 @@
 import React, {useContext , useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View} from "react-native";
+import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import FormButton from "../../common/FormButton";
 import {AuthContext} from "../navigation/AuthProvider";
 import logo from "../../../assets/icon.png";
@@ -7,6 +7,9 @@ import colors from "../../colors/colors";
 import BR from "../helper/BR";
 import FileUploadExampleScreen from "./FileUploadExampleScreen";
 import AsyncStorageHelper from "./../../services/AsyncStorageHelper";
+import InverseButton from "../../common/InverseButton";
+import {windowHeight, windowWidth} from "../../utils/Dimensions";
+import FormButtonSmall from "../../common/FormButtonSmall";
 
 const HomeScreen = ({navigation}) => {
     const {user, logout} = useContext(AuthContext);
@@ -32,8 +35,17 @@ const HomeScreen = ({navigation}) => {
                 </Text>
 
 
+            <InverseButton onPress={()=> alert('yes')}  buttonTitle={"Enable Location"} iconName={"location-arrow"} />
 
-                <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
+            <InverseButton buttonTitle={"Fetching Location"} iconName={"cog"} />
+
+            <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
+
+
+
+
+
+
 
 
         </View>

@@ -1,15 +1,36 @@
-import React, { useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import FormButton from "../../../../common/FormButton";
+import React from "react";
+import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
-import BR from "../../../helper/BR";
-import API from "../../../../services/api";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import logo from "../../../../../assets/Feature_Icons-03.png";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 
-const PostTypeSelection = ({navigation, selection}) => {
-    
+const PostTypeSelection = ({navigation}) => {
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight : () => <Text/>,
+            headerLeft: () => (
+                <View style={{
+                    left:20
+                }}
+                >
+                    <TouchableOpacity
+                        onPress={() =>
+                        {
+                            console.log("Click");
+                            navigation.navigate( "HomeTabs" )
+                        }
+                        }
+                    >
+                        <Ionicons name='md-arrow-back' color={"white"} size={32} />
+                    </TouchableOpacity>
+                </View>
+            ),
+        });
+    }, [navigation]);
+
     return (
         <View style={styles.container}>
 
@@ -17,14 +38,14 @@ const PostTypeSelection = ({navigation, selection}) => {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => selection( 1 )}
+                onPress={() =>  navigation.navigate( "PostCategorySelection" , { postTypeIdProp: 1 } ) }
             >
                 <Text style={styles.buttonText}>I want to help.</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => selection( 2 )}
+                onPress={() => navigation.navigate( "PostCategorySelection" , { postTypeIdProp: 2 } )  }
             >
                 <Text style={styles.buttonText}>I need a help.</Text>
             </TouchableOpacity>

@@ -19,7 +19,7 @@ import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
 import HomeIcon from '../../../assets/icons_png/Icons_Altruist_Home.png'
 
-import CreatePost from '../screens/Posts/Create/Create'
+import createPostStack from './createPostStack'
 
 
 
@@ -61,7 +61,7 @@ export default function homeTabs() {
                     if( focused ){
                         return <Ionicons name='ios-home' size={size} color={color} />;
                     }else{
-                        return <AntDesign name="home" size={size} color={color} />;
+                        return <Ionicons name="md-home" size={size} color={color} />;
                     }
                 } else if (route.name === 'Chat') {
                     iconName = focused ? 'wechat' : 'wechat';
@@ -88,20 +88,14 @@ export default function homeTabs() {
 
 
     >
-        <Tab.Screen name='HomeStack' component={HelpStackScreens}  options={{ title: '', header: () => null }} />
-        <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
-        <Tab.Screen name='CreatePost' component={CreatePost} options={{
+        <Tab.Screen name='HomeStack' component={HomeScreen}  options={{ title: '' }} />
+        <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '' }} />
+        <Tab.Screen name='CreatePost' component={createPostStack} options={{
+            tabBarVisible : false,
             title: '',
-            headerStyle: {
-                backgroundColor: '#f4511e',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-            }
         }} />
-        <Tab.Screen name='Notifications' component={UserPostHelpScreen} options={{ title: '', header: () => null }} />
-        <Tab.Screen name="UserProfile" component={FileUploadExampleScreen} options={{ title: '', header: () => null }} />
+        <Tab.Screen name='Notifications' component={UserPostHelpScreen} options={{ title: '' }} />
+        <Tab.Screen name="UserProfile" component={FileUploadExampleScreen} options={{ title: '' }} />
     </Tab.Navigator>
     );
 }
