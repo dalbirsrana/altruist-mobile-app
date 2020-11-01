@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        alignItems: "center",
+        alignItems: "left",
         justifyContent: "center",
         display: "flex",
         flexDirection: "row",
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         alignItems: "center",
-        justifySelf: "center",
+
         alignSelf:"center",
     },
 });

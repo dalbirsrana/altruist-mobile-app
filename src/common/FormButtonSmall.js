@@ -20,7 +20,7 @@ export default function FormButtonSmall({ buttonTitle, align, ...rest }) {
       marginLeft:20,
       marginRight:20,
       display:"flex",
-      flexFlow: "row",
+      flexDirection: "row",
       flexWrap: "no-wrap",
       alignItems: "end",
       justifyItems: "end",
