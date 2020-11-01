@@ -2,10 +2,9 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import HomeTabs from './HomeTabs'
 import AuthStack from './AuthStack'
-import SignInScreen from "../screens/SignInScreen";
+import SignInScreen from "../screens/Unauthenticated/SignInScreen";
 import HomeScreen from "../screens/HomeScreen";
 
-// import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
 const Stack = createStackNavigator();
 

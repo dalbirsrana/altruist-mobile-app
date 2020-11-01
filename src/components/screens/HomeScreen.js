@@ -20,9 +20,9 @@ const HomeScreen = ({navigation}) => {
 
     useEffect(() => {
         if( isUserSignedOut() ){
-            navigation.navigate("SignIn");
+           return navigation.navigate("SignIn");
         }
-    });
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -31,6 +31,7 @@ const HomeScreen = ({navigation}) => {
 
 
                 <Text>
+                    { user.isSignout ? "true" : "false" }
                     Welcome {user.firstName} {user.lastName}
                 </Text>
 
