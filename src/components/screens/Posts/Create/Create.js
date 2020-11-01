@@ -12,8 +12,11 @@ const Create = ({navigation}) => {
 
     const [id, setId] = useState("");
     const [title, setTitle] = useState("");
+
     const [postTypeId, setPostTypeId] = useState("");
     const [postCategoryId, setPostCategoryId] = useState("");
+
+
     const [description, setDescription] = useState("");
     const [userId, setUserId] = useState("");
     const [lat, setLat] = useState("");
@@ -26,8 +29,6 @@ const Create = ({navigation}) => {
     const [setpThree, setStepThree] = useState(false );
     const [setpFour, setStepFour] = useState(false );
     const [setpFive, setStepFive] = useState(false );
-
-
 
 
     function goBack( step ){
@@ -53,7 +54,6 @@ const Create = ({navigation}) => {
             { setpOne === false ? <PostTypeSelection back={() => { navigation.pop() }}  selection={( value ) => {  setPostTypeId( value ); setStepOne(true); } } /> : null }
             { setpTwo === false && setpOne === true ? <PostCategorySelection back={() => goBack(1) } selection={( value ) => { setPostCategoryId( value ); setStepTwo(true); }} /> : null }
             { setpThree === false && setpTwo === true ? <PostDataForm back={() => goBack(2) }  selection={( value ) => setPostCategoryId( value )} /> : null }
-
 
 
         </View>

@@ -1,32 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import FormButton from "../../../../common/FormButton";
 import colors from "../../../../colors/colors";
 import BR from "../../../helper/BR";
 import API from "../../../../services/api";
 import logo from "../../../../../assets/icon.png";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
+import {windowHeight} from "../../../../utils/Dimensions";
+import {AuthContext} from "../../../navigation/AuthProvider";
 
-const PostCategorySelection = ({navigation, selection}) => {
+const PostCategorySelection = ({navigation, route }) => {
+
+    const {user, logout} = useContext(AuthContext);
 
     const [catList, setCatList] = useState([]);
+    const [postTypeId, setPostTypeId] = useState( route.params.postTypeIdProp );
 
-    useEffect(() => {
-        async function getCatList( ){
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight : () => <Text/>,
+            headerLeft: () => (
+                <View style={{
+                    left:20
+                }}
+                >
+                    <TouchableOpacity
+                        onPress={() =>
+                        {
+                            navigation.navigate( "PostTypeSelection" )
+                        }
+                        }
+                    >
+                        <Ionicons name='md-arrow-back' color={"white"} size={32} />
+                    </TouchableOpacity>
+                </View>
+            ),
+        });
+    }, [navigation]);
+
+    async function getCatList( ){
+        let list = await AsyncStorageHelper.getCatList();
+        console.log( "list" , list);
+        if( Array.isArray( list ) ){
+            setCatList( list );
+        }else{
             let catListData = await API.PostCategories.list();
             if( catListData.success === true ){
                 console.log( catListData.data );
                 setCatList( catListData.data );
+                AsyncStorageHelper.setObjectValue( 'catList' ,catListData.data );
+            }else if (  catListData.success === false && catListData.tokenExpired === true  ){
+                logout();
             }
         }
-        getCatList();
+    }
+
+    useEffect(() => {
+
+        let isUnMount = false;
+        if( !isUnMount  ){
+            getCatList();
+        }
+        return () => {
+            isUnMount = true ;
+        }
+
     } , [] );
 
     return (
         <View style={styles.container}>
             { catList.map( function ( cat ) {
                 return (
-                    <TouchableOpacity style={styles.catBox}  onPress={() => selection( cat.id )}   key={cat.key}  >
-                        <View >
+                    <TouchableOpacity style={styles.catBox}  onPress={
+                        ( event ) =>  navigation.navigate( "PostDataForm" , { postTypeIdProp: postTypeId , postCategoryIdProp: cat.id } )
+                    }   key={cat.key}  >
+                        <View style={styles.imgContainer} >
                             <Image source={cat.s3_path} style={{width: 100, height: 100}}/>
                             <BR/>
                             <Text style={styles.textColour} >{cat.title}</Text>
@@ -78,5 +127,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         color: "rgb(232, 155, 141)",
         textAlign: "center",
+    },
+    imgContainer: {
+        flex: 1,
+        height: windowHeight/4,
+        backgroundColor: colors.white,
+        justifyContent: "center",
+        textAlign: "center",
+        marginTop: 20,
+        marginBottom: 20,
+        alignItems: "center",
+        justifySelf: "center",
+        alignSelf:"center",
     },
 });
