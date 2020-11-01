@@ -27,7 +27,7 @@ const HomeScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
 
-            <Image source={logo} style={{width: 200, height: 200}}/>
+            <Image source={logo} style={{width: 200, height: 200}} />
 
 
                 <Text>

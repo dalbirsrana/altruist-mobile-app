@@ -88,9 +88,9 @@ export default function homeTabs() {
 
 
     >
-        <Tab.Screen name='HomeStack' component={HomeScreen}  options={{ title: '' }} />
-        <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '' }} />
-        <Tab.Screen name='CreatePost' component={createPostStack} options={{
+        <Tab.Screen name='HomeStack' component={HomeStackScreens}  options={{ title: '', header: () => null }} />
+        <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
+        <Tab.Screen name='CreatePost' component={CreatePost} options={{
             tabBarVisible : false,
             title: '',
         }} />
