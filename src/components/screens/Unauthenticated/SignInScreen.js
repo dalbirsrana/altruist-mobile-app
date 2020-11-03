@@ -1,13 +1,13 @@
 import React, {useState, useContext, useEffect} from "react";
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
 
-import FormButton from "../../common/FormButton";
-import FormInput from "../../common/FormInput";
-import { AuthContext } from "../navigation/AuthProvider";
+import FormButton from "../../../common/FormButton";
+import FormInput from "../../../common/FormInput";
+import { AuthContext } from "../../navigation/AuthProvider";
 
-import logo from "../../../assets/icon.png";
-import colors from "../../colors/colors";
-import { windowHeight, windowWidth } from "../../utils/Dimensions";
+import logo from "../../../../assets/icon.png";
+import colors from "../../../colors/colors";
+import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

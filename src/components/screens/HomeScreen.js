@@ -23,14 +23,15 @@ const HomeScreen = ({navigation}) => {
 
     useEffect(() => {
         if( isUserSignedOut() ){
-            navigation.navigate("SignIn");
+           return navigation.navigate("SignIn");
         }
-    });
+    }, []);
 
     return (
         <View style={styles.container}>
 
             <Image source={logo} style={{width: 200, height: 200}}/>
+      
             <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
 
 
