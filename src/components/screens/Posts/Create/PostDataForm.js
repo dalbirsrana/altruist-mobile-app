@@ -24,15 +24,15 @@ const PostDataForm = ({navigation, route }) => {
     const [postTypeId, setPostTypeId] = useState( route.params.postTypeIdProp );
     const [postCategoryId, setPostCategoryId] = useState(route.params.postCategoryIdProp );
 
-    const [title, setTitle] = useState( "" );
-    const [description, setDescription] = useState( "" );
+    const [title, setTitle] = useState(  route.params.hasOwnProperty('titleProp') ?  route.params.titleProp : ""  );
+    const [description, setDescription] = useState( route.params.hasOwnProperty('descriptionProp') ?  route.params.descriptionProp : "" );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState("");
-    const [lang, setLang] = useState("");
-    const [cityName, setCityName] = useState("");
+    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
+    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
+    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
 
     const submitForm = async () => {
 
@@ -42,7 +42,7 @@ const PostDataForm = ({navigation, route }) => {
             "Location":cityName,
         };
 
-        let errorListVar = [] ;
+        let errorListVar = {} ;
         for( const property in requiredCheck ){
             if( requiredCheck[property] === "" ){
                 errorListVar[property] = <Text style={styles.errorLabel} >{property+" is required."}</Text>;
@@ -50,9 +50,20 @@ const PostDataForm = ({navigation, route }) => {
         }
         setErrorList2( errorListVar )
 
-        if( errorListVar.length === 0 ){
+        if( Object.keys(errorListVar).length === 0 && errorListVar.constructor === Object ){
             // now go to next setp
-            //navigation.navigate();
+            navigation.navigate( 'PostUploads' , {
+
+                postTypeIdProp: postTypeId ,
+                postCategoryIdProp: postCategoryId ,
+
+                titleProp: title ,
+                descriptionProp: description ,
+                cityNameProp: cityName ,
+                latProp: lat ,
+                langProp: lang
+
+            } );
         }
     }
 
@@ -65,10 +76,14 @@ const PostDataForm = ({navigation, route }) => {
     }
 
     function error(err) {
+        setLat( "" );
+        setLang( "" );
         console.warn(`ERROR(${err.code}): ${err.message}`);
     }
 
     function findCurrentLocation(){
+        setLat( "FETCHING" );
+        setLang( "FETCHING" );
         navigator.geolocation.getCurrentPosition(
             async (position) =>  {
                 const latitude = JSON.stringify( position.coords.latitude );
@@ -257,14 +272,14 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         alignItems: "center",
-        justifySelf: "center",
+
         alignSelf:"center",
     },
     catBox: {
         flexBasis: "100%",
         backgroundColor: colors.white,
         alignItems: "center",
-        justifySelf: "center",
+
         alignSelf:"center",
         justifyContent: "center",
         textAlign: "center",

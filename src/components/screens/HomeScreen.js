@@ -11,6 +11,9 @@ import InverseButton from "../../common/InverseButton";
 import {windowHeight, windowWidth} from "../../utils/Dimensions";
 import FormButtonSmall from "../../common/FormButtonSmall";
 
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 const HomeScreen = ({navigation}) => {
     const {user, logout} = useContext(AuthContext);
 
@@ -27,27 +30,12 @@ const HomeScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
 
-            <Image source={logo} style={{width: 200, height: 200}} />
-
-
-                <Text>
-                    { user.isSignout ? "true" : "false" }
-                    Welcome {user.firstName} {user.lastName}
-                </Text>
-
-
-            <InverseButton onPress={()=> alert('yes')}  buttonTitle={"Enable Location"} iconName={"location-arrow"} />
-
-            <InverseButton buttonTitle={"Fetching Location"} iconName={"cog"} />
-
+            <Image source={logo} style={{width: 200, height: 200}}/>
+      
             <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
 
 
-
-
-
-
-
+            <FileUploadExampleScreen  />
 
         </View>
     )

@@ -6,6 +6,7 @@ import logo from "../../../../../assets/Feature_Icons-03.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import BR from "../../../helper/BR";
+import FileUploadExampleScreen from "../../FileUploadExampleScreen";
 
 
 export default function PostUploads ({navigation, route}){
@@ -40,8 +41,17 @@ export default function PostUploads ({navigation, route}){
                     <TouchableOpacity
                         onPress={() =>
                         {
-                            console.log("Click");
-                            navigation.navigate( "HomeTabs" )
+                            navigation.navigate( "PostDataForm" , {
+                                postTypeIdProp: postTypeId ,
+                                postCategoryIdProp: postCategoryId ,
+
+                                titleProp: title ,
+                                descriptionProp: description ,
+                                cityNameProp: cityName ,
+                                latProp: lat ,
+                                langProp: lang
+
+                            } )
                         }
                         }
                     >
@@ -51,6 +61,14 @@ export default function PostUploads ({navigation, route}){
             ),
         });
     }, [navigation]);
+
+    function addNew(){
+        uploadsObj.push( data );
+        setUploadsObj( uploadsObj );
+
+        uploads.push( data['key'] );
+        setUploads( uploads );
+    }
 
     return (
         <View style={styles.container}>
@@ -65,8 +83,10 @@ export default function PostUploads ({navigation, route}){
                 )
             } ) }
 
-            <View  key={index} style={styles.imgContainer} >
-
+            <View  style={styles.catBox} >
+                <View  style={styles.imgContainer} >
+                    <FileUploadExampleScreen imageUploaded={( data ) => { addNew( data ) }}  />
+                </View>
             </View>
 
         </View>
@@ -76,43 +96,37 @@ export default function PostUploads ({navigation, route}){
 const styles = StyleSheet.create({
     catBox: {
         flexBasis: "50%",
-        backgroundColor: colors.white,
         alignItems: "center",
-        justifyContent: "center",
+        padding:10,
+        minHeight:100,
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     imgContainer: {
-        flex: 1,
+        borderRadius: 20,
         height: windowHeight/4,
+        width:'100%',
+        borderWidth: 1,
         backgroundColor: colors.white,
+        borderColor: colors.primary,
         justifyContent: "center",
         textAlign: "center",
         marginTop: 20,
         marginBottom: 20,
         alignItems: "center",
-        justifySelf: "center",
         alignSelf:"center",
     },
     container: {
-        flex: 1,
-        backgroundColor: colors.white,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: colors.secondary,
-        width: windowWidth / 1.5,
-        height: windowHeight / 10,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: "white",
-        borderRadius: 25,
-        marginBottom: 20,
-    },
-    buttonText: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: colors.black,
-    },
+        backgroundColor:colors.white,
+        width: windowWidth,
+        minHeight: '100%',
+        height:'fit-content',
+        padding:10,
+        display:"flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "start",
+        justifyItems: "start",
+        justifyContent: "start",
+    }
 });

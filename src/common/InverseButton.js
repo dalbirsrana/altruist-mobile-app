@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     marginLeft: 0 ,
     marginTop: 0 ,
     width: windowWidth,
-    display:"block",
+    display:"flex",
     minWidth: "100%"
   },
   iconStyle : {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     display:'flex',
-    flexFlow: 'row',
+    flexDirection: 'row',
     flexWrap:'no-wrap',
     padding: 10,
     marginTop: 10,

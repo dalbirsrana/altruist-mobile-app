@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { AsyncStorage , Platform } from 'react-native';
+import {AsyncStorage, Platform, TouchableOpacity} from 'react-native';
 import {
     ActivityIndicator,
-    Image,
     StatusBar,
     StyleSheet,
     View,
@@ -11,7 +10,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import API from '../../services/api';
-import AsyncStorageHelper from "../../services/AsyncStorageHelper";
+import colors from "../../colors/colors";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {windowHeight, windowWidth} from "../../utils/Dimensions";
 
 export default class FileUploadExampleScreen extends Component {
 
@@ -38,9 +39,9 @@ export default class FileUploadExampleScreen extends Component {
         } = this.state;
 
         return (
-            <View style={styles.container}>
-                <StatusBar barStyle="default" />
+            <View>
 
+                <StatusBar barStyle="default" />
                 <Button
                     buttonStyle={
                         styles.imageUploadButton
@@ -51,13 +52,12 @@ export default class FileUploadExampleScreen extends Component {
                         <Icon
                             name="plus"
                             size={26}
-                            color="#2288dd"
+                            color={colors.primary}
                         />
                     }
                 />
-
-                {this._maybeRenderImage()}
                 {this._maybeRenderUploadingOverlay()}
+
             </View>
         );
     }
@@ -73,27 +73,8 @@ export default class FileUploadExampleScreen extends Component {
         }
     };
 
-    _maybeRenderImage = () => {
-        let {
-            image
-        } = this.state;
-
-        if (!image) {
-            return;
-        }
-
-        return (
-            <View
-                style={styles.maybeRenderContainer}>
-                <View
-                    style={styles.maybeRenderImageContainer}>
-                    <Image source={{ uri: image }} style={styles.maybeRenderImage} />
-                </View>
-            </View>
-        );
-    };
-
     _pickImage = async () => {
+        console.log('Yes');
         const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
 
         // only if user allows permission to camera roll
@@ -123,11 +104,11 @@ export default class FileUploadExampleScreen extends Component {
 
                 console.log(uploadResult);
                 if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
-                    let key = this.props['location'];
+
 
                     try {
-                        console.log(key);
-                        await AsyncStorageHelper.setObjectValue( key , uploadResult['data'] );
+                        //console.log(key);
+                        this.props.imageUploaded( uploadResult['data'] );
                     } catch (error) {
                         // Error saving data
                         console.log( error );
@@ -156,17 +137,10 @@ export default class FileUploadExampleScreen extends Component {
 
 
 const styles = StyleSheet.create({
-
     imageUploadButton: {
-        minHeight : 150,
-        minWidth : 125,
-        borderRadius:10
-    },
-
-    container: {
-        alignItems: 'center',
-        flex: 1,
-        justifyContent: 'center',
+        height: windowHeight/4,
+        width:windowWidth/2.3,
+        borderRadius:30
     },
     exampleText: {
         fontSize: 20,
@@ -205,4 +179,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
     }
+});
+
+
+const styles2 = StyleSheet.create({
+    catBox: {
+        flexBasis: "100%",
+        alignItems: "center",
+        padding:10,
+        minHeight:100,
+        alignContent: 'center',
+        justifyContent: 'center',
+    },
+    imgContainer: {
+        borderRadius: 20,
+        height: windowHeight/4,
+        width:windowWidth/2.3,
+        borderWidth: 1,
+        backgroundColor: colors.white,
+        borderColor: colors.primary,
+        justifyContent: "center",
+        textAlign: "center",
+        margin:20,
+        alignItems: "center",
+        alignSelf:"center",
+    }
+
 });
