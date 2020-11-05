@@ -15,7 +15,7 @@ import Loading from "../../../common/Loading";
 const HomeScreen = ({navigation}) => {
 
     const [posts, setPosts] = useState([]);
-    const [isLoading, setLoading] = useState(true)
+    const [isLoading, setLoading] = useState(true);
 
     const loadPost = async () => {
         let p = await API.Post.list();
@@ -44,7 +44,7 @@ const HomeScreen = ({navigation}) => {
             <Image source={logo} style={{width: 200, height: 200}}/>
 
                 <Text style={styles.heading}>
-                    UnAuthenticated Home Page
+                    Home Page
                 </Text>
 
                 { isLoading ? <Loading /> : (

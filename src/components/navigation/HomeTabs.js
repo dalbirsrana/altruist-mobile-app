@@ -15,12 +15,9 @@ import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
 import UserActivityScreen from '../screens/UserActivityScreen'
 import UserPostHelpScreen from '../screens/UserPostHelpScreen'
-import FileUploadExampleScreen from '../screens/FileUploadExampleScreen'
 
 
 import createPostStack from './createPostStack'
-
-
 
 const HomeStack = createStackNavigator();
 
@@ -93,8 +90,8 @@ export default function HomeTabs() {
             tabBarVisible : false,
             title: '',
         }} />
-        <Tab.Screen name='Notifications' component={UserPostHelpScreen} options={{ title: '' }} />
-        <Tab.Screen name="UserProfile" component={FileUploadExampleScreen} options={{ title: '' }} />
+        <Tab.Screen name='Notifications' component={UserActivityScreen} options={{ title: '' }} />
+        <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{ title: '' }} />
     </Tab.Navigator>
     );
 }

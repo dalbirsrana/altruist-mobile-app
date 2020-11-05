@@ -1,144 +1,164 @@
-import React from 'react';
-import {Image, Button, StyleSheet, Text, View } from 'react-native';
-import {AuthContext} from "../navigation/AuthProvider";
-import postImage from "../../../assets/splash.png";
+import React, {useContext} from "react";
+import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import { AuthContext } from "../navigation/AuthProvider";
+
+
+import postImage from "../../../assets/user-avatar.png";
 import colors from "../../colors/colors";
-import { color } from 'react-native-reanimated';
+// import {color} from "react-native-reanimated";
 
-import editPostIcon from "../../../assets/Icons_Altruist_Edit.png"
-import settingIcon from "../../../assets/Icons_Altruist_Settings.png"
-import contactIcon from "../../../assets/Icons_Altruist_Help.png"
-import logoutIcon from "../../../assets/Icons_Altruist_Logout.png"
-import nextIcon from "../../../assets/Icons_Altruist_next.png"
-
-
+import editPostIcon from "../../../assets/Icons_Altruist_Edit.png";
+import settingIcon from "../../../assets/Icons_Altruist_Settings.png";
+import contactIcon from "../../../assets/Icons_Altruist_Help.png";
+import logoutIcon from "../../../assets/Icons_Altruist_Logout.png";
+import nextIcon from "../../../assets/Icons_Altruist_next.png";
 
 
+const UserProfile = ({ navigation }) => {
 
-const UserProfile = ( {navigation} ) => (
-    <View style={styles.container}>
+    const {user, logout} = useContext(AuthContext)
 
-     
-        <View style= {styles.thumbnail}>
-            <Image source={postImage} style={{height: 400, width: 400 , borderRadius: 400/2 }} />
-            <Text style={styles.userName}>Pawandeep Singh</Text>
-            <Text style={styles.userCollege}>Langara College</Text>
-        </View>
+    return (
 
-        <View style ={styles.optionsList}>
-
-            <View style={styles.option}>
-              <Image source={editPostIcon} style={styles.optionIcon}/>
-              <Text style={styles.optionTitle}>Posts</Text>
-              <Image source={nextIcon} style={styles.optionArrow}/> 
-            </View>
-
-            <View style={styles.option} >
-              <Image source={settingIcon} style={styles.optionIcon}/>
-              <Text style={styles.optionTitle}>Settings</Text>
-              <Image source={nextIcon} style={styles.optionArrow}/> 
-            </View>
-
-            <View style={styles.option}>
-              <Image source={contactIcon} style={styles.optionIcon}/>
-              <Text style={styles.optionTitle}>Contact Us</Text>
-              <Image source={nextIcon} style={styles.optionArrow}/> 
-            </View>
+        <View style = {styles.container}>
             
-        </View>
-      
-        <View style={styles.logout}>
-              <Image source={logoutIcon} style={styles.logoutIcon}/>
-              <Text style={styles.logoutTitle}>Log Out</Text>
+            <View style = {styles.thumbnail}>
+                { 
+                    user.profileImage 
+                    ? 
+                    (<Image source={user.profileImage} style = {{height: 200, width: 200, borderRadius: 20 }} />) 
+                    : 
+                    ( <Image source = {postImage} style = {{height: 200, width: 200, borderRadius: 20 }} /> ) 
+                }
+                
+                <Text style = {styles.userName}>
+                    {user.firstName} {user.lastName}
+                </Text> 
+                <Text style = {styles.userCollege}> 
+                    Langara College 
+                </Text>
+            </View >
+
+            <View style = {styles.optionsList} >
+                <View style = {styles.option} >
+                    <Image source={editPostIcon} style={styles.optionIcon} />
+                    <Text style={styles.optionTitle}>
+                        Posts
+                    </Text> 
+                    <Image source={nextIcon} style={styles.optionArrow} /> 
+                </View >
+
+                <View style = {styles.option}>
+                    <Image source = {settingIcon} style = {styles.optionIcon } />
+                    <Text style = {styles.optionTitle}> 
+                        Settings 
+                    </Text> 
+                    <Image source = {nextIcon} style = {styles.optionArrow }/> 
+                </View >
+
+                <View style = {styles.option}>
+                    <Image source = {contactIcon} style = {styles.optionIcon} /> 
+                    <Text style = {styles.optionTitle}>
+                        Contact Us
+                    </Text> 
+                    <Image source = {nextIcon} style = {styles.optionArrow}/> 
+                </View> 
+            
+            </View>
+
+            <View style={styles.logout}>
+                <Image source={logoutIcon} style={styles.logoutIcon} /> 
+                <TouchableOpacity onPress={() => logout()} style={styles.logoutTitle}>
+                    <Text style={{fontWeight: "bold"}}>
+                        Log Out
+                    </Text>
+                </TouchableOpacity>
+            </View > 
+        
+        
         </View>
 
-
-    </View>
-)
+    );
+};
 
 export default UserProfile;
 
-
 const styles = StyleSheet.create({
-   
-
     container: {
-      flex:1,
-      flexDirection:"column",
+        flex: 1,
+        flexDirection: "column",
     },
 
     thumbnail: {
         flexDirection: "column",
         flexWrap: "nowrap",
-        alignItems: 'center',
+        alignItems: "center",
         backgroundColor: colors.primary,
-        paddingHorizontal: 0,
-        paddingBottom: 10,   
+        padding: 10,
     },
 
     userName: {
         color: "black",
         marginVertical: 5,
-        fontSize:30,
+        fontSize: 30,
     },
 
     userCollege: {
         color: "black",
         marginVertical: 5,
-        fontSize:15,
+        fontSize: 15,
     },
 
-    optionsList:{
-        flex:1,
-        justifyContent: 'center',
-        alignItems:'center',
-        padding:30,
+    optionsList: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 30,
     },
 
     option: {
-        flex:1,
-        flexDirection:"row",
-        flexWrap:"nowrap",
+        flex: 1,
+        flexDirection: "row",
+        flexWrap: "nowrap",
         justifyContent: "space-between",
+        alignItems: "center",
+        width: "100%",
         borderTopColor: colors.black,
         borderBottomColor: colors.black,
     },
-   
+
     optionIcon: {
-        flex: 0,
         width: 35,
         height: 35,
     },
 
-    optionTitle:{
-        flex:3,
+    optionTitle: {
+        flex: 3,
         paddingLeft: 20,
         fontWeight: "bold",
     },
 
     optionArrow: {
-        flex: 0,
         width: 20,
         height: 20,
     },
 
     logout: {
-        flex:1,
         flexDirection: "row",
-        flexWrap:"nowrap",
+        flexWrap: "nowrap",
         justifyContent: "space-between",
+        alignItems: "center",
         padding: 30,
     },
 
     logoutIcon: {
-        flex: 0,
         width: 35,
         height: 35,
+        marginLeft: 4,
     },
 
     logoutTitle: {
         flex: 1,
-        fontWeight: "bold",
+        paddingLeft: 20,
     },
-
 });
