@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View, StatusBar } from 'react-native'
 
 
 const SingleHelp = ( {navigation} ) => (

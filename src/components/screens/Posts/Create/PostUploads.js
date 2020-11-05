@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
         display:"flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        alignItems: "start",
-        justifyItems: "start",
-        justifyContent: "start",
+        alignItems: "flex-start",
+        justifyItems: "flex-start",
+        justifyContent: "flex-start",
     }
 });

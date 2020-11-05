@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        alignItems: "top",
-        justifyContent: "left",
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
     },
     imgContainer: {
         flex: 1,
