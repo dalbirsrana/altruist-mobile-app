@@ -11,8 +11,7 @@ import ScaledImage from "../../../../common/ScaledImage";
 import FormButtonSmall from "../../../../common/FormButtonSmall";
 
 
-
-export default function PostUploads ({navigation, route}){
+export default function PostReview ({navigation, route}){
 
     const {user, logout} = useContext(AuthContext);
 

@@ -69,6 +69,15 @@ const API =
             let uriParts = uri.split('.');
             let fileType = uriParts[uriParts.length - 1];
 
+            let defaultHeaders = {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+            };
+            let userData = await AsyncStorageHelper.getUserData();
+            if ( userData !== false ) {
+                defaultHeaders.Authorization = "Bearer "+userData.token;
+            }
+
             let formData = new FormData();
             formData.append('photo', {
                 uri,
@@ -80,10 +89,7 @@ const API =
             let options = {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: defaultHeaders,
             };
             return fetch(apiUrl, options);
         },

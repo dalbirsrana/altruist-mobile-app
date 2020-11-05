@@ -26,7 +26,7 @@ export default function createPostStack() {
         }}
 
     >
-        <CreatePostStack.Screen name='PostTypeSelection' component={PostTypeSelection}  options={{
+        <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
             title: 'Select type'
         }} />
         <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection}  options={{
