@@ -2,15 +2,13 @@ import React, {useContext, useState, useEffect} from "react";
 import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
-import logo from "../../../../../assets/Feature_Icons-03.png";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import BR from "../../../helper/BR";
-import FileUploadExampleScreen from "../../FileUploadExampleScreen";
-import ScaledImage from "../../../../common/ScaledImage";
-import FormButtonSmall from "../../../../common/FormButtonSmall";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
+
+import FlatListSlider from './../../../helper/Slider/FlatListSlider';
+
 
 
 export default function PostViewHome ({navigation, route , dataProp }){
@@ -48,6 +46,19 @@ export default function PostViewHome ({navigation, route , dataProp }){
     } ,  [] );
 
 
+    const screenWidth = Math.round(windowWidth);
+
+    function getImagesArray(){
+        let imageArray = [] ;
+        data.postUploads.map( function ( upload , index ) {
+            imageArray.push( {
+                image : upload ,
+                desc : data.title
+            } );
+        });
+        return imageArray;
+    }
+
     return (
         <ScrollView style={styles.container}>
 
@@ -69,11 +80,9 @@ export default function PostViewHome ({navigation, route , dataProp }){
 
             <View style={styles.containerReview} >
 
-                <Text style={styles.textColour} >Title</Text>
-                <Text style={styles.containerReviewHeader} >{data.title}</Text>
+                <Text style={styles.textColour} >{data.title}</Text>
                 <BR/>
 
-                <Text style={styles.textColour} >Description</Text>
                 <Text style={styles.containerReviewHeader} >{data.description}</Text>
                 <BR/>
 
@@ -86,17 +95,19 @@ export default function PostViewHome ({navigation, route , dataProp }){
             <BR/>
             <BR/>
 
-            { data.postUploads.map( function ( upload , index ) {
-                console.log( "Test check Review" );
-                console.log( upload );
-                return (
-                        <View  key={index} style={styles.catBox2} >
-                            <View  style={styles.imgContainer2} >
-                                <Image style={styles.img2}  source={{uri:upload}} />
-                            </View>
-                        </View>
-                )
-            } ) }
+            <FlatListSlider
+                data={getImagesArray()}
+                timer={100}
+                imageKey={'image'}
+                local={false}
+                width={screenWidth}
+                separator={0}
+                loop={false}
+                autoscroll={false}
+                currentIndexCallback={index => console.log('Index', index)}
+                indicator
+                animation
+            />
 
 
         </ScrollView>

@@ -6,6 +6,8 @@ import logo from "../../../assets/icon.png";
 import colors from "../../colors/colors";
 import Loading from "../../common/Loading";
 import PostViewHome from "./Posts/View/PostViewHome";
+import {windowWidth} from "../../utils/Dimensions";
+import FlatListSlider from "../helper/Slider/FlatListSlider";
 
 
 const HomeScreen = ({navigation}) => {
@@ -59,12 +61,27 @@ const HomeScreen = ({navigation}) => {
         },
     ] ;
 
+    const screenWidth = Math.round(windowWidth);
     return (
         <ScrollView style={styles.container}>
 
             {/* Slider container */}
             <View style={{ height: 250 }}>
-                <Image source={logo} style={{width: 200, height: 200}}/>
+
+                <FlatListSlider
+                    data={images}
+                    timer={100}
+                    imageKey={'image'}
+                    local={false}
+                    width={screenWidth}
+                    separator={0}
+                    loop={false}
+                    autoscroll={false}
+                    currentIndexCallback={index => console.log('Index', index)}
+                    indicator
+                    animation
+                />
+
                 <Button title="Looking for help" color="black" accessibilityLabel="looking for help in your area" />
 
             </View>
@@ -88,9 +105,9 @@ const HomeScreen = ({navigation}) => {
                     (
                         <ScrollView>
                             {
-                                posts.map( function( post ) {
+                                posts.map( function( post , index ) {
                                     return(
-                                        <PostViewHome dataProp={post} ></PostViewHome>
+                                        <PostViewHome key={index} dataProp={post} ></PostViewHome>
                                         )
                                 })
                             }
