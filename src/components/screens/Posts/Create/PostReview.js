@@ -180,8 +180,6 @@ export default function PostReview ({navigation, route}){
             <BR/>
 
             { uploadsObj.reverse().map( function ( upload , index ) {
-                console.log( "Test check Review" );
-                console.log( upload );
                 return (
                     <View  key={index} style={styles.catBox2} >
                         <View  style={styles.imgContainer2} >

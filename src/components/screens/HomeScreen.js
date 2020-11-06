@@ -31,6 +31,11 @@ const HomeScreen = ({navigation}) => {
         let isUnMount = false;
         if (!isUnMount){
             loadPost();
+
+            setInterval( () => {
+                loadPost();
+            } , 60000 );
+
         }
         return () => {
             isUnMount = true;

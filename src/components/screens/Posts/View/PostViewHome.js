@@ -63,13 +63,15 @@ export default function PostViewHome ({navigation, route , dataProp }){
         <ScrollView style={styles.container}>
 
 
-            <View style={styles.imgContainer}>
+            <Text style={styles.textColourName} >{data.user.fullName} {data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+
+            <View style={styles.imgContainerSmall}>
                 { catList.map( function ( cat , index) {
                     return (
-                        cat.id === data.post_category_id ?
-                            <View  key={index} >
-                                <Image source={ {uri:cat.s3_path} } style={{width: 150, height: 150, marginBottom:15}}/>
-                                <Text style={styles.textColour} >{cat.title}</Text>
+                        cat.id === data.postCategory.id ?
+                            <View  style={styles.catBox}  key={index} >
+                                <Image source={ {uri:cat.s3_path} } style={{width: 35, height: 35, marginBottom:5}}/>
+                                <Text style={{ ...styles.textColour , fontSize:12   }} >{cat.title}</Text>
                             </View> : null
                     )
                 } ) }
@@ -80,14 +82,9 @@ export default function PostViewHome ({navigation, route , dataProp }){
 
             <View style={styles.containerReview} >
 
-                <Text style={styles.textColour} >{data.title}</Text>
-                <BR/>
-
-                <Text style={styles.containerReviewHeader} >{data.description}</Text>
-                <BR/>
-
-                <Text style={styles.textColour} >Location</Text>
-                <Text style={styles.containerReviewHeader} >{data.city_name}</Text>
+                <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "normal" }} >{data.title}</Text>
+                <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 }} >{data.description}</Text>
+                <Text style={{ ...styles.textColour, textAlign:"left" ,  fontSize:10 }} >{data.city_name}</Text>
                 <BR/>
 
             </View>
@@ -119,7 +116,6 @@ const styles = StyleSheet.create({
     containerReview : {
         display: "flex",
         height: 100,
-        margin:20,
         marginTop: 10,
         marginBottom: 10,
         width:windowWidth-40,
@@ -154,6 +150,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         backgroundColor: colors.white,
+        margin:20,
     },
     imgContainer: {
         flexBasis: "100%",
@@ -167,9 +164,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         alignSelf:"center",
     },
+    imgContainerSmall: {
+        flexBasis: "100%",
+        flex: 1,
+        height: 50,
+        marginTop:20,
+        backgroundColor: colors.white,
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf:"center",
+    },
     catBox: {
         flexBasis: "100%",
-        height:150,
         backgroundColor: colors.white,
         alignItems: "center",
         alignSelf:"center",
@@ -183,6 +190,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         color: "rgb(232, 155, 141)",
         textAlign: "center",
+    },
+    textColourName: {
+        fontSize: 16,
+        fontWeight: "bold",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        color: "rgb(232, 155, 141)",
+        textAlign: "left",
     },
     textColour2: {
         marginTop:10,

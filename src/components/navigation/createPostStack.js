@@ -15,7 +15,6 @@ const CreatePostStack = createStackNavigator();
 export default function createPostStack() {
     return (
     <CreatePostStack.Navigator
-
         screenOptions={{
             headerStyle: {
                 backgroundColor: '#e89b8d',
@@ -26,7 +25,6 @@ export default function createPostStack() {
                 textAlign: 'center'
             }
         }}
-
     >
         <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
             title: 'Select type'
@@ -35,11 +33,8 @@ export default function createPostStack() {
             title: 'Select Category'
         }} />
         <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
-
-
         <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
         <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
-
 
     </CreatePostStack.Navigator>
 
