@@ -9,7 +9,7 @@ export default function FormInput({ labelValue, placeholderText, error, ...rest 
         <TextInput
             value={labelValue}
             style={styles.input}
-            numberOfLines={10}
+            numberOfLines={2}
             placeholder={placeholderText}
             placeholderTextColor="#666"
             {...rest}
@@ -25,7 +25,7 @@ export default function FormInput({ labelValue, placeholderText, error, ...rest 
 const styles = StyleSheet.create({
   errorLabel: {
     width: windowWidth-40,
-    height: "fit-content",
+    height: 100,
     margin:10,
     marginLeft:20,
     marginRight:20,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
-    height:200,
+    height:100,
     textAlignVertical: 'top',
     marginLeft: 20 ,
     marginTop: 10 ,
@@ -45,5 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: colors.black,
     borderWidth: 1,
+    display:"flex",
+    alignContent:'flex-start'
   },
 });

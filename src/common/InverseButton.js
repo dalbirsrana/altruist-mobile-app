@@ -4,6 +4,7 @@ import colors from "../colors/colors";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import * as Animatable from 'react-native-animatable';
 
 
@@ -16,7 +17,7 @@ export default function InverseButton({ buttonTitle , iconName , ...rest }) {
               : null
           }
           { iconName !== "cog" ?
-            <FontAwesome style={styles.iconStyle} color={colors.primary} name={iconName} size={18}/>
+            <MaterialIcons style={styles.iconStyle} color={colors.primary} name={iconName} size={18}/>
             : null
           }
           <Text style={styles.buttonText}>{buttonTitle}</Text>
@@ -50,11 +51,9 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     padding: 10,
     marginTop: 10,
-    marginBottom: 10,
     marginLeft: 20 ,
-    width: "fit-content",
+    width: 200,
     fontSize: 16,
-    height: "fit-content",
     borderColor: colors.primary,
     borderWidth: 1,
     color: colors.primary,

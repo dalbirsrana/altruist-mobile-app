@@ -1,10 +1,11 @@
 import React, {useState, useEffect, useContext} from "react";
-import {Image, Button, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator} from "react-native";
+import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
 import InverseButton from "../../../../common/InverseButton";
 import colors from "../../../../colors/colors";
 import BR from "../../../helper/BR";
 import API from "../../../../services/api";
 import FormInput2 from "../../../../common/FormInput2";
+import FormInput from "../../../../common/FormInput";
 import FormButtonSmall from "../../../../common/FormButtonSmall";
 import FormTextArea from "../../../../common/FormTextArea";
 import IconButton from "../../../../common/IconButton";
@@ -34,6 +35,9 @@ const PostDataForm = ({navigation, route }) => {
     const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
     const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
 
+    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
+
+
     const submitForm = async () => {
 
         let requiredCheck = {
@@ -61,7 +65,9 @@ const PostDataForm = ({navigation, route }) => {
                 descriptionProp: description ,
                 cityNameProp: cityName ,
                 latProp: lat ,
-                langProp: lang
+                langProp: lang,
+
+                uploadsObj: uploadsObj
 
             } );
         }
@@ -176,8 +182,7 @@ const PostDataForm = ({navigation, route }) => {
 
 
     return (
-        <View style={styles.container}>
-
+        <ScrollView style={styles.container}>
 
             { errorList.length > 0 ?
                 <View style={styles.layoutContainer}>
@@ -186,19 +191,17 @@ const PostDataForm = ({navigation, route }) => {
                 : null
             }
 
-            <View >
-                { catList.map( function ( cat ) {
+            <View style={styles.imgContainer}>
+                { catList.map( function ( cat , index) {
                     return (
                         cat.id === postCategoryId ?
-                        <View style={styles.imgContainer} >
-                            <Image source={{uri:cat.s3_path}} style={{width: 150, height: 150}}/>
-                            <BR/>
+                        <View  key={index} >
+                            <Image source={ {uri:cat.s3_path} } style={{width: 150, height: 150, marginBottom:15}}/>
                             <Text style={styles.textColour} >{cat.title}</Text>
                         </View> : null
                         )
                 } ) }
             </View>
-
 
             <FormInput2
                 value={title}
@@ -220,12 +223,12 @@ const PostDataForm = ({navigation, route }) => {
             />
 
             { lat === "" && lang === "" && cityName === "" ?
-                <InverseButton onPress={()=> findCurrentLocation()}  buttonTitle={"Enable Location"} iconName={"location-arrow"} />
+                <InverseButton onPress={()=> findCurrentLocation()}  buttonTitle={"Enable Location"} iconName={"add-location"} />
                 : null
             }
 
             { lat !== "" && lang !== "" && cityName === "" ?
-                <InverseButton buttonTitle={"Fetching Location"} iconName={"cog"} />
+                <InverseButton buttonTitle={"Fetching Location..."} iconName={"cog"} />
                 : null
             }
 
@@ -239,10 +242,9 @@ const PostDataForm = ({navigation, route }) => {
                 : null
             }
 
-
             <FormButtonSmall onPress={()=> submitForm()}  buttonTitle={"Next"}  align={"right"} />
 
-        </View>
+        </ScrollView>
     )
 }
 
@@ -259,9 +261,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: colors.white,
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
+        backgroundColor: colors.white
     },
     imgContainer: {
         flex: 1,

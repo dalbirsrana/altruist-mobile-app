@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
     maybeRenderUploading: {
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.4)',
-        justifyContent: 'center',
     },
     maybeRenderContainer: {
         borderRadius: 3,

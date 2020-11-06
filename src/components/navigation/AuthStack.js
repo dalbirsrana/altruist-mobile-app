@@ -20,7 +20,6 @@ export default function AuthStack() {
         <Stack.Screen name="VerifyAccount"  options={{ headerTitle: "Verify Account" }} component={VerifyAccount} />
         
         <Stack.Screen name="ResetPassword" options={{ headerTitle: "Reset Password" }} component={ResetPassword} />
-
     </Stack.Navigator>
   );
 }

@@ -5,7 +5,7 @@ import { windowHeight, windowWidth } from "../utils/Dimensions";
 
 export default function FormInput2({ labelValue, placeholderText, error = "" , ...rest }) {
   return (
-      <View>
+      <View >
         <TextInput
             value={labelValue}
             style={styles.input}
@@ -25,7 +25,7 @@ export default function FormInput2({ labelValue, placeholderText, error = "" , .
 const styles = StyleSheet.create({
   errorLabel: {
     width: windowWidth-40,
-    height: "fit-content",
+    height: 100,
     margin:10,
     marginLeft:20,
     marginRight:20,
