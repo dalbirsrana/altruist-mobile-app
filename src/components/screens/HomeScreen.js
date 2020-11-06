@@ -56,13 +56,7 @@ const HomeScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
 
-            <Image source={logo} style={{width: 200, height: 200}} />
-
-
-                <Text>
-                    { user.isSignout ? "true" : "false" }
-                    Welcome {user.firstName} {user.lastName}
-                </Text>
+            <Image source={logo} style={{width: 200, height: 200}}/>
 
             <FormButton buttonTitle='LogOut' onPress={() => logout()}/>
 
