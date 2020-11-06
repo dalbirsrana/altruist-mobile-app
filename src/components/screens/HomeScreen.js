@@ -23,11 +23,11 @@ const HomeScreen = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
 
     const loadPost = async () => {
-        let p = await API.Post.list();
-        if (p !== undefined ) {
+        let P = await API.Post.list();
+        if (P !== undefined ) {
             setLoading(false)
-            setPosts(p.data)
-            console.log(p.data)
+            setPosts(P.data)
+            console.log(P.data)
             return true;
         }
     }
@@ -59,36 +59,39 @@ const HomeScreen = ({navigation}) => {
             </View>
 
             {/* Top Helper container */}
-            <View style={{ height: 100 }}>
+            <View style={{ height: 200 }}>
                 <Text>Top Helper's</Text>
 
             </View>
 
             {/* Help Posts container */}
             
+ 
+
+                <View style={{height: 340}}>
+
                 <Text style={{fontSize: 30, marginVertical: 10, borderTopWidth: 1, }}>Help Seeker's</Text>
+
                 <ScrollView>
                 { 
                     isLoading 
                     ? 
                     <Loading /> 
                     : 
-                    (<> {
-                        posts.map(post => (
-                            
+                    (
+                        posts.map(post => (   
                             <TouchableOpacity underlayColor="white" key={post.id} onPress={ ()=> navigation.navigate("SingleHelpScreen") }>
-                            
+                            <View>
                                 <Text style={styles.h2}>{post.title}</Text>
-                                <Image source={post.s3_path} style={{width: 200, height: 200}} />
-                            
+                                <Image source={{uri:post.s3_path}} style={{width: 150, height: 150}} />
+                            </View>
                             </TouchableOpacity>
                             
-                        )) }
-                    </>
+                        ))
                     )
                 }
-            </ScrollView>
-            
+                </ScrollView>
+                </View>
         </View>
     )
 }
@@ -101,6 +104,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: colors.white,
         alignItems: "stretch",
-        justifyContent: "space-evenly",
+        justifyContent: "flex-start",
     },
 });

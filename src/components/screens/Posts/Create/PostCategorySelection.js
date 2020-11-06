@@ -76,7 +76,7 @@ const PostCategorySelection = ({navigation, route }) => {
                         ( event ) =>  navigation.navigate( "PostDataForm" , { postTypeIdProp: postTypeId , postCategoryIdProp: cat.id } )
                     }   key={cat.key}  >
                         <View style={styles.imgContainer} >
-                            <Image source={cat.s3_path} style={{width: 100, height: 100}}/>
+                            <Image source={{uri:cat.s3_path}} style={{width: 100, height: 100}}/>
                             <BR/>
                             <Text style={styles.textColour} >{cat.title}</Text>
                         </View>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        alignItems: "left",
+        alignItems: "flex-start",
         justifyContent: "center",
         display: "flex",
         flexDirection: "row",

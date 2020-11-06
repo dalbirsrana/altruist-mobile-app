@@ -1,11 +1,13 @@
-import React, {useContext , useState, useEffect } from "react";
-import {Image, StyleSheet, Text, View, TouchableHighlight} from "react-native";
+import React, {useState, useEffect } from "react";
+import {Image, StyleSheet, Text, Button, View, TouchableHighlight} from "react-native";
 
 import API from "../../../services/api";
-
+ 
 import colors from "../../../colors/colors";
 import logo from "../../../../assets/icon.png";
 import Loading from "../../../common/Loading";
+
+import { ScrollView } from "react-native-gesture-handler";
 
 
 // const DisplayPosts = (props, {navigation}) => (
@@ -41,23 +43,37 @@ const HomeScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
 
-            <Image source={logo} style={{width: 200, height: 200}}/>
+            {/* Slider container */}
+            <View style={{ height: 250 }}>
+                <Image source={logo} style={{width: 200, height: 200}}/>
+                <Button title="Looking for help" color="black" accessibilityLabel="looking for help in your area" />
+            </View>
 
-                <Text style={styles.heading}>
-                    Home Page
-                </Text>
+            {/* Top Helper container */}
+            <View style={{ height: 300 }}>
+                <Text>Top Helper's</Text>
+            </View>
 
+            {/* Help Posts container */}
+            <View>
+                <Text style={{fontSize: 30, marginVertical: 10, borderTopWidth: 1, }}>Help Seeker's</Text>
+            </View>
+
+            <View style={{height: 300}}>
+            <ScrollView>
                 { isLoading ? <Loading /> : (
                     posts.map( post => (
                         <TouchableHighlight underlayColor="white" key={post.id} onPress={ ()=> navigation.navigate("SignIn") }>
-                            <View>
+                            <View style={{height: 200}}>
                                 <Text style={styles.h2}>{post.title}</Text>
-                                <Image source={post.s3_path} style={{width: 200, height: 200}} />
+                                <Image source={{uri:post.s3_path}} style={{ width: 150, height: 150 }} />
                             </View>
                         </TouchableHighlight>
                         ))
-                    ) 
+                    )
                 }
+            </ScrollView>
+            </View>
         </View>
     )
 }
@@ -68,8 +84,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: "stretch",
+        justifyContent: "flex-start",
     },
     h2: {
         fontSize: 26,

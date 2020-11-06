@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "flex-start",
-        justifyItems: "flex-start",
+        // justifyItems: "flex-start",
         justifyContent: "flex-start",
     }
 });

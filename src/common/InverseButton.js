@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display:'flex',
     flexDirection: 'row',
-    flexWrap:'no-wrap',
+    flexWrap: 'nowrap',
     padding: 10,
     marginTop: 10,
     marginBottom: 10,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     textAlign: "center",
-    alignSelf:"left"
+    alignSelf: "flex-start"
   },
   buttonText: {
     flexBasis:"80%",
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     paddingRight:20,
     fontSize: 20,
     color: colors.primary,
-    flexWrap:'no-wrap',
+    flexWrap:'nowrap',
     minWidth:"100%",
     textAlign: "center",
   },

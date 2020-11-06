@@ -191,7 +191,7 @@ const PostDataForm = ({navigation, route }) => {
                     return (
                         cat.id === postCategoryId ?
                         <View style={styles.imgContainer} >
-                            <Image source={cat.s3_path} style={{width: 150, height: 150}}/>
+                            <Image source={{uri:cat.s3_path}} style={{width: 150, height: 150}}/>
                             <BR/>
                             <Text style={styles.textColour} >{cat.title}</Text>
                         </View> : null
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
         margin:20,
         marginTop: 10,
         marginBottom: 10,
-        width:windowWidth-40
+        width: windowWidth-40
     },
     container: {
         flex: 1,
