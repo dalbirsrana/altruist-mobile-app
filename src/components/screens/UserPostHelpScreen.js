@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
     },
 
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
         flex: 1,
         width: 100,
         height: 100,
-        // borderRadius: '50%',
     },
 
     userInfo: {
