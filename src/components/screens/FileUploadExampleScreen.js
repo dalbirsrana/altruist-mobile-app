@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, useContext} from 'react';
 import {AsyncStorage, Platform, TouchableOpacity} from 'react-native';
 import {
     ActivityIndicator,
@@ -13,6 +13,7 @@ import API from '../../services/api';
 import colors from "../../colors/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {windowHeight, windowWidth} from "../../utils/Dimensions";
+import {AuthContext} from "../navigation/AuthProvider";
 
 export default class FileUploadExampleScreen extends Component {
 
@@ -105,9 +106,7 @@ export default class FileUploadExampleScreen extends Component {
                 console.log(uploadResult);
                 if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
 
-
                     try {
-                        //console.log(key);
                         this.props.imageUploaded( uploadResult['data'] );
                     } catch (error) {
                         // Error saving data
@@ -135,74 +134,21 @@ export default class FileUploadExampleScreen extends Component {
 
 }
 
-
 const styles = StyleSheet.create({
     imageUploadButton: {
-        height: windowHeight/4,
-        width:windowWidth/2.3,
-        borderRadius:30
-    },
-    exampleText: {
-        fontSize: 20,
-        marginBottom: 20,
-        marginHorizontal: 15,
-        textAlign: 'center',
+        width:windowWidth-40,
+        borderRadius:20,
+        borderWidth:0
     },
     maybeRenderUploading: {
+        marginTop:-5,
+        borderRadius:20,
+        height:50,
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundColor: "rgba(232,155,141,0.6)" ,
         justifyContent: 'center',
-    },
-    maybeRenderContainer: {
-        borderRadius: 3,
-        elevation: 2,
-        marginTop: 30,
-        shadowColor: 'rgba(0,0,0,1)',
-        shadowOpacity: 0.2,
-        shadowOffset: {
-            height: 4,
-            width: 4,
-        },
-        shadowRadius: 5,
-        width: 250,
-    },
-    maybeRenderImageContainer: {
-        borderTopLeftRadius: 3,
-        borderTopRightRadius: 3,
-        overflow: 'hidden',
-    },
-    maybeRenderImage: {
-        height: 250,
-        width: 250,
-    },
-    maybeRenderImageText: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
     }
 });
 
 
-const styles2 = StyleSheet.create({
-    catBox: {
-        flexBasis: "100%",
-        alignItems: "center",
-        padding:10,
-        minHeight:100,
-        alignContent: 'center',
-        justifyContent: 'center',
-    },
-    imgContainer: {
-        borderRadius: 20,
-        height: windowHeight/4,
-        width:windowWidth/2.3,
-        borderWidth: 1,
-        backgroundColor: colors.white,
-        borderColor: colors.primary,
-        justifyContent: "center",
-        textAlign: "center",
-        margin:20,
-        alignItems: "center",
-        alignSelf:"center",
-    }
 
-});

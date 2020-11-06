@@ -1,5 +1,5 @@
-import React, {useContext, useState} from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import React, {useContext, useState, useEffect} from "react";
+import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import logo from "../../../../../assets/Feature_Icons-03.png";
@@ -7,6 +7,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import BR from "../../../helper/BR";
 import FileUploadExampleScreen from "../../FileUploadExampleScreen";
+import ScaledImage from "../../../../common/ScaledImage";
+import FormButtonSmall from "../../../../common/FormButtonSmall";
+
 
 
 export default function PostUploads ({navigation, route}){
@@ -16,19 +19,17 @@ export default function PostUploads ({navigation, route}){
     const [postTypeId, setPostTypeId] = useState( route.params.postTypeIdProp );
     const [postCategoryId, setPostCategoryId] = useState(route.params.postCategoryIdProp );
 
-    const [title, setTitle] = useState( route.params.titleProp );
-    const [description, setDescription] = useState( route.params.titleProp  );
-
+    const [title, setTitle] = useState(  route.params.hasOwnProperty('titleProp') ?  route.params.titleProp : ""  );
+    const [description, setDescription] = useState( route.params.hasOwnProperty('descriptionProp') ?  route.params.descriptionProp : "" );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState(route.params.latProp );
-    const [lang, setLang] = useState(route.params.langProp );
-    const [cityName, setCityName] = useState(route.params.cityNameProp );
+    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
+    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
+    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
 
-    const [uploads, setUploads] = useState([]);
-    const [uploadsObj, setUploadsObj] = useState([]);
+    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -49,7 +50,9 @@ export default function PostUploads ({navigation, route}){
                                 descriptionProp: description ,
                                 cityNameProp: cityName ,
                                 latProp: lat ,
-                                langProp: lang
+                                langProp: lang ,
+
+                                uploadsObjProp : uploadsObj
 
                             } )
                         }
@@ -62,71 +65,135 @@ export default function PostUploads ({navigation, route}){
         });
     }, [navigation]);
 
-    function addNew(){
-        uploadsObj.push( data );
-        setUploadsObj( uploadsObj );
+    const submitForm = async () => {
 
-        uploads.push( data['key'] );
-        setUploads( uploads );
+        console.log( "uploadsObj start" );
+        console.log( uploadsObj );
+        console.log( "uploadsObj end" );
+
+        let pObject = await uploadsObj;
+
+        if( pObject.length > 0 ){
+            await navigation.navigate( 'PostReview' , {
+
+                postTypeIdProp: postTypeId ,
+                postCategoryIdProp: postCategoryId ,
+
+                titleProp: title ,
+                descriptionProp: description ,
+                cityNameProp: cityName ,
+                latProp: lat ,
+                langProp: lang,
+
+                uploadsObjProp: pObject
+
+            } );
+        }
+
+    }
+
+    useEffect(() => {
+    } ,  [] );
+
+    const removeItem = async ( url ) => {
+        let newUploadsObj = [] ;
+        uploadsObj.reverse().map( function ( upload , index ) {
+            if( upload.objectUrl !== url ){
+                newUploadsObj.push( upload );
+            }
+        });
+        setUploadsObj( newUploadsObj );
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
 
-            { uploads.map( function ( upload , index ) {
+            <View  style={styles.catBox2} >
+                <View  style={styles.imgContainer2} >
+                    <FileUploadExampleScreen imageUploaded={( event ) => {  setUploadsObj(oldArray => [...oldArray, event]);   }}  />
+                </View>
+            </View>
+            <BR/>
+
+            { uploadsObj.reverse().map( function ( upload , index ) {
+                console.log( "Test check" );
+                console.log( upload.objectUrl );
                 return (
                     <View  key={index} style={styles.catBox} >
+                        <FormButtonSmall  buttonTitle={"X"}  align={"right"} onPress={()=> removeItem( upload.objectUrl )}  />
                         <View  style={styles.imgContainer} >
-                            <Image source={upload.objectUrl} style={{width: 100, height: 100}}/>
+                            <Image style={styles.img}  source={{uri:upload.objectUrl}} />
                         </View>
                     </View>
                 )
             } ) }
 
-            <View  style={styles.catBox} >
-                <View  style={styles.imgContainer} >
-                    <FileUploadExampleScreen imageUploaded={( data ) => { addNew( data ) }}  />
-                </View>
-            </View>
+            { uploadsObj.length > 0 ?
+                <FormButtonSmall  buttonTitle={"Review"}  align={"right"} onPress={()=> submitForm()}  />
+            : null }
 
-        </View>
+            <BR/>
+            <BR/>
+
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
-    catBox: {
-        flexBasis: "50%",
-        alignItems: "center",
+
+    catBox2: {
+        height: 50,
         padding:10,
-        minHeight:100,
         alignContent: 'center',
         justifyContent: 'center',
+        alignItems: "center",
+    },
+    img : {
+        borderRadius:20,
+        width:"100%",
+        height:250
+    },
+    catBox: {
+        height: 350,
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: "center",
+        marginBottom: 15,
+        overflow:'hidden'
     },
     imgContainer: {
         borderRadius: 20,
-        height: windowHeight/4,
-        width:'100%',
+        width: windowWidth-40,
+        margin:10,
+        height: 250,
+        borderWidth: 0,
+        backgroundColor: colors.white,
+        textAlign: "center",
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf:"flex-start",
+    },
+    imgContainer2: {
+        borderRadius: 20,
+        width: windowWidth-40,
+        height: 50,
         borderWidth: 1,
         backgroundColor: colors.white,
         borderColor: colors.primary,
-        justifyContent: "center",
+        marginTop: 10,
+        marginBottom: 10,
         textAlign: "center",
-        marginTop: 20,
-        marginBottom: 20,
+        justifyContent: "center",
         alignItems: "center",
-        alignSelf:"center",
+        alignSelf:"flex-start",
     },
     container: {
         backgroundColor:colors.white,
         width: windowWidth,
-        minHeight: '100%',
-        height:'fit-content',
         padding:10,
+        paddingTop:20,
         display:"flex",
         flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "flex-start",
-        justifyItems: "flex-start",
-        justifyContent: "flex-start",
+        flexWrap: "wrap"
     }
 });

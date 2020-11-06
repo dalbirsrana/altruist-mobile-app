@@ -23,8 +23,21 @@ const HomeStack = createStackNavigator();
 
 function HomeStackScreens() {
     return (
-        <HomeStack.Navigator>
-            <HomeStack.Screen name="Home" component={HomeScreen}  options={{ header: () => null }} />
+        <HomeStack.Navigator
+
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#e89b8d',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }
+            }}
+
+        >
+            <HomeStack.Screen name="Home" component={HomeScreen}  options={{ title: 'ALTRUIST' }} />
             <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
         </HomeStack.Navigator>
     )

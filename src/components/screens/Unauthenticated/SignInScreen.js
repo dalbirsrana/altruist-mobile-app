@@ -10,8 +10,8 @@ import colors from "../../../colors/colors";
 import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("jpandya00@mylangara.ca");
+  const [password, setPassword] = useState("jaimin");
   const [msg, setMsg] = useState("");
   const { user, login } = useContext(AuthContext);
 
@@ -77,7 +77,7 @@ const SignInScreen = ({ navigation }) => {
           let signIn = await login(data);
           if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
               setPassword("");
-              navigation.navigate("HomeTabs");
+              navigation.navigate( "HomeTabs");
           } else {
             if (signIn.data.username) setMsg(signIn.data.username);
             if (signIn.data.verification_token)

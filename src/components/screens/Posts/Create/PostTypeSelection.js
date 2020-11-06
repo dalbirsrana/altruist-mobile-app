@@ -1,12 +1,47 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import logo from "../../../../../assets/Feature_Icons-03.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {AuthContext} from "../../../navigation/AuthProvider";
 
 
-const PostTypeSelection = ({navigation}) => {
+const PostTypeSelection = ({ navigation , route}) => {
+
+    const [postTypeId, setPostTypeId] = useState(  route.params.hasOwnProperty('postTypeIdProp') ?  route.params.postTypeIdProp : "" );
+    const [postCategoryId, setPostCategoryId] = useState(  route.params.hasOwnProperty('postCategoryIdProp') ?  route.params.postCategoryIdProp : "" );
+
+    const [title, setTitle] = useState(  route.params.hasOwnProperty('titleProp') ?  route.params.titleProp : ""  );
+    const [description, setDescription] = useState( route.params.hasOwnProperty('descriptionProp') ?  route.params.descriptionProp : "" );
+    const [errors, setErrors] = useState({});
+    const [errorList, setErrorList] = useState([]);
+    const [errorList2, setErrorList2] = useState({});
+
+    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
+    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
+    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
+
+    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
+
+    function move( forward , postTypeIdSelected = null  ){
+        if( !forward ){
+             navigation.navigate( "HomeStack" );
+        }else{
+            navigation.navigate(  "PostCategorySelection" , {
+                postTypeIdProp: postTypeIdSelected ,
+                postCategoryIdProp: postCategoryId ,
+
+                titleProp: title ,
+                descriptionProp: description ,
+                cityNameProp: cityName ,
+                latProp: lat ,
+                langProp: lang ,
+
+                uploadsObjProp : uploadsObj
+            });
+        }
+    }
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -19,8 +54,7 @@ const PostTypeSelection = ({navigation}) => {
                     <TouchableOpacity
                         onPress={() =>
                         {
-                            console.log("Click");
-                            navigation.navigate( "HomeTabs" )
+                            move( false );
                         }
                         }
                     >
@@ -38,14 +72,24 @@ const PostTypeSelection = ({navigation}) => {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() =>  navigation.navigate( "PostCategorySelection" , { postTypeIdProp: 1 } ) }
+                onPress={
+                    async ( event ) => {
+                        await setPostTypeId( 1 );
+                        move( true , 1);
+                    }
+                }
             >
                 <Text style={styles.buttonText}>I want to help.</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate( "PostCategorySelection" , { postTypeIdProp: 2 } )  }
+                onPress={
+                    async ( event ) => {
+                        await setPostTypeId( 2 );
+                        move( true , 2 );
+                    }
+                }
             >
                 <Text style={styles.buttonText}>I need a help.</Text>
             </TouchableOpacity>
