@@ -103,7 +103,7 @@ const API =
                 return makeRequest('/city-name', {Posts: data})
             },
             list : ( data ) => {
-                return makeRequest('/post-types', {}, GET)
+                return makeRequest('/posts', {}, GET)
             }
         },
 

@@ -4,9 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PostTypeSelection from "../screens/Posts/Create/PostTypeSelection";
 import PostCategorySelection from "../screens/Posts/Create/PostCategorySelection";
 import PostDataForm from "../screens/Posts/Create/PostDataForm";
+import PostReview from "../screens/Posts/Create/PostReview";
 import PostUploads from "../screens/Posts/Create/PostUploads";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeTabs from "./HomeTabs";
+import HomeScreen from "./../screens/HomeScreen";
 
 const CreatePostStack = createStackNavigator();
 
@@ -36,10 +38,7 @@ export default function createPostStack() {
 
 
         <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
-        <CreatePostStack.Screen name='PostReview' component={PostDataForm}  options={{ title: 'Fill Info' }} />
-
-
-        <CreatePostStack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }}   />
+        <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
 
 
     </CreatePostStack.Navigator>

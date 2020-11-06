@@ -30,10 +30,10 @@ const PostCategorySelection = ({navigation, route }) => {
 
     const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
 
-    function move( forward ){
+    function move( forward , postCategoryIdSelected = null ){
         navigation.navigate( forward ?  "PostDataForm" : "PostTypeSelection" , {
             postTypeIdProp: postTypeId ,
-            postCategoryIdProp: postCategoryId ,
+            postCategoryIdProp: postCategoryIdSelected ,
 
             titleProp: title ,
             descriptionProp: description ,
@@ -102,7 +102,7 @@ const PostCategorySelection = ({navigation, route }) => {
                                               onPress={
                                                   async ( event ) => {
                                                       await setPostCategoryId( cat.id );
-                                                      move( true );
+                                                      move( true , cat.id);
                                                   }
                                               }
                             >

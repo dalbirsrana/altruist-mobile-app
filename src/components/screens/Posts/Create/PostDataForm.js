@@ -253,34 +253,35 @@ export default PostDataForm;
 const styles = StyleSheet.create({
     layoutContainer : {
         display: "flex",
-        height: 100,
+        height: "fit-content",
         margin:20,
         marginTop: 10,
         marginBottom: 10,
-        width:windowWidth-40,
+        width:windowWidth-40
     },
     container: {
         flex: 1,
-        flexDirection: "column",
         backgroundColor: colors.white,
+        alignItems: "flex-start",
+        justifyContent: "flex-start",
     },
     imgContainer: {
-        flexBasis: "100%",
         flex: 1,
-        height: 170,
+        height: windowHeight/3,
         backgroundColor: colors.white,
-        justifyContent: "flex-start",
+        justifyContent: "center",
         textAlign: "center",
+        marginTop: 20,
         marginBottom: 20,
-        marginTop:20,
         alignItems: "center",
+
         alignSelf:"center",
     },
     catBox: {
         flexBasis: "100%",
-        height:150,
         backgroundColor: colors.white,
         alignItems: "center",
+
         alignSelf:"center",
         justifyContent: "center",
         textAlign: "center",
@@ -307,18 +308,4 @@ const styles = StyleSheet.create({
         color: "rgb(232, 155, 141)",
         textAlign: "left"
     },
-
-
-    input: {
-        padding: 15,
-        marginBottom: 10,
-        marginLeft: 20 ,
-        marginTop: 20 ,
-        width: windowWidth-40,
-        fontSize: 16,
-        borderRadius: 8,
-        borderColor: colors.black,
-        borderWidth: 1,
-    },
-
 });

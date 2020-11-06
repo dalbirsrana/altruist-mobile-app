@@ -2,10 +2,10 @@ import AsyncStorage  from '@react-native-community/async-storage';
 
 function isJsonOk( text ){
     if( typeof text === "undefined" || text === null || text === ""  ){
-        console.log("isJsonOk", false);
+        //console.log("isJsonOk", false);
         return false ;
     }
-    console.log(text);
+    //console.log(text);
     return /^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').replace(/(?:^|:|,)(?:\s*\[)+/g, ''));
 }
 
@@ -16,7 +16,7 @@ const AsyncStorageHelper = {
             keys = await AsyncStorage.getAllKeys()
             return keys;
         } catch(e) {
-            console.log( e )
+            //console.log( e )
             return false;
         }
     },
@@ -25,19 +25,19 @@ const AsyncStorageHelper = {
             return await AsyncStorage.getItem( key )
         } catch(e) {
             // read error
-            console.log( e );
+            //console.log( e );
             return false;
         }
     },
     getMyObject : async ( key ) => {
         try {
             const jsonValue = await AsyncStorage.getItem(key);
-            console.log( "getMyObject" , key , jsonValue );
+            //console.log( "getMyObject" , key , jsonValue );
             let p =  isJsonOk( jsonValue ) ;
-            console.log( "p" , p );
+            //console.log( "p" , p );
             return p ? JSON.parse(jsonValue) : null
         } catch(e) {
-            console.log( e )
+            //console.log( e )
             return false;
         }
     },
@@ -45,7 +45,7 @@ const AsyncStorageHelper = {
         try {
             await AsyncStorage.setItem(key , value)
         } catch(e) {
-            console.log( e );
+            //console.log( e );
             return false;
         }
     },
@@ -53,16 +53,16 @@ const AsyncStorageHelper = {
         try {
             const jsonValue = JSON.stringify(value)
             let p =  isJsonOk( jsonValue ) ;
-            console.log( "p" , p );
+            //console.log( "p" , p );
             if( p ){
-                console.log( "setObjectValue" , key ,jsonValue );
+                //console.log( "setObjectValue" , key ,jsonValue );
                 await AsyncStorage.setItem(key, jsonValue)
             }else{
-                console.log( "removeValue" , key ,jsonValue );
+                //console.log( "removeValue" , key ,jsonValue );
                 await AsyncStorage.removeItem(key)
             }
         } catch(e) {
-            console.log( e );
+            //console.log( e );
             return false;
         }
     },
@@ -70,7 +70,7 @@ const AsyncStorageHelper = {
         try {
             await AsyncStorage.removeItem(key)
         } catch(e) {
-            console.log( e );
+            //console.log( e );
             return false;
         }
     },
@@ -89,7 +89,7 @@ const AsyncStorageHelper = {
     },
     getCatList: async () => {
         let catList = await AsyncStorageHelper.getMyObject('catList');
-        console.log( catList );
+        //console.log( catList );
         if (
             typeof catList !== "undefined"
             && catList !== false

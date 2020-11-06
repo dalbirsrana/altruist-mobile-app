@@ -13,100 +13,12 @@ import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
 
 
-export default function PostReview ({navigation, route}){
+export default function PostViewHome ({navigation, route , dataProp }){
 
     const {user, logout} = useContext(AuthContext);
 
     const [catList, setCatList] = useState([]);
-
-    const [postTypeId, setPostTypeId] = useState( route.params.postTypeIdProp );
-    const [postCategoryId, setPostCategoryId] = useState(route.params.postCategoryIdProp );
-
-    const [title, setTitle] = useState(  route.params.hasOwnProperty('titleProp') ?  route.params.titleProp : ""  );
-    const [description, setDescription] = useState( route.params.hasOwnProperty('descriptionProp') ?  route.params.descriptionProp : "" );
-    const [errors, setErrors] = useState({});
-    const [errorList, setErrorList] = useState([]);
-    const [errorList2, setErrorList2] = useState({});
-
-    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
-    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
-    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
-
-    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
-
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight : () => <Text/>,
-            headerLeft: () => (
-                <View style={{
-                    left:20
-                }}
-                >
-                    <TouchableOpacity
-                        onPress={() =>
-                        {
-                            navigation.navigate( "PostUploads" , {
-                                postTypeIdProp: postTypeId ,
-                                postCategoryIdProp: postCategoryId ,
-
-                                titleProp: title ,
-                                descriptionProp: description ,
-                                cityNameProp: cityName ,
-                                latProp: lat ,
-                                langProp: lang ,
-
-                                uploadsObjProp : uploadsObj
-
-                            } )
-                        }
-                        }
-                    >
-                        <Ionicons name='md-arrow-back' color={"white"} size={32} />
-                    </TouchableOpacity>
-                </View>
-            ),
-        });
-    }, [navigation]);
-
-    const submitForm = async () => {
-
-        let PostUploads = [] ;
-        uploadsObj.map(function ( upload ) {
-            PostUploads.push( upload.key );
-        });
-
-        let createPost = await API.Post.create({
-            title: title,
-            post_type_id : postTypeId ,
-            post_category_id : postCategoryId ,
-            description : description ,
-            lat : lat,
-            lang: lang,
-            PostUploads : PostUploads
-        });
-
-        if( createPost && createPost.success ){
-            console.log( "Post created succefully" );
-            console.log( createPost.data );
-
-            navigation.navigate('HomeStack');
-
-        }else{
-            setErrorList( ['Something went wrong. Please try again later.'] );
-        }
-
-    }
-
-    function setErrorsInStart() {
-        let errorListVar = [] ;
-        for( const property in errors ){
-            var singleAttributeErrors = errors[property];
-            for (var i = 0; i < singleAttributeErrors.length; i++){
-                errorListVar.push(<Text style={styles.errorLabel} >{singleAttributeErrors[i]}</Text>);
-            }
-        }
-        setErrorList( errorListVar ) ;
-    }
+    const [data, setData] = useState( dataProp );
 
     async function getCatList( ){
         let list = await AsyncStorageHelper.getCatList();
@@ -135,20 +47,15 @@ export default function PostReview ({navigation, route}){
 
     } ,  [] );
 
+
     return (
         <ScrollView style={styles.container}>
 
-            { errorList.length > 0 ?
-                <View style={styles.layoutContainer}>
-                    {errorList}
-                </View>
-                : null
-            }
 
             <View style={styles.imgContainer}>
                 { catList.map( function ( cat , index) {
                     return (
-                        cat.id === postCategoryId ?
+                        cat.id === data.post_category_id ?
                             <View  key={index} >
                                 <Image source={ {uri:cat.s3_path} } style={{width: 150, height: 150, marginBottom:15}}/>
                                 <Text style={styles.textColour} >{cat.title}</Text>
@@ -163,15 +70,15 @@ export default function PostReview ({navigation, route}){
             <View style={styles.containerReview} >
 
                 <Text style={styles.textColour} >Title</Text>
-                <Text style={styles.containerReviewHeader} >{title}</Text>
+                <Text style={styles.containerReviewHeader} >{data.title}</Text>
                 <BR/>
 
                 <Text style={styles.textColour} >Description</Text>
-                <Text style={styles.containerReviewHeader} >{description}</Text>
+                <Text style={styles.containerReviewHeader} >{data.description}</Text>
                 <BR/>
 
                 <Text style={styles.textColour} >Location</Text>
-                <Text style={styles.containerReviewHeader} >{cityName}</Text>
+                <Text style={styles.containerReviewHeader} >{data.city_name}</Text>
                 <BR/>
 
             </View>
@@ -179,19 +86,18 @@ export default function PostReview ({navigation, route}){
             <BR/>
             <BR/>
 
-            { uploadsObj.reverse().map( function ( upload , index ) {
+            { data.postUploads.map( function ( upload , index ) {
                 console.log( "Test check Review" );
                 console.log( upload );
                 return (
-                    <View  key={index} style={styles.catBox2} >
-                        <View  style={styles.imgContainer2} >
-                            <Image style={styles.img2}  source={{uri:upload.objectUrl}} />
+                        <View  key={index} style={styles.catBox2} >
+                            <View  style={styles.imgContainer2} >
+                                <Image style={styles.img2}  source={{uri:upload}} />
+                            </View>
                         </View>
-                    </View>
                 )
             } ) }
 
-            <FormButtonSmall  buttonTitle={"Create Post"}  align={"right"} onPress={()=> submitForm()}  />
 
         </ScrollView>
     )

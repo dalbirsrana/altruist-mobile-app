@@ -1,31 +1,11 @@
 import React, {useContext , useState, useEffect } from "react";
 import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import API from "../../services/api";
-import FormButton from "../../common/FormButton";
 import {AuthContext} from "../navigation/AuthProvider";
-
 import logo from "../../../assets/icon.png";
 import colors from "../../colors/colors";
 import Loading from "../../common/Loading";
-
-// import FormButton from "../../common/FormButton";
-// import InverseButton from "../../common/InverseButton";
-// import {windowHeight, windowWidth} from "../../utils/Dimensions";
-// import FormButtonSmall from "../../common/FormButtonSmall";
-
-// import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-// import Ionicons from "react-native-vector-icons/Ionicons";
-
-import Swiper from 'react-native-swiper';
-import BR from "../helper/BR";
-import FileUploadExampleScreen from "./FileUploadExampleScreen";
-import AsyncStorageHelper from "./../../services/AsyncStorageHelper";
-import InverseButton from "../../common/InverseButton";
-import {windowHeight, windowWidth} from "../../utils/Dimensions";
-import FormButtonSmall from "../../common/FormButtonSmall";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FlatListSlider from './../helper/Slider/FlatListSlider';
+import PostViewHome from "./Posts/View/PostViewHome";
 
 
 const HomeScreen = ({navigation}) => {
@@ -44,10 +24,6 @@ const HomeScreen = ({navigation}) => {
         }
     }
 
-
-    // const isUserSignedOut = () => {
-    //     return  typeof user === "undefined" || ( typeof user !== "undefined" && user.isSignout === true );
-    // }
 
     useEffect(() => {
         let isUnMount = false;
@@ -83,9 +59,8 @@ const HomeScreen = ({navigation}) => {
         },
     ] ;
 
-    const screenWidth = Math.round(Dimensions.get('window').width);
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
 
             {/* Slider container */}
             <View style={{ height: 250 }}>
@@ -96,36 +71,35 @@ const HomeScreen = ({navigation}) => {
 
             {/* Top Helper container */}
             <View style={{ height: 100 }}>
-                <Text>Top Helper's</Text>
+                {/*<Text>Top Helper's</Text>*/}
 
             </View>
 
             {/* Help Posts container */}
 
-                <Text style={{fontSize: 30, marginVertical: 10, borderTopWidth: 1, }}>Help Seeker's</Text>
-                <ScrollView>
+                {/*<Text style={{fontSize: 30, marginVertical: 10, borderTopWidth: 1, }}>Help Seeker's</Text>*/}
+
+            <View>
                 {
                     isLoading
                     ?
                     <Loading />
                     :
-                    (<> {
-                        posts.map(post => (
-
-                            <TouchableOpacity underlayColor="white" key={post.id} onPress={ ()=> navigation.navigate("SingleHelpScreen") }>
-
-                                <Text style={styles.h2}>{post.title}</Text>
-                                <Image source={post.s3_path} style={{width: 200, height: 200}} />
-
-                            </TouchableOpacity>
-
-                        )) }
-                    </>
+                    (
+                        <ScrollView>
+                            {
+                                posts.map( function( post ) {
+                                    return(
+                                        <PostViewHome dataProp={post} ></PostViewHome>
+                                        )
+                                })
+                            }
+                        </ScrollView>
                     )
                 }
-            </ScrollView>
+            </View>
 
-        </View>
+        </ScrollView>
     )
 }
 
@@ -135,8 +109,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: colors.white,
-        alignItems: "stretch",
-        justifyContent: "space-evenly",
+        backgroundColor: colors.white
     },
 });

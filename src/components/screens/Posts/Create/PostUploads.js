@@ -67,23 +67,14 @@ export default function PostUploads ({navigation, route}){
 
     const submitForm = async () => {
 
-        let requiredCheck = {
-            "Title":title,
-            "Description":description,
-            "Location":cityName,
-        };
+        console.log( "uploadsObj start" );
+        console.log( uploadsObj );
+        console.log( "uploadsObj end" );
 
-        let errorListVar = {} ;
-        for( const property in requiredCheck ){
-            if( requiredCheck[property] === "" ){
-                errorListVar[property] = <Text style={styles.errorLabel} >{property+" is required."}</Text>;
-            }
-        }
-        setErrorList2( errorListVar )
+        let pObject = await uploadsObj;
 
-        if( Object.keys(errorListVar).length === 0 && errorListVar.constructor === Object ){
-            // now go to next setp
-            navigation.navigate( 'PostReview' , {
+        if( pObject.length > 0 ){
+            await navigation.navigate( 'PostReview' , {
 
                 postTypeIdProp: postTypeId ,
                 postCategoryIdProp: postCategoryId ,
@@ -94,14 +85,25 @@ export default function PostUploads ({navigation, route}){
                 latProp: lat ,
                 langProp: lang,
 
-                uploadsObj: uploadsObj
+                uploadsObjProp: pObject
 
             } );
         }
+
     }
 
     useEffect(() => {
     } ,  [] );
+
+    const removeItem = async ( url ) => {
+        let newUploadsObj = [] ;
+        uploadsObj.reverse().map( function ( upload , index ) {
+            if( upload.objectUrl !== url ){
+                newUploadsObj.push( upload );
+            }
+        });
+        setUploadsObj( newUploadsObj );
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -113,11 +115,12 @@ export default function PostUploads ({navigation, route}){
             </View>
             <BR/>
 
-            { uploadsObj.map( function ( upload , index ) {
+            { uploadsObj.reverse().map( function ( upload , index ) {
                 console.log( "Test check" );
-                console.log( upload );
+                console.log( upload.objectUrl );
                 return (
                     <View  key={index} style={styles.catBox} >
+                        <FormButtonSmall  buttonTitle={"X"}  align={"right"} onPress={()=> removeItem( upload.objectUrl )}  />
                         <View  style={styles.imgContainer} >
                             <Image style={styles.img}  source={{uri:upload.objectUrl}} />
                         </View>
@@ -137,25 +140,26 @@ export default function PostUploads ({navigation, route}){
 }
 
 const styles = StyleSheet.create({
-    img : {
-        borderRadius:20,
-        width:"100%",
-        height:250
-    },
-    catBox: {
-        height: 250,
-        alignContent: 'center',
-        justifyContent: 'center',
-        alignItems: "center",
-        marginBottom: 15,
-        overflow:'hidden'
-    },
+
     catBox2: {
         height: 50,
         padding:10,
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: "center",
+    },
+    img : {
+        borderRadius:20,
+        width:"100%",
+        height:250
+    },
+    catBox: {
+        height: 350,
+        alignContent: 'center',
+        justifyContent: 'center',
+        alignItems: "center",
+        marginBottom: 15,
+        overflow:'hidden'
     },
     imgContainer: {
         borderRadius: 20,

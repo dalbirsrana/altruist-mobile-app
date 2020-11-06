@@ -24,12 +24,12 @@ const PostTypeSelection = ({ navigation , route}) => {
 
     const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
 
-    function move( forward ){
+    function move( forward , postTypeIdSelected = null  ){
         if( !forward ){
-            navigation.navigate( "HomeTabs" );
+             navigation.navigate( "HomeStack" );
         }else{
             navigation.navigate(  "PostCategorySelection" , {
-                postTypeIdProp: postTypeId ,
+                postTypeIdProp: postTypeIdSelected ,
                 postCategoryIdProp: postCategoryId ,
 
                 titleProp: title ,
@@ -75,7 +75,7 @@ const PostTypeSelection = ({ navigation , route}) => {
                 onPress={
                     async ( event ) => {
                         await setPostTypeId( 1 );
-                        move( true );
+                        move( true , 1);
                     }
                 }
             >
@@ -87,7 +87,7 @@ const PostTypeSelection = ({ navigation , route}) => {
                 onPress={
                     async ( event ) => {
                         await setPostTypeId( 2 );
-                        move( true );
+                        move( true , 2 );
                     }
                 }
             >
