@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display:'flex',
     flexDirection: 'row',
-    flexWrap:'nowrap',
+    flexWrap: 'nowrap',
     padding: 10,
     marginTop: 10,
     marginLeft: 20 ,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     textAlign: "center",
-    alignSelf:"flex-start"
+    alignSelf: "flex-start"
   },
   buttonText: {
     flexBasis:"80%",

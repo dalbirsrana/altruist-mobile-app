@@ -17,11 +17,11 @@ const HomeScreen = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
 
     const loadPost = async () => {
-        let p = await API.Post.list();
-        if (p !== undefined ) {
+        let P = await API.Post.list();
+        if (P !== undefined ) {
             setLoading(false)
-            setPosts(p.data)
-            console.log(p.data)
+            setPosts(P.data)
+            console.log(P.data)
             return true;
         }
     }
@@ -120,8 +120,6 @@ const HomeScreen = ({navigation}) => {
                     )
                 }
             </View>
-
-        </ScrollView>
     )
 }
 
