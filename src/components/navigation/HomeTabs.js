@@ -18,6 +18,7 @@ import UserPostHelpScreen from '../screens/UserPostHelpScreen'
 
 
 import createPostStack from './createPostStack'
+import PostTypeSelection from '../screens/Posts/Create/PostTypeSelection';
 
 const HomeStack = createStackNavigator();
 

@@ -6,6 +6,8 @@ import ResetPassword from "../screens/Unauthenticated/ResetPassword";
 import UnauthenticatedHomeScreen from "./../screens/Unauthenticated/HomeScreen";
 import VerifyAccount from "../screens/Unauthenticated/VerifyAccount";
 
+import HomeTabs from "./HomeTabs";
+
 const Stack = createStackNavigator();
 
 export default function AuthStack() {
@@ -20,6 +22,10 @@ export default function AuthStack() {
         <Stack.Screen name="VerifyAccount"  options={{ headerTitle: "Verify Account" }} component={VerifyAccount} />
         
         <Stack.Screen name="ResetPassword" options={{ headerTitle: "Reset Password" }} component={ResetPassword} />
+
+        <Stack.Screen name="HomeTabs" component={HomeTabs} />
+
+
     </Stack.Navigator>
   );
 }

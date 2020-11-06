@@ -22,7 +22,6 @@ export default function VerifyAccount( { navigation } ) {
     }
 
     const useEffect = ( () => {
-        console.log( errors );
     });
 
     const submitForm = async () => {

@@ -65,13 +65,13 @@ const PostCategorySelection = ({navigation, route }) => {
 
     async function getCatList( ){
         let list = await AsyncStorageHelper.getCatList();
-        console.log( "list" , list);
+        // console.log( "list" , list);
         if( Array.isArray( list ) ){
             setCatList( list );
         }else{
             let catListData = await API.PostCategories.list();
             if( catListData.success === true ){
-                console.log( catListData.data );
+                // console.log( catListData.data );
                 setCatList( catListData.data );
                 AsyncStorageHelper.setObjectValue( 'catList' ,catListData.data );
             }else if (  catListData.success === false && catListData.tokenExpired === true  ){

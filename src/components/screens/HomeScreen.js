@@ -19,23 +19,19 @@ const HomeScreen = ({navigation}) => {
     const loadPost = async () => {
         let p = await API.Post.list();
         if (p !== undefined ) {
-            setLoading(false)
-            setPosts(p.data)
-            console.log(p.data)
+            if( Array.isArray( p.data ) ){
+                setPosts(p.data)
+                setLoading(false)
+            }
+            // console.log(p.data)
             return true;
         }
     }
-
 
     useEffect(() => {
         let isUnMount = false;
         if (!isUnMount){
             loadPost();
-
-            setInterval( () => {
-                loadPost();
-            } , 60000 );
-
         }
         return () => {
             isUnMount = true;
@@ -68,7 +64,7 @@ const HomeScreen = ({navigation}) => {
 
     const screenWidth = Math.round(windowWidth);
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}  >
 
             {/* Slider container */}
             <View style={{ height: 250 }}>
