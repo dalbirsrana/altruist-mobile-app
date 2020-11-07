@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,
-        alignItems:"flex-start",
+        alignItems: "flex-start",
         justifyContent: "center",
         display: "flex",
         flexDirection: "row",

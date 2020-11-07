@@ -57,7 +57,7 @@ export default function VerifyAccount( { navigation } ) {
 
             { errorList.length > 0 ?
                 <View>
-                    {errorList}
+                    <Text>{errorList}</Text>
                 </View>
                 : null
             }
