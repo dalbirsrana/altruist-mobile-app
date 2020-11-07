@@ -10,7 +10,7 @@ import colors from "../../../colors/colors";
 import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("jpandya00@mylangara.ca");
+  const [email, setEmail] = useState("p72@mylangara.ca");
   const [password, setPassword] = useState("jaimin");
   const [msg, setMsg] = useState("");
   const { user, login } = useContext(AuthContext);
@@ -21,7 +21,6 @@ const SignInScreen = ({ navigation }) => {
 
     async function checkUserLoggedIn(){
         if( !isUserSignedOut() ){
-            console.log('HomeTabs');
             await navigation.navigate("HomeTabs");
         }
     }

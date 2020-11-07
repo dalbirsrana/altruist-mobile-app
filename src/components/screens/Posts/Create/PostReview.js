@@ -82,17 +82,18 @@ export default function PostReview ({navigation, route}){
             description : description ,
             lat : lat,
             lang: lang,
-            PostUploads : PostUploads
+            PostUploads : PostUploads,
+            city_name : cityName
         });
 
+        console.log( createPost );
+
         if( createPost && createPost.success ){
-            console.log( "Post created succefully" );
-            console.log( createPost.data );
-
-            navigation.navigate('HomeStack');
-
+            return navigation.navigate('HomeStack');
         }else{
-            setErrorList( ['Something went wrong. Please try again later.'] );
+            let string = "Please try again later there is some error.";
+            //let string = JSON.parse( createPost );
+            setErrorList( [<Text style={styles.errorLabel} key={0} >{string}</Text>] );
         }
 
     }

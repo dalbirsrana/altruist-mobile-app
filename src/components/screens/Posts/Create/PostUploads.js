@@ -67,10 +67,6 @@ export default function PostUploads ({navigation, route}){
 
     const submitForm = async () => {
 
-        console.log( "uploadsObj start" );
-        console.log( uploadsObj );
-        console.log( "uploadsObj end" );
-
         let pObject = await uploadsObj;
 
         if( pObject.length > 0 ){
@@ -116,8 +112,6 @@ export default function PostUploads ({navigation, route}){
             <BR/>
 
             { uploadsObj.reverse().map( function ( upload , index ) {
-                console.log( "Test check" );
-                console.log( upload.objectUrl );
                 return (
                     <View  key={index} style={styles.catBox} >
                         <FormButtonSmall  buttonTitle={"X"}  align={"right"} onPress={()=> removeItem( upload.objectUrl )}  />

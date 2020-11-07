@@ -72,7 +72,6 @@ const ResetPassword = ({ navigation }) => {
 
                                 let confirmChange = await API.changePassword(userData)
 
-                                console.log(confirmChange)
 
                                 if (confirmChange.success) {
                                     setMsg('Password Reset Successfull, Go Back to login')
@@ -112,8 +111,7 @@ const ResetPassword = ({ navigation }) => {
 
                                 let verify = await API.resetPasswordCheck(data)
 
-                                console.log(verify)
-                                
+
                                 if(verify.success) {
                                     setValidUser(true)
                                     setMsg('')
