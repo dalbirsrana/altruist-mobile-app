@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "Altruist"
     },
     "web": {
       "favicon": "./assets/favicon.png"

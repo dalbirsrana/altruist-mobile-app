@@ -67,8 +67,6 @@ export default function SignUpScreen({ navigation }) {
               `Sign Up Success with user ID: ${signUp.data.id} \nRedirecting to login page...`
             );
 
-            console.log("success " + signUp.data.id);
-
             navigation.navigate("SignIn");
           } else {
             setMsg(

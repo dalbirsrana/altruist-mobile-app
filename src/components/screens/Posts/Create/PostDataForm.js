@@ -31,9 +31,9 @@ const PostDataForm = ({navigation, route }) => {
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
-    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
-    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
+    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?   "27.2046" : "27.2046");
+    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  "77.4977" : "77.4977");
+    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  "Argyle Street Vancouver" : "Argyle Street Vancouver");
 
     const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
 
@@ -97,12 +97,12 @@ const PostDataForm = ({navigation, route }) => {
                 setLat( latitude );
                 setLang( longitude );
 
-                console.log( lat, lang );
+                // console.log( lat, lang );
 
                 let cityData = await API.Post.getCityName({lat:position.coords.latitude,lang:position.coords.longitude});
-                console.log( cityData  );
+                // console.log( cityData  );
                 if( cityData.success === true ){
-                    console.log( cityData  );
+                    // console.log( cityData  );
                     setCityName( cityData.data.city_name  );
                     errorList['Location'] = "";
                     setErrorList( errorList );
@@ -118,13 +118,13 @@ const PostDataForm = ({navigation, route }) => {
 
     async function getCatList( ){
         let list = await AsyncStorageHelper.getCatList();
-        console.log( "list" , list);
+        // console.log( "list" , list);
         if( Array.isArray( list ) ){
             setCatList( list );
         }else{
             let catListData = await API.PostCategories.list();
             if( catListData.success === true ){
-                console.log( catListData.data );
+                // console.log( catListData.data );
                 setCatList( catListData.data );
                 AsyncStorageHelper.setObjectValue( 'catList' ,catListData.data );
             }else if (  catListData.success === false && catListData.tokenExpired === true  ){
@@ -208,7 +208,6 @@ const PostDataForm = ({navigation, route }) => {
                 placeholderText="Title"
                 onChangeText={( value ) => setTitle( value )}
                 autoCapitalize="none"
-                keyboardType="email-address"
                 autoCorrect={false}
                 error={ title === "" && errorList2.hasOwnProperty('Title') &&  errorList2["Title"] ? errorList2["Title"] : "" }
             />

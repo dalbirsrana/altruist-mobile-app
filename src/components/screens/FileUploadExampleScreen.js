@@ -75,7 +75,7 @@ export default class FileUploadExampleScreen extends Component {
     };
 
     _pickImage = async () => {
-        console.log('Yes');
+        // console.log('Yes');
         const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
 
         // only if user allows permission to camera roll
@@ -103,14 +103,14 @@ export default class FileUploadExampleScreen extends Component {
                 uploadResponse = await API.uploadImageAsync(pickerResult.uri);
                 uploadResult = await uploadResponse.json();
 
-                console.log(uploadResult);
+                // console.log(uploadResult);
                 if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
 
                     try {
                         this.props.imageUploaded( uploadResult['data'] );
                     } catch (error) {
                         // Error saving data
-                        console.log( error );
+                        // console.log( error );
                     }
 
                     this.setState({
@@ -121,8 +121,8 @@ export default class FileUploadExampleScreen extends Component {
                 }
             }
         } catch (e) {
-            console.log({ uploadResponse });
-            console.log({ uploadResult });
+            // console.log({ uploadResponse });
+            // console.log({ uploadResult });
             console.log({ e });
             alert('Please try again later!');
         } finally {

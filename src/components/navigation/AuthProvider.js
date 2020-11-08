@@ -110,7 +110,7 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: validateToken.data.profile_picture
                         })
 
-                        console.log( "RESTORE_TOKEN" );
+                        //console.log( "RESTORE_TOKEN" );
                         newLogOutMessage = "" ;
                         await AsyncStorageHelper.setObjectValue('user',validateToken)
                     }else{
