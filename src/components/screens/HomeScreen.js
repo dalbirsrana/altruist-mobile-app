@@ -10,7 +10,7 @@ import {windowWidth} from "../../utils/Dimensions";
 import FlatListSlider from "../helper/Slider/FlatListSlider";
 
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = () => {
     const {user} = useContext(AuthContext);
 
     const [posts, setPosts] = useState([]);
@@ -106,9 +106,9 @@ const HomeScreen = ({navigation}) => {
                     (
                         <ScrollView>
                             {
-                                posts.map( function( post , index ) {
+                                Array.isArray(posts) && posts.map( function( post , index ) {
                                     return(
-                                        <PostViewHome key={index} dataProp={post} ></PostViewHome>
+                                        <PostViewHome key={index} dataProp={post}></PostViewHome>
                                         )
                                 })
                             }
@@ -116,6 +116,7 @@ const HomeScreen = ({navigation}) => {
                     )
                 }
             </View>
+        </ScrollView>
     )
 }
 
