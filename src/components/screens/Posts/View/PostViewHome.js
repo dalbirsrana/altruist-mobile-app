@@ -7,11 +7,15 @@ import BR from "../../../helper/BR";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
 
+import { useNavigation } from '@react-navigation/native';
+
 import FlatListSlider from './../../../helper/Slider/FlatListSlider';
 
 
 
-export default function PostViewHome ({navigation, route , dataProp }){
+export default function PostViewHome ({route , dataProp }){
+    
+    const navigation = useNavigation();
 
     const {user, logout} = useContext(AuthContext);
 
@@ -80,13 +84,13 @@ export default function PostViewHome ({navigation, route , dataProp }){
 
             <BR/>
 
-            <View style={styles.containerReview} >
-
-                <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "normal" }} >{data.title}</Text>
-                <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 }} >{data.description}</Text>
-                <Text style={{ ...styles.textColour, textAlign:"left" ,  fontSize:10 }} >{data.city_name}</Text>
-                <BR/>
-
+            <View style={styles.containerReview}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('SingleHelpScreen', { postId: data.id })}}>
+                    <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "normal" }} >{data.title}</Text>
+                    <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 }} >{data.description}</Text>
+                    <Text style={{ ...styles.textColour, textAlign:"left" ,  fontSize:10 }} >{data.city_name}</Text>
+                    <BR/>
+                </TouchableOpacity>
             </View>
 
             <BR/>
@@ -105,8 +109,6 @@ export default function PostViewHome ({navigation, route , dataProp }){
                 indicator
                 animation
             />
-
-
         </ScrollView>
     )
 }
@@ -120,14 +122,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         width:windowWidth-40,
         textAlign:'left',
-
         justifyContent: "flex-start",
         alignItems: "flex-start",
         alignSelf:"flex-start",
 
     },
-
-
     containerReviewHeader : {
         fontSize: 16,
         justifyContent: "center",
@@ -136,8 +135,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
 
     },
-
-
     layoutContainer : {
         display: "flex",
         height: 100,
@@ -213,8 +210,6 @@ const styles = StyleSheet.create({
         color: "rgb(232, 155, 141)",
         textAlign: "left"
     },
-
-
     input: {
         padding: 15,
         marginBottom: 10,
@@ -226,8 +221,6 @@ const styles = StyleSheet.create({
         borderColor: colors.black,
         borderWidth: 1,
     },
-
-
     img2 : {
         borderRadius:20,
         width:"100%",

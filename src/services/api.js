@@ -104,6 +104,12 @@ const API =
             },
             list : ( data ) => {
                 return makeRequest('/posts', {}, GET)
+            },
+            openList: () => {
+                return makeRequest('/open-posts', {}, GET)
+            },
+            single: (id)=>{
+                return makeRequest('/posts/' + id, {}, GET)
             }
         },
 
