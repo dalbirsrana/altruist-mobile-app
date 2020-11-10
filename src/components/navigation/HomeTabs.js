@@ -13,9 +13,7 @@ import HelpScreen from '../screens/SingleHelpScreen'
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
-import UserActivityScreen from '../screens/UserActivityScreen'
-import UserPostHelpScreen from '../screens/UserPostHelpScreen'
-
+import UserNotificationScreen from '../screens/userNotificationsScreen'
 
 import createPostStack from './createPostStack'
 import PostTypeSelection from '../screens/Posts/Create/PostTypeSelection';
@@ -104,7 +102,7 @@ export default function HomeTabs() {
             tabBarVisible : false,
             title: '',
         }} />
-        <Tab.Screen name='Notifications' component={UserActivityScreen} options={{ title: '' }} />
+        <Tab.Screen name='Notifications' component={UserNotificationScreen} options={{ title: '' }} />
         <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{ title: '' }} />
     </Tab.Navigator>
     );
