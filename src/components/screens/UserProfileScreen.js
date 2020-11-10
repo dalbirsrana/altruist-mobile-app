@@ -1,34 +1,87 @@
-import React, {useContext} from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import React, {useContext, useState, useEffect} from "react";
+import {Image, StyleSheet, Text, View, TouchableOpacity, ScrollView} from "react-native";
 import { AuthContext } from "../navigation/AuthProvider";
 
 
 import postImage from "../../../assets/user-avatar.png";
 import colors from "../../colors/colors";
-// import {color} from "react-native-reanimated";
 
 import editPostIcon from "../../../assets/Icons_Altruist_Edit.png";
 import settingIcon from "../../../assets/Icons_Altruist_Settings.png";
 import contactIcon from "../../../assets/Icons_Altruist_Help.png";
 import logoutIcon from "../../../assets/Icons_Altruist_Logout.png";
 import nextIcon from "../../../assets/Icons_Altruist_next.png";
+import {windowWidth} from "../../utils/Dimensions";
+import FileUploadExampleScreen from "./FileUploadExampleScreen";
+import API from "../../services/api";
 
 
 const UserProfile = ({ navigation }) => {
 
-    const {user, logout} = useContext(AuthContext)
+    const { user, logout, pictureUploaded} = useContext(AuthContext)
+    const [profileImage, setProfileImage] = useState( "" );
+    const [loading, setLoading] = useState( true );
+
+    useEffect(() => {
+        let isUnMount = false;
+        if (!isUnMount){
+            setProfileImage( user.profileImage );
+            setLoading( false );
+        }
+        return () => {
+            isUnMount = true;
+        }
+    });
+
+    const changeProfilePicture = async ( uploadObject ) => {
+        setLoading( true );
+        setProfileImage( uploadObject.objectUrl );
+        let data = {
+            profile_picture : uploadObject.key
+        };
+        let changePicture = await API.User.changePicture( data );
+        if( changePicture.success ){
+            pictureUploaded( changePicture.data );
+            setProfileImage( changePicture.data.profile_picture );
+            setLoading( false );
+        }
+    }
 
     return (
 
-        <View style = {styles.container}>
-            
+        <ScrollView style = {styles.container}>
+
+
             <View style = {styles.thumbnail}>
-                { 
-                    user.profileImage 
+
+                {
+                    profileImage
                     ? 
-                    (<Image source={user.profileImage} style = {{height: 200, width: 200, borderRadius: 20 }} />) 
+                    (
+                        <View opacity={ loading ? 0.5 : 1}  >
+                            <View style={ styles.thumbnail  }>
+                                <Image source={{uri: profileImage}} style = {{height: 200, width: 200, borderRadius: 100 }} />
+                                <View
+                                    style={buttonStyles.buttonContainer} >
+                                    <FileUploadExampleScreen location={"ChangeProfilePicture"}
+                                                             imageUploaded={( event ) => {  changeProfilePicture( event );   }}  />
+                                </View>
+                            </View>
+                        </View>
+                    )
                     : 
-                    ( <Image source = {postImage} style = {{height: 200, width: 200, borderRadius: 20 }} /> ) 
+                    (
+                        <View opacity={ loading ? 0.5 : 1} >
+                            <View style = {styles.thumbnail} >
+                                <Image source = {postImage} style = {{height: 200, width: 200, borderRadius: 100 }} />
+                                <View
+                                    style={buttonStyles.buttonContainer} >
+                                    <FileUploadExampleScreen location={"AddProfilePicture"}
+                                                             imageUploaded={( event ) => {  changeProfilePicture( event );   }}  />
+                                </View>
+                            </View>
+                        </View>
+                    )
                 }
                 
                 <Text style = {styles.userName}>
@@ -76,7 +129,7 @@ const UserProfile = ({ navigation }) => {
             </View > 
         
         
-        </View>
+        </ScrollView>
 
     );
 };
@@ -160,5 +213,28 @@ const styles = StyleSheet.create({
     logoutTitle: {
         flex: 1,
         paddingLeft: 20,
+    },
+});
+
+const buttonStyles = StyleSheet.create({
+    buttonContainer: {
+        position: 'absolute',
+        bottom:10,
+        marginBottom: 10,
+        width: windowWidth / 2.5,
+        height: 'auto',
+        borderColor: colors.primary,
+        backgroundColor: colors.transparent,
+        borderWidth:2,
+        padding: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        alignSelf: "center",
+        borderRadius: 4,
+    },
+    buttonText: {
+        fontWeight:'bold',
+        fontSize: 12,
+        color: colors.white,
     },
 });

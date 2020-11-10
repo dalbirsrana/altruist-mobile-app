@@ -6,49 +6,50 @@ import {AuthContext} from "../../../navigation/AuthProvider";
 import BR from "../../../helper/BR";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
-
 import { useNavigation } from '@react-navigation/native';
 
 import FlatListSlider from './../../../helper/Slider/FlatListSlider';
+import postImage from "../../../../../assets/user-avatar.png";
+
+import styled from 'styled-components/native'
+import LoadableImage from "../../../../common/LoadableImage";
+const StyledTextButton = styled.Text`
+  color: palevioletred;
+  background-color: transparent;
+  font-size: 10px;
+  margin: 5px 5px 5px 0;
+  padding: 2.5px;
+  border: 1px solid palevioletred;
+  border-radius: 10px;
+  width:100px;
+  text-align:center;
+  text-transform:capitalize;
+  display: inline;
+`
+
+const StyledTextButton2 = styled(StyledTextButton)`
+  width:150px;
+`
 
 
 
-export default function PostViewHome ({route , dataProp }){
+
+export default function PostViewHome ({ route , dataProp , key , dataKey }){
     
     const navigation = useNavigation();
 
     const {user, logout} = useContext(AuthContext);
-
-    const [catList, setCatList] = useState([]);
     const [data, setData] = useState( dataProp );
 
-    async function getCatList( ){
-        let list = await AsyncStorageHelper.getCatList();
-        if( Array.isArray( list ) ){
-            setCatList( list );
-        }else{
-            let catListData = await API.PostCategories.list();
-            if( catListData.success === true ){
-                setCatList( catListData.data );
-                AsyncStorageHelper.setObjectValue( 'catList' ,catListData.data );
-            }else if (  catListData.success === false && catListData.tokenExpired === true  ){
-                logout();
-            }
-        }
-    }
-
     useEffect(() => {
-
         let isUnMount = false;
         if( !isUnMount  ){
-            getCatList();
         }
         return () => {
             isUnMount = true ;
         }
 
     } ,  [] );
-
 
     const screenWidth = Math.round(windowWidth);
 
@@ -64,68 +65,109 @@ export default function PostViewHome ({route , dataProp }){
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={[styles.container,{backgroundColor: dataKey%2===0 ? colors.primaryTransparent : colors.secondaryTransparent }]}>
+            <TouchableOpacity onPress={()=>{navigation.navigate('SingleHelpScreen', { postId: data.id })}}>
 
+                <View style={styles.userContainer} >
+                    <View style={styles.userPicContainer} >
+                        {
+                            data.user.profile_picture ?
+                                <LoadableImage
+                                    source={{uri:data.user.profile_picture}} styleData={{width:30,height:30,borderRadius:15}} />
+                                :
+                                <LoadableImage
+                                    source={postImage} styleData={{width:30,height:30,borderRadius:15}} />
+                        }
+                    </View>
+                    <Text style={styles.userName} >{data.user.fullName}</Text>
+                </View>
 
-            <Text style={styles.textColourName} >{data.user.fullName} {data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                <View style={styles.tagsContainer} >
+                    <Text style={styles.tag}  >{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                    <Text style={styles.tag}  >{data.postCategory.title}</Text>
+                </View>
 
-            <View style={styles.imgContainerSmall}>
-                { catList.map( function ( cat , index) {
-                    return (
-                        cat.id === data.postCategory.id ?
-                            <View  style={styles.catBox}  key={index} >
-                                <Image source={ {uri:cat.s3_path} } style={{width: 35, height: 35, marginBottom:5}}/>
-                                <Text style={{ ...styles.textColour , fontSize:12   }} >{cat.title}</Text>
-                            </View> : null
-                    )
-                } ) }
-            </View>
+                <Text style={{ ...styles.locationLabel , textAlign:"left"  }} >{data.city_name}</Text>
 
+                <View style={styles.containerReview}>
 
-            <BR/>
-
-            <View style={styles.containerReview}>
-                <TouchableOpacity onPress={()=>{navigation.navigate('SingleHelpScreen', { postId: data.id })}}>
                     <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "normal" }} >{data.title}</Text>
                     <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 }} >{data.description}</Text>
-                    <Text style={{ ...styles.textColour, textAlign:"left" ,  fontSize:10 }} >{data.city_name}</Text>
-                    <BR/>
-                </TouchableOpacity>
-            </View>
 
-            <BR/>
-            <BR/>
+                </View>
 
-            <FlatListSlider
-                data={getImagesArray()}
-                timer={100}
-                imageKey={'image'}
-                local={false}
-                width={screenWidth}
-                separator={0}
-                loop={false}
-                autoscroll={false}
-                currentIndexCallback={index => console.log('Index', index)}
-                indicator
-                animation
-            />
+                <FlatListSlider
+                    style={
+                        {
+                            width:windowWidth
+                        }
+                    }
+                    data={getImagesArray()}
+                    timer={100}
+                    imageKey={'image'}
+                    local={false}
+                    width={screenWidth}
+                    separator={0}
+                    loop={false}
+                    autoscroll={false}
+                    currentIndexCallback={index => console.log('Index', index)}
+                    indicator
+                    animation
+                />
+
+
+
+            </TouchableOpacity>
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
 
-    containerReview : {
+    tagsContainer:{
         display: "flex",
-        height: 100,
+        marginTop: 10,
+        flexDirection: "row",
+        wrap: "nowrap"
+    },
+    userContainer:{
+        display: "flex",
+        flexDirection: "row",
+        wrap: "nowrap"
+    },
+    userPicContainer : {
+        width: 35,
+        height:30,
+        borderRadius:15
+    },
+    locationLabel : {
+        color: "palevioletred",
+        fontSize: 12,
         marginTop: 10,
         marginBottom: 10,
-        width:windowWidth-40,
+    },
+    tag : {
+        color: "palevioletred",
+        backgroundColor: "transparent",
+        fontSize: 12,
+        marginRight: 10,
+        padding: 5,
+        borderWidth: 1,
+        borderColor : "palevioletred",
+        borderRadius: 10,
+        textAlign:"center",
+        textTransform:"capitalize",
+    },
+    containerReview : {
+        display: "flex",
+        height: "auto",
+        marginTop: 10,
+        marginBottom: 10,
+        width:windowWidth,
         textAlign:'left',
         justifyContent: "flex-start",
         alignItems: "flex-start",
         alignSelf:"flex-start",
-
     },
     containerReviewHeader : {
         fontSize: 16,
@@ -133,21 +175,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         color: "rgb(16,14,14)",
         textAlign: "center",
-
     },
     layoutContainer : {
         display: "flex",
         height: 100,
-        margin:20,
         marginTop: 10,
         marginBottom: 10,
-        width:windowWidth-40,
+        width:windowWidth,
     },
     container: {
         flex: 1,
         flexDirection: "column",
         backgroundColor: colors.white,
-        margin:20,
+        marginBottom: 10,
+        padding:10
     },
     imgContainer: {
         flexBasis: "100%",
@@ -185,24 +226,25 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         justifyContent: "center",
         alignItems: "center",
-        color: "rgb(232, 155, 141)",
+        color: colors.black,
         textAlign: "center",
     },
-    textColourName: {
+    userName: {
         fontSize: 16,
         fontWeight: "bold",
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        color: "rgb(232, 155, 141)",
+        color: colors.black,
         textAlign: "left",
+        marginTop: 5
     },
     textColour2: {
         marginTop:10,
         marginLeft:20,
         fontSize: 20,
-        color: "rgb(232, 155, 141)",
+        color: colors.black,
         textAlign: "left",
-        width: windowWidth-40
+        width: windowWidth
     },
     errorLabel: {
         marginLeft:0,
@@ -215,7 +257,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 20 ,
         marginTop: 20 ,
-        width: windowWidth-40,
+        width: windowWidth,
         fontSize: 16,
         borderRadius: 8,
         borderColor: colors.black,
@@ -236,7 +278,7 @@ const styles = StyleSheet.create({
     },
     imgContainer2: {
         borderRadius: 20,
-        width: windowWidth-40,
+        width: windowWidth,
         margin:10,
         height: 250,
         borderWidth: 0,

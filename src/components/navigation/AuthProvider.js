@@ -1,5 +1,4 @@
 import React, {createContext, useReducer, useEffect} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
 import API from '../../services/api';
 import AsyncStorageHelper from "../../services/AsyncStorageHelper";
 
@@ -18,10 +17,10 @@ export const AuthProvider = ({children , navigation}) => {
         (prevState, ...actions) => {
             if( typeof actions !== "undefined" && Array.isArray( actions ) && actions.length > 0 && typeof actions[0] !== "undefined" ){
                 let action = actions[0];
+                console.log( 'action' , action );
                 switch (action.type) {
                     case 'RESTORE_TOKEN':
                         return {
-                            ...prevState,
                             token: action.token,
                             id: action.id,
                             username: action.username,
@@ -29,15 +28,29 @@ export const AuthProvider = ({children , navigation}) => {
                             lastName: action.lastName,
                             email: action.email,
                             phone: action.phone,
-                            profileImage: action.profile_picture,
+                            picture: action.profileImage,
+                            profileImage: action.profileImage,
+                            isLoading: false,
+                            isSignout: false,
+                            logoutMsg:false
+                        };
+                    case 'STATE_UPDATED':
+                        return {
+                            token: action.token,
+                            id: action.id,
+                            username: action.username,
+                            firstName: action.firstName,
+                            lastName: action.lastName,
+                            email: action.email,
+                            phone: action.phone,
+                            picture: action.profileImage,
+                            profileImage: action.profileImage,
                             isLoading: false,
                             isSignout: false,
                             logoutMsg:false
                         };
                     case 'SIGN_IN':
                         return {
-                            ...prevState,
-                            isSignout: false,
                             token: action.token,
                             id: action.id,
                             username: action.username,
@@ -45,12 +58,14 @@ export const AuthProvider = ({children , navigation}) => {
                             lastName: action.lastName,
                             email: action.email,
                             phone: action.phone,
-                            profileImage: action.profile_picture,
+                            picture: action.profileImage,
+                            profileImage: action.profileImage,
+                            isLoading: false,
+                            isSignout: false,
                             logoutMsg:false
                         };
                     case 'SIGN_OUT':
                         return {
-                            ...prevState,
                             isSignout: true,
                             token: null,
                             id: null,
@@ -60,6 +75,7 @@ export const AuthProvider = ({children , navigation}) => {
                             email: null,
                             phone: null,
                             profileImage: null,
+                            picture: null,
                             logoutMsg:newLogOutMessage
                         };
                 }
@@ -76,6 +92,7 @@ export const AuthProvider = ({children , navigation}) => {
             email: null,
             phone: null,
             profileImage: null,
+            picture: null,
             logoutMsg: newLogOutMessage
         }
     );
@@ -150,6 +167,7 @@ export const AuthProvider = ({children , navigation}) => {
                     try {
                         let signIn = await API.signIn(data)
                         if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
+                            console.log( 'signIn' , signIn.data.profile_picture );
                             dispatch({
                                 type: 'SIGN_IN',
                                 isSignout: false,
@@ -160,6 +178,7 @@ export const AuthProvider = ({children , navigation}) => {
                                 lastName: signIn.data.lastName,
                                 email: signIn.data.email,
                                 phone: signIn.data.phone,
+                                picture: signIn.data.profile_picture,
                                 profileImage: signIn.data.profile_picture
                             })
                             newLogOutMessage = "" ;
@@ -192,6 +211,7 @@ export const AuthProvider = ({children , navigation}) => {
                             email: null,
                             phone: null,
                             isSignout: true,
+                            picture: null,
                             profileImage: null,
                             logoutMsg: newLogOutMessage
                         };
@@ -200,6 +220,24 @@ export const AuthProvider = ({children , navigation}) => {
                     } catch (e) {
                         console.error(e)
                     }
+                },
+                pictureUploaded : async ( user ) => {
+                    let newUserdata = {
+                        type: 'STATE_UPDATED',
+                        isSignout: false,
+                        token: user.token,
+                        id: user.id,
+                        username: user.username,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        phone: user.phone,
+                        picture: user.profile_picture,
+                        profileImage: user.profile_picture
+                    };
+                    dispatch( newUserdata );
+                    console.log( newUserdata );
+                    return newUserdata;
                 },
                 userStateChanged: () => {
                     try {

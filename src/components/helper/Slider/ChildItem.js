@@ -1,6 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {windowWidth} from "../../../utils/Dimensions";
+import LoadableImage from "../../../common/LoadableImage"
 
 export default function ChildItem ({
                                  item,
@@ -19,13 +20,11 @@ export default function ChildItem ({
                     <TouchableOpacity
                         style={styles.container}
                         onPress={() => onPress(index)}>
-                        <Image
-                            style={[styles.image, style, {height: height}]}
+                        <LoadableImage
+                            styleData={[styles.image, style, {height: height}]}
                             source={local ? item[imageKey] : {uri: item[imageKey]}}
                         />
                     </TouchableOpacity>
-
-
 
 
     );
@@ -34,6 +33,8 @@ export default function ChildItem ({
 const styles = StyleSheet.create({
     container: {
         width: windowWidth,
+        position: 'relative',
+        height: 230
     },
     image: {
         height: 230,
