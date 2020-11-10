@@ -2,12 +2,12 @@ import React, {useContext , useState, useEffect } from "react";
 import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import API from "../../services/api";
 import {AuthContext} from "../navigation/AuthProvider";
-import logo from "../../../assets/icon.png";
 import colors from "../../colors/colors";
 import Loading from "../../common/Loading";
 import PostViewHome from "./Posts/View/PostViewHome";
 import {windowWidth} from "../../utils/Dimensions";
 import FlatListSlider from "../helper/Slider/FlatListSlider";
+import TopHelper from "../screens/partials/home/TopHelpers"
 
 
 const HomeScreen = () => {
@@ -23,8 +23,6 @@ const HomeScreen = () => {
             setLoading(false)
             setPosts(P.data)
             console.log(P.data)
-          
-            return true;
         }
     }
 
@@ -64,11 +62,9 @@ const HomeScreen = () => {
 
     const screenWidth = Math.round(windowWidth);
     return (
-        <ScrollView style={styles.container}  >
-
+        <ScrollView style={styles.container}>
             {/* Slider container */}
-            <View style={{ height: 250 }}>
-
+            <View>
                 <FlatListSlider
                     data={images}
                     timer={100}
@@ -82,15 +78,12 @@ const HomeScreen = () => {
                     indicator
                     animation
                 />
-
                 <Button title="Looking for help" color="black" accessibilityLabel="looking for help in your area" />
-
             </View>
 
             {/* Top Helper container */}
-            <View style={{ height: 100 }}>
-                {/*<Text>Top Helper's</Text>*/}
-
+            <View>
+                <TopHelper />
             </View>
 
             {/* Help Posts container */}
