@@ -17,8 +17,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "Altruist"
+      "bundleIdentifier": "com.toffee.altruist",
+      "buildNumber": "1.0.1",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.toffee.altruist",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

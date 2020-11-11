@@ -13,10 +13,48 @@ import HelpScreen from '../screens/SingleHelpScreen'
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
+
+import UserActivityScreen from '../screens/UserActivityScreen'
+import UserPostHelpScreen from '../screens/UserPostHelpScreen'
+
 import UserNotificationScreen from '../screens/userNotificationsScreen'
 
-import createPostStack from './createPostStack'
 import PostTypeSelection from '../screens/Posts/Create/PostTypeSelection';
+import PostCategorySelection from "../screens/Posts/Create/PostCategorySelection";
+import PostDataForm from "../screens/Posts/Create/PostDataForm";
+import PostUploads from "../screens/Posts/Create/PostUploads";
+import PostReview from "../screens/Posts/Create/PostReview";
+
+const CreatePostStack = createStackNavigator();
+
+function createPostStack() {
+    return (
+        <CreatePostStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#e89b8d',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }
+            }}
+        >
+            <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
+                title: 'Select type'
+            }} />
+            <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection}  options={{
+                title: 'Select Category'
+            }} />
+            <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
+            <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
+            <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
+
+        </CreatePostStack.Navigator>
+
+    );
+}
 
 const HomeStack = createStackNavigator();
 
