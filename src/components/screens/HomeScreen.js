@@ -2,12 +2,15 @@ import React, {useContext , useState, useEffect } from "react";
 import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import API from "../../services/api";
 import {AuthContext} from "../navigation/AuthProvider";
-import logo from "../../../assets/icon.png";
 import colors from "../../colors/colors";
 import Loading from "../../common/Loading";
 import PostViewHome from "./Posts/View/PostViewHome";
 import {windowWidth} from "../../utils/Dimensions";
+
 import HomePageTopSlider from "../helper/HomePageTopSlider/HomePageTopSlider";
+
+import TopHelper from "../screens/partials/home/TopHelpers"
+
 
 
 const HomeScreen = () => {
@@ -40,21 +43,17 @@ const HomeScreen = () => {
     }, []);
 
     return (
-        <ScrollView style={styles.container}  >
-
+        <ScrollView style={styles.container}>
+      
             {/* Slider container */}
             <HomePageTopSlider />
 
             {/* Top Helper container */}
-            <View style={{ height: 100 }}>
-                {/*<Text>Top Helper's</Text>*/}
+            <View>
+                <TopHelper />
             </View>
 
             {/* Help Posts container */}
-
-                {/*<Text style={{fontSize: 30, marginVertical: 10, borderTopWidth: 1, }}>Help Seeker's</Text>*/}
-
-
             <View>
                 {
                     isLoading

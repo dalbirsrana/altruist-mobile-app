@@ -129,6 +129,14 @@ const API =
             list : async () => {
                 return makeRequest('/post-categories', {}, GET)
             }
+        },
+
+        userNotifications: () => {
+            return makeRequest('/notifications', {}, GET)
+        },
+
+        topHelper: () => {
+            return makeRequest('/top-helpers', {}, GET)
         }
 
 
