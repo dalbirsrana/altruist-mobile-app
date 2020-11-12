@@ -5,36 +5,36 @@ import {windowWidth} from "../../../utils/Dimensions";
 
 let images = [
     {
-        image:'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+        image:'https://images.unsplash.com/photo-1460518451285-97b6aa326961?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80%27',
         desc: '1',
-        buttonLable : "Looking for help"
+        buttonLable : "Books help"
     },
     {
-        image:'https://images.unsplash.com/photo-1455620611406-966ca6889d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1130&q=80',
+        image:'https://images.unsplash.com/photo-1461280360983-bd93eaa5051b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80%27',
         desc: '2',
-        buttonLable : "Want to help"
+        buttonLable : "Get Help"
     },
     {
-        image:'https://images.unsplash.com/photo-1465572089651-8fde36c892dd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=889&q=80',
+        image:'https://images.unsplash.com/photo-1515459961680-58264ee27219?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80%27',
         desc: '3',
-        buttonLable : "Donate your books"
+        buttonLable : "Give Essentials"
     },
     {
-        image:'https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=889&q=80',
+        image:'https://images.unsplash.com/photo-1600725935160-f67ee4f6084a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80%27',
         desc: '4',
-        buttonLable : "Looking for laptop"
+        buttonLable : "Help Shifting"
     },
     {
-        image:'https://images.unsplash.com/photo-1589011352120-510c9fca6d31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
+        image:'https://images.unsplash.com/photo-1580894736036-7a68513983ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
         desc: '5',
-        buttonLable : "Looking for help"
+        buttonLable : "Academic help"
     },
 ] ;
 
 const screenWidth = Math.round(windowWidth);
-const HomePageTopSlider = (  ) => (
+const HomePageTopSlider = ( { navigation } ) => (
 
-       <View style={{ height: 250 }}>
+       <View style={{ height: 240 }}>
 
            <FlatListSlider
                data={images}
@@ -48,6 +48,7 @@ const HomePageTopSlider = (  ) => (
                currentIndexCallback={index => console.log('Index', index)}
                indicator
                animation
+               navigation={navigation}
            />
 
        </View>

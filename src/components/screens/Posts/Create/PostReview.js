@@ -89,7 +89,7 @@ export default function PostReview ({navigation, route}){
         console.log( createPost );
 
         if( createPost && createPost.success ){
-            return navigation.navigate('HomeStack');
+            return navigation.navigate('HomeStack',{postCreatedProp:true});
         }else{
             let string = "Please try again later there is some error.";
             //let string = JSON.parse( createPost );

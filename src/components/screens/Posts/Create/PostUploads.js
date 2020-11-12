@@ -188,8 +188,6 @@ const styles = StyleSheet.create({
         paddingTop:20,
         display:"flex",
         flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
+        flexWrap: "wrap"
     }
 });

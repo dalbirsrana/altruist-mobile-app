@@ -18,6 +18,7 @@ const StyledTextButton = styled.Button`
 
 
 export default function ChildItem({
+        navigation,
                                       item,
                                       style,
                                       onPress,
@@ -35,8 +36,14 @@ export default function ChildItem({
                 styleData={[styles.image, style]}
                 source={local ? item[imageKey] : {uri: item[imageKey]}}
             />
-            <TouchableOpacity style={buttonStyles.buttonContainer} >
-                <Text style={buttonStyles.buttonText}>{item[buttonLable]}</Text>
+            <TouchableOpacity style={buttonStyles.buttonContainer}
+                              onPress={()=>{
+                                  console.log( navigation );
+                                  navigation.navigate('CreatePost');
+                              }}
+            >
+                <Text style={buttonStyles.buttonText}
+                >{item[buttonLable]}</Text>
             </TouchableOpacity>
         </View>
     );

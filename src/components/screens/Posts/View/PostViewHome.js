@@ -3,16 +3,22 @@ import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
-import BR from "../../../helper/BR";
-import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
-import API from "../../../../services/api";
 import { useNavigation } from '@react-navigation/native';
-
 import FlatListSlider from './../../../helper/Slider/FlatListSlider';
 import postImage from "../../../../../assets/user-avatar.png";
-
 import styled from 'styled-components/native'
 import LoadableImage from "../../../../common/LoadableImage";
+import IconButton from "../../../../common/IconButton";
+
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import API from "../../../../services/api";
+
+
 const StyledTextButton = styled.Text`
   color: palevioletred;
   background-color: transparent;
@@ -40,10 +46,18 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
 
     const {user, logout} = useContext(AuthContext);
     const [data, setData] = useState( dataProp );
+    
+    const [likes, setLikes] = useState( dataProp.totalLikes );
+    const [liked, setLiked] = useState( dataProp.likedPost );
+
+    const [saves, setSaves] = useState( dataProp.totalSaved );
+    const [saved, setSaved] = useState( dataProp.savedPost );
+
 
     useEffect(() => {
         let isUnMount = false;
         if( !isUnMount  ){
+            
         }
         return () => {
             isUnMount = true ;
@@ -63,77 +77,181 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
         });
         return imageArray;
     }
+    
+    async function likePost( id ){
+        let returnedData = await API.Post.like( id );
+        if (returnedData !== undefined && returnedData.success ) {
+            setLiked( returnedData.data.status );
+            setSaves( returnedData.data.totalLikes );
+        }else if( returnedData !== undefined && !returnedData.success ){
+            if( returnedData.tokenExpired ){
+                logout();
+            }
+        }
+    }
+
+
+    async function savePost( id ){
+        let returnedData = await API.Post.save( id );
+        if (returnedData !== undefined && returnedData.success ) {
+            setSaved( returnedData.data.status );
+            setSaves( returnedData.data.totalSaved );
+        }else if( returnedData !== undefined && !returnedData.success ){
+            if( returnedData.tokenExpired ){
+                logout();
+            }
+        }
+    }
 
     return (
-        <ScrollView style={[styles.container,{backgroundColor: dataKey%2===0 ? colors.primaryTransparent : colors.secondaryTransparent }]}>
-            <TouchableOpacity onPress={()=>{navigation.navigate('SingleHelpScreen', { postId: data.id })}}>
+        <View style={[styles.container,{backgroundColor: dataKey%2===0 ? colors.primaryTransparent : colors.secondaryTransparent }]}>
 
-                <View style={styles.userContainer} >
-                    <View style={styles.userPicContainer} >
-                        {
-                            data.user.profile_picture ?
-                                <LoadableImage
-                                    source={{uri:data.user.profile_picture}} styleData={{width:30,height:30,borderRadius:15}} />
-                                :
-                                <LoadableImage
-                                    source={postImage} styleData={{width:30,height:30,borderRadius:15}} />
-                        }
-                    </View>
+            <View style={styles.userContainer} >
+                <View style={styles.userPicContainer} >
+                    {
+                        data.user.profile_picture ?
+                            <LoadableImage
+                                source={{uri:data.user.profile_picture}} styleData={{width:30,height:30,borderRadius:15}} />
+                            :
+                            <LoadableImage
+                                source={postImage} styleData={{width:30,height:30,borderRadius:15}} />
+                    }
+                </View>
+                <View style={{flex:1}} >
                     <Text style={styles.userName} >{data.user.fullName}</Text>
+                    <Text style={{ ...styles.locationLabel , textAlign:"left" , fontSize:8  }} >{data.city_name}</Text>
                 </View>
 
-                <View style={styles.tagsContainer} >
-                    <Text style={styles.tag}  >{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
-                    <Text style={styles.tag}  >{data.postCategory.title}</Text>
+                {  !user.isSignout ?
+                    <View style={styles.headerButtonContainer} >
+                        {  saved ?
+                            <View style={styles.innerFlexContainer} >
+                                <TouchableOpacity  onPress={()=>{ savePost( data.id ) }} >
+                                    <MaterialCommunityIcons style={ styles.bottomButtonContainerIcon } name={"content-save"} size={18} color={"palevioletred"} />
+                                </TouchableOpacity>
+                                <Text style={styles.innerFlexContainerText} >{saves}</Text>
+                            </View>
+                            :
+                            <View style={styles.innerFlexContainer} >
+                                <TouchableOpacity  onPress={()=>{ savePost( data.id ) }} >
+                                    <MaterialCommunityIcons style={ styles.bottomButtonContainerIcon } name={"content-save"} size={18} color={"palevioletred"} />
+                                </TouchableOpacity>
+                                <Text style={styles.innerFlexContainerText} >{saves}</Text>
+                            </View>
+                        }
+                    </View> : null }
+
+            </View>
+
+            <TouchableOpacity onPress={()=>{navigation.navigate('SingleHelpScreen', { postId: data.id })}}>
+                
+
+                <View style={{ ...styles.tagsContainer,  paddingRight:20 }} >
+                    <Text style={{ ...styles.tag }}  >{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                    <Text style={{ ...styles.tag }}  >{data.postCategory.title}</Text>
                 </View>
 
-                <Text style={{ ...styles.locationLabel , textAlign:"left"  }} >{data.city_name}</Text>
 
                 <View style={styles.containerReview}>
 
-                    <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "normal" }} >{data.title}</Text>
-                    <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 }} >{data.description}</Text>
+                    <Text style={{ ...styles.textColour , textAlign:"left" , marginBottom: 10 , fontWeight: "bold" }} >{data.title}</Text>
+                    <Text style={{ ...styles.containerReviewHeader , textAlign:"left" , marginBottom: 10 ,  fontSize:14 , paddingRight:20 }} >{data.description}</Text>
 
                 </View>
 
-                <FlatListSlider
-                    style={
-                        {
-                            width:windowWidth
+                { getImagesArray().length > 0 ? ( getImagesArray().length > 1 ?
+                    <FlatListSlider
+                        style={
+                            {
+                                width:windowWidth
+                            }
                         }
-                    }
-                    data={getImagesArray()}
-                    timer={100}
-                    imageKey={'image'}
-                    local={false}
-                    width={screenWidth}
-                    separator={0}
-                    loop={false}
-                    autoscroll={false}
-                    currentIndexCallback={index => console.log('Index', index)}
-                    indicator
-                    animation
-                />
-
-
-
+                        data={getImagesArray()}
+                        timer={100}
+                        imageKey={'image'}
+                        local={false}
+                        width={screenWidth}
+                        separator={0}
+                        loop={false}
+                        autoscroll={false}
+                        currentIndexCallback={index => console.log('Index', index)}
+                        indicator
+                        animation
+                    />
+                    :
+                    <LoadableImage
+                        styleData={[imageStyles.image,  {height: 230}]}
+                        source={{uri: getImagesArray()[0]['image']}}
+                    /> ) : null
+                }
+                
             </TouchableOpacity>
-        </ScrollView>
+
+            {  !user.isSignout ?
+            <View style={styles.bottomButtonContainer} >
+                {  liked ?
+                    <View style={styles.innerFlexContainer} >
+                        <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
+                            <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart"} size={18} color={"palevioletred"} />
+                        </TouchableOpacity>
+                        <Text style={styles.innerFlexContainerText} >{likes}</Text>
+                    </View>
+                    :
+                    <View style={styles.innerFlexContainer} >
+                        <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
+                            <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart-empty"} size={18} color={"palevioletred"} />
+                        </TouchableOpacity>
+                        <Text style={styles.innerFlexContainerText} >{likes}</Text>
+                    </View>
+                }
+            </View> : null }
+
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
 
+    bottomButtonContainerIcon : {
+        padding:5
+    },
+
+    innerFlexContainerText : {
+        padding:5,
+        paddingLeft:0,
+        color: "palevioletred"
+    },
+
+    bottomButtonContainer : {
+        display: "flex",
+        paddingTop: 10,
+        flexDirection: "row",
+        flexWrap: "nowrap",
+    },
+
+    headerButtonContainer : {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        alignSelf:"flex-end"
+    },
+
+    innerFlexContainer : {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+    },
+
     tagsContainer:{
         display: "flex",
         marginTop: 10,
         flexDirection: "row",
-        wrap: "nowrap"
+        flexWrap: "nowrap"
     },
     userContainer:{
         display: "flex",
         flexDirection: "row",
-        wrap: "nowrap"
+        flexWrap: "nowrap"
     },
     userPicContainer : {
         width: 35,
@@ -143,8 +261,8 @@ const styles = StyleSheet.create({
     locationLabel : {
         color: "palevioletred",
         fontSize: 12,
-        marginTop: 10,
-        marginBottom: 10,
+        marginTop: 0,
+        marginBottom: 0,
     },
     tag : {
         color: "palevioletred",
@@ -236,7 +354,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         color: colors.black,
         textAlign: "left",
-        marginTop: 5
+        marginTop: 0
     },
     textColour2: {
         marginTop:10,
@@ -289,4 +407,17 @@ const styles = StyleSheet.create({
         alignSelf:"flex-start",
     },
 
+});
+
+const imageStyles = StyleSheet.create({
+    container: {
+        width: windowWidth,
+        position: 'relative',
+        height: 230
+    },
+    image: {
+        height: 230,
+        width: windowWidth-20,
+        resizeMode: 'stretch',
+    },
 });

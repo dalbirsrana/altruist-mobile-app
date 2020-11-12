@@ -1,5 +1,5 @@
 import React, {useContext , useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
+import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
 import API from "../../services/api";
 import {AuthContext} from "../navigation/AuthProvider";
 import colors from "../../colors/colors";
@@ -8,71 +8,71 @@ import PostViewHome from "./Posts/View/PostViewHome";
 import {windowWidth} from "../../utils/Dimensions";
 
 import HomePageTopSlider from "../helper/HomePageTopSlider/HomePageTopSlider";
+import HomePagePostListView from "./Posts/List/HomePagePostListView";
 
 import TopHelper from "../screens/partials/home/TopHelpers"
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
 
-const HomeScreen = () => {
+function getRandomInt() {
+    return Math.floor(Math.random() * Math.floor(100000));
+}
+
+const HomeScreen = ({ navigation , postCreatedProp }) => {
     const {user, logout} = useContext(AuthContext);
 
-    const [posts, setPosts] = useState([]);
-    const [isLoading, setLoading] = useState(true);
-
-    const loadPost = async () => {
-        let postsData = await API.Post.list();
-        if (postsData !== undefined && postsData.success ) {
-            setLoading(false)
-            setPosts(postsData.data)
-            return true;
-        }else if( postsData !== undefined && !postsData.success ){
-            if( postsData.tokenExpired ){
-                logout();
-            }
-        }
-    }
-
-    useEffect(() => {
+    const [isLoading, setLoading] = useState( false );
+    const [askComponentToLoadMorePosts, setAskComponentToLoadMorePosts] = useState( postCreatedProp ? getRandomInt() : 1 );
+    const [posLoadingFinished, setPosLoadingFinished] = useState( false );
+    
+    
+    React.useEffect(() => {
+        console.log('Here');
         let isUnMount = false;
         if (!isUnMount){
-            loadPost();
+            setLoading( false );
+
+            // setInterval(() => {
+            //     let i = askComponentToLoadMorePosts+1;
+            //     setAskComponentToLoadMorePosts(  i  );
+            // } , 60000 );
+
         }
         return () => {
             isUnMount = true;
         }
+    } , [] );
+    
+    const loadinIsFinished = React.useCallback(() => {
+        console.log(' Loading is finished ');
+        setLoading( false )
     }, []);
-
+    
     return (
-        <ScrollView style={styles.container}>
-      
+        <ScrollView style={styles.container}
+                    refreshControl={
+                        <RefreshControl refreshing={isLoading} onRefresh={()=>{
+                            setLoading( true );
+                            let i = askComponentToLoadMorePosts+1;
+                            setAskComponentToLoadMorePosts(  i  );
+                        }} />
+                    }
+        >
+            
             {/* Slider container */}
-            <HomePageTopSlider />
+            <HomePageTopSlider navigation={navigation} />
 
             {/* Top Helper container */}
-            <View>
-                <TopHelper />
-            </View>
+            <TopHelper />
 
             {/* Help Posts container */}
-            <View>
-                {
-                    isLoading
-                    ?
-                    <Loading />
-                    :
-                    (
-                        <ScrollView>
-                            {
-                                Array.isArray(posts) && posts.map( function( post , index ) {
-                                    return(
-                                        <PostViewHome dataKey={index} key={index} dataProp={post}></PostViewHome>
-                                        )
-                                })
-                            }
-                        </ScrollView>
-                    )
-                }
-            </View>
+            <HomePagePostListView askComponentToLoadMorePostsProp={askComponentToLoadMorePosts}  loadinIsFinished={()=>{ loadinIsFinished() }} />
 
         </ScrollView>
     )

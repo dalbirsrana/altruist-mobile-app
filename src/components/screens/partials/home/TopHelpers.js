@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from "react"
-import { StyleSheet, Text, View, Image, FlatList } from "react-native"
+import {StyleSheet, Text, View, Image, FlatList} from "react-native"
 import Loading from "../../../../common/Loading";
 import API from "../../../../services/api"
-import { windowWidth } from "../../../../utils/Dimensions";
+import {windowWidth} from "../../../../utils/Dimensions";
 import COLORS from "../../../../colors/colors"
 
-export default function TopHelpers(){
+
+import postImage from "../../../../../assets/user-avatar.png";
+
+
+export default function TopHelpers() {
 
     const [topHelper, setTopHelper] = useState([])
     const [isLoading, setLoading] = useState(true);
@@ -15,45 +19,52 @@ export default function TopHelpers(){
         if (P !== undefined && P.success) {
             setTopHelper(P.data)
             setLoading(false)
+        }else{
+            setTopHelper([])
+            setLoading(false)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         let isUnMount = false
         if (!isUnMount) {
             loadPost()
         }
-        return ()=>{
+        return () => {
             isUnMount = true
         }
     }, [])
 
-    const DATA = topHelper.map((user)=>({
-            name: user.firstName,
-            image: user.profile_picture,
-            college: user.college,
-            helpCounts: user.helps_provided
+    const DATA = topHelper.map((user) => ({
+        name: user.firstName + " " + user.lastName,
+        image: user.profile_picture,
+        college: user.college,
+        helpCounts: user.helps_provided
     }))
 
     return (
         <View>
-            <Text style={styles.mainHeading}>Top Helper's</Text>
             <View style={styles.slider}>
-            {
-                isLoading ? <Loading /> : (
-                    <FlatList
-                        horizontal
-                        data={DATA}
-                        renderItem={({item, index})=>(
-                            <View style={styles.card}>
-                                <Text style={styles.name}>{item.name}</Text>
-                                <Image source={{uri:item.image}} style={styles.image} />
-                                <Text style={styles.collegeName}>Student at {item.college}</Text>
-                            </View>
-                        )}
-                    />
-                )
-            }
+                <Text style={styles.mainHeading}>Top Helper's</Text>
+                {
+                    isLoading ? <Loading/> : (
+                        <FlatList
+                            horizontal
+                            data={DATA}
+                            keyExtractor={ ( item , index ) => index.toString() }
+                            renderItem={({item, index}) => (
+                                <View style={styles.card} key={index}>
+                                    <Text style={styles.name}>{item.name}</Text>
+                                    {item.image ?
+                                        <Image source={{uri: item.image}} style={styles.image}/>
+                                        : <Image source={postImage} style={styles.image}/>
+                                    }
+                                    <Text style={styles.collegeName}>Student at {item.college}</Text>
+                                </View>
+                            )}
+                        />
+                    )
+                }
             </View>
         </View>
     )
@@ -64,30 +75,31 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.secondary,
     },
     mainHeading: {
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: 'bold',
         color: COLORS.primary,
-        marginLeft: windowWidth/20,
+        marginLeft: windowWidth / 20,
         marginTop: 5,
         marginBottom: 5,
     },
     name: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     collegeName: {
         fontSize: 14,
-        textAlign: 'center',
+        textAlign: 'left',
+        width: windowWidth / 2,
     },
     card: {
         paddingTop: 5,
         paddingBottom: 5,
-        paddingStart: windowWidth/20,
-        paddingEnd: windowWidth/20,
+        paddingStart: windowWidth / 20,
+        paddingEnd: windowWidth / 20,
     },
     image: {
-        width: windowWidth/2,
-        height: windowWidth/2.5,
+        width: windowWidth / 2,
+        height: windowWidth / 2.5,
         resizeMode: 'cover',
         borderRadius: 8,
         marginTop: 6,

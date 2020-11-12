@@ -126,14 +126,14 @@ export default class FileUploadExampleScreen extends Component {
                         image: uploadResult['data']['objectUrl']
                     });
                 }else{
-                    alert('Please try again later!');
+                    alert('Please choose small size file!');
                 }
             }
         } catch (e) {
             // console.log({ uploadResponse });
             // console.log({ uploadResult });
             console.log({ e });
-            alert('Please try again later!');
+            alert('Please choose small size file!');
         } finally {
             this.setState({
                 uploading: false

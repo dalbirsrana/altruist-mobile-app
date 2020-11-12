@@ -90,6 +90,7 @@ export default class FlatListSlider extends Component {
                             active: index === this.state.index,
                             local: this.props.local,
                             height: this.props.height,
+                            navigation: this.props.navigation
                         })
 
                     )

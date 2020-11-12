@@ -17,7 +17,7 @@ export const AuthProvider = ({children , navigation}) => {
         (prevState, ...actions) => {
             if( typeof actions !== "undefined" && Array.isArray( actions ) && actions.length > 0 && typeof actions[0] !== "undefined" ){
                 let action = actions[0];
-                console.log( 'action' , action );
+                // console.log( 'action' , action );
                 switch (action.type) {
                     case 'RESTORE_TOKEN':
                         return {
@@ -167,7 +167,7 @@ export const AuthProvider = ({children , navigation}) => {
                     try {
                         let signIn = await API.signIn(data)
                         if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
-                            console.log( 'signIn' , signIn.data.profile_picture );
+                            // console.log( 'signIn' , signIn.data.profile_picture );
                             dispatch({
                                 type: 'SIGN_IN',
                                 isSignout: false,
@@ -236,7 +236,7 @@ export const AuthProvider = ({children , navigation}) => {
                         profileImage: user.profile_picture
                     };
                     dispatch( newUserdata );
-                    console.log( newUserdata );
+                    // console.log( newUserdata );
                     return newUserdata;
                 },
                 userStateChanged: () => {
