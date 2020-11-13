@@ -22,7 +22,6 @@ export default function VerifyAccount( { navigation } ) {
     }
 
     const useEffect = ( () => {
-        console.log( errors );
     });
 
     const submitForm = async () => {
@@ -58,7 +57,7 @@ export default function VerifyAccount( { navigation } ) {
 
             { errorList.length > 0 ?
                 <View>
-                    {errorList}
+                    <Text>{errorList}</Text>
                 </View>
                 : null
             }

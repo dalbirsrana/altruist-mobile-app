@@ -1,23 +1,39 @@
 import React, {useState, useContext, useEffect} from "react";
 import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
 
-import FormButton from "../../common/FormButton";
-import FormInput from "../../common/FormInput";
-import { AuthContext } from "../navigation/AuthProvider";
+import FormButton from "../../../common/FormButton";
+import FormInput from "../../../common/FormInput";
+import { AuthContext } from "../../navigation/AuthProvider";
 
-import logo from "../../../assets/icon.png";
-import colors from "../../colors/colors";
-import { windowHeight, windowWidth } from "../../utils/Dimensions";
+import logo from "../../../../assets/icon.png";
+import colors from "../../../colors/colors";
+import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
-  const { user, login, skipLogin } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
 
-  useEffect(() => {
-        console.log( user );
-  });
+    const isUserSignedOut = () => {
+        return  typeof user === "undefined" || ( typeof user !== "undefined" && user.isSignout === true );
+    }
+
+    async function checkUserLoggedIn(){
+        if( !isUserSignedOut() ){
+            await navigation.navigate("HomeTabs");
+        }
+    }
+
+    useEffect(() => {
+        let isUnMount = false;
+        if( !isUnMount  ){
+            checkUserLoggedIn();
+        }
+        return () => {
+          isUnMount = true ;
+        }
+    } , [] );
 
   return (
     <View style={styles.container}>
@@ -27,6 +43,11 @@ const SignInScreen = ({ navigation }) => {
       />
 
       <Text>{msg}</Text>
+
+        { ( typeof user !== "undefined" && user.hasOwnProperty('logoutMsg') && user.logoutMsg !== false ) ?
+            <Text>{user.logoutMsg}</Text>
+            : null
+        }
 
       <FormInput
         value={email}
@@ -53,15 +74,13 @@ const SignInScreen = ({ navigation }) => {
           };
 
           let signIn = await login(data);
-
-          if (signIn.success) {
-            navigation.navigate("Home");
+          if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
+              setPassword("");
+              navigation.navigate( "HomeTabs");
           } else {
             if (signIn.data.username) setMsg(signIn.data.username);
-
             if (signIn.data.verification_token)
               setMsg(signIn.data.verification_token);
-
             if (signIn.data.message) setMsg(signIn.data.message);
           }
         }}
@@ -82,8 +101,7 @@ const SignInScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          if (skipLogin()) return navigation.navigate("HomeTabs");
-          else undefined;
+            return navigation.navigate("UnauthenticatedHomeScreen");
         }}
       >
         <Text style={styles.buttonText}>Skip</Text>

@@ -1,45 +1,80 @@
 import React, {useContext , useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View} from "react-native";
-import FormButton from "../../common/FormButton";
+import {Image, Button, StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl, SafeAreaView } from "react-native";
+import API from "../../services/api";
 import {AuthContext} from "../navigation/AuthProvider";
-import logo from "../../../assets/icon.png";
 import colors from "../../colors/colors";
-import BR from "../helper/BR";
-import FileUploadExampleScreen from "./FileUploadExampleScreen";
-import AsyncStorageHelper from "./../../services/AsyncStorageHelper";
+import Loading from "../../common/Loading";
+import PostViewHome from "./Posts/View/PostViewHome";
+import {windowWidth} from "../../utils/Dimensions";
 
-const HomeScreen = ({navigation}) => {
+import HomePageTopSlider from "../helper/HomePageTopSlider/HomePageTopSlider";
+import HomePagePostListView from "./Posts/List/HomePagePostListView";
+
+import TopHelper from "../screens/partials/home/TopHelpers"
+import Ionicons from "react-native-vector-icons/Ionicons";
+
+
+const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+}
+
+function getRandomInt() {
+    return Math.floor(Math.random() * Math.floor(100000));
+}
+
+const HomeScreen = ({ navigation , postCreatedProp }) => {
     const {user, logout} = useContext(AuthContext);
 
-    const isGuestUser = () => {
-        return  typeof user === "undefined";
-    }
+    const [isLoading, setLoading] = useState( false );
+    const [askComponentToLoadMorePosts, setAskComponentToLoadMorePosts] = useState( postCreatedProp ? getRandomInt() : 1 );
+    const [posLoadingFinished, setPosLoadingFinished] = useState( false );
+    
+    
+    React.useEffect(() => {
+        console.log('Here');
+        let isUnMount = false;
+        if (!isUnMount){
+            setLoading( false );
 
-    const alertItem = async function () {
-        let valueSaved = await AsyncStorageHelper.getMyObject('home');
-        console.log(valueSaved);
-    }
+            // setInterval(() => {
+            //     let i = askComponentToLoadMorePosts+1;
+            //     setAskComponentToLoadMorePosts(  i  );
+            // } , 60000 );
 
+        }
+        return () => {
+            isUnMount = true;
+        }
+    } , [] );
+    
+    const loadinIsFinished = React.useCallback(() => {
+        console.log(' Loading is finished ');
+        setLoading( false )
+    }, []);
+    
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}
+                    refreshControl={
+                        <RefreshControl refreshing={isLoading} onRefresh={()=>{
+                            setLoading( true );
+                            let i = askComponentToLoadMorePosts+1;
+                            setAskComponentToLoadMorePosts(  i  );
+                        }} />
+                    }
+        >
+            
+            {/* Slider container */}
+            <HomePageTopSlider navigation={navigation} />
 
-            <Image source={logo} style={{width: 200, height: 200}}/>
+            {/* Top Helper container */}
+            <TopHelper />
 
-            { isGuestUser() ?
-                null
-                : 
-                <Text>
-                    Welcome {user.firstName} {user.lastName}
-                </Text>
-            }
+            {/* Help Posts container */}
+            <HomePagePostListView askComponentToLoadMorePostsProp={askComponentToLoadMorePosts}  loadinIsFinished={()=>{ loadinIsFinished() }} />
 
-            { typeof user === 'undefined' || user.isSignout ?
-                <FormButton buttonTitle='SignIn' onPress={ () => navigation.navigate("SignIn") } /> 
-                : 
-                <FormButton buttonTitle='LogOut' onPress={() => logout()}/> 
-            }
-
-        </View>
+        </ScrollView>
     )
 }
 
@@ -48,16 +83,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    para: {
-        fontSize: 20,
-        justifyContent: "center",
-        alignItems: "center",
-        color: "red",
-        textAlign: "center",
-        marginVertical: 30,
+        flexDirection: "column",
+        backgroundColor: colors.white
     },
 });
