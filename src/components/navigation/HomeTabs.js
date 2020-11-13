@@ -144,8 +144,6 @@ export default function HomeTabs() {
                 showIcon: true,
             }
         }
-
-
     >
         <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt() }}  component={HomeStackScreens}  options={{ title: '', header: () => null }} />
         <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
