@@ -131,28 +131,31 @@ const API =
                 return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
             },
         },
+        User: {
+            getSavedPosts: () => {
+                return makeRequest('/user-saved-posts', {}, GET)
+            },
+            getPosts: () => {
+                return makeRequest('/user-posts', {}, GET)
+            },
+            getNotifications: () => {
+                return makeRequest('/notifications', {}, GET)
+            },
+        },
 
         PostTypes : {
             list : ( data ) => {
                 return makeRequest('/post-types', {}, GET)
             }
         },
-
         PostCategories : {
             list : async () => {
                 return makeRequest('/post-categories', {}, GET)
             }
         },
-
-        userNotifications: () => {
-            return makeRequest('/notifications', {}, GET)
-        },
-
         topHelper: () => {
             return makeRequest('/top-helpers', {}, GET)
         }
-
-
     }
 
 export default API
