@@ -39,9 +39,18 @@ export default class FileUploadExampleScreen extends Component {
             image
         } = this.state;
 
+        let location = this.props.location ;
+        let iconUploadName = 'plus';
+        if( location == "PostUpload" ){
+            iconUploadName = 'plus';
+        }else if( location == "ChangeProfilePicture" ){
+            iconUploadName = 'pencil';
+        }else if( location == "AddProfilePicture" ){
+            iconUploadName = 'plus-circle';
+        }
+
         return (
             <View>
-
                 <StatusBar barStyle="default" />
                 <Button
                     buttonStyle={
@@ -51,7 +60,7 @@ export default class FileUploadExampleScreen extends Component {
                     type="outline"
                     icon={
                         <Icon
-                            name="plus"
+                            name={iconUploadName}
                             size={26}
                             color={colors.primary}
                         />
@@ -117,14 +126,14 @@ export default class FileUploadExampleScreen extends Component {
                         image: uploadResult['data']['objectUrl']
                     });
                 }else{
-                    alert('Please try again later!');
+                    alert('Please choose small size file!');
                 }
             }
         } catch (e) {
             // console.log({ uploadResponse });
             // console.log({ uploadResult });
             console.log({ e });
-            alert('Please try again later!');
+            alert('Please choose small size file!');
         } finally {
             this.setState({
                 uploading: false

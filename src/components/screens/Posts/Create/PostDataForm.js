@@ -31,10 +31,14 @@ const PostDataForm = ({navigation, route }) => {
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
+    // const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
+    // const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
+    // const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
+
     const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?   "27.2046" : "27.2046");
     const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  "77.4977" : "77.4977");
     const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  "Argyle Street Vancouver" : "Argyle Street Vancouver");
-
+    
     const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
 
 

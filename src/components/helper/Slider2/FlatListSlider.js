@@ -17,6 +17,7 @@ export default class FlatListSlider extends Component {
     static defaultProps = {
         data: [],
         imageKey: 'image',
+        buttonLable : 'buttonLable',
         local: false,
         width: Math.round(Dimensions.get('window').width),
         height: 230,
@@ -24,7 +25,7 @@ export default class FlatListSlider extends Component {
         loop: true,
         indicator: true,
         indicatorStyle: {},
-        indicatorContainerStyle:{position:'absolute',bottom:10},
+        indicatorContainerStyle: {position:'absolute',bottom:20},
         indicatorActiveColor: '#3498db',
         indicatorInActiveColor: '#bdc3c7',
         indicatorActiveWidth: 6,
@@ -83,11 +84,13 @@ export default class FlatListSlider extends Component {
                             style: {width: this.props.width},
                             item: item,
                             imageKey: this.props.imageKey,
+                            buttonLable : this.props.buttonLable,
                             onPress: this.changeSliderListIndex,
                             index: this.state.index % this.props.data.length,
                             active: index === this.state.index,
                             local: this.props.local,
                             height: this.props.height,
+                            navigation: this.props.navigation
                         })
 
                     )

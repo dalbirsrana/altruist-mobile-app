@@ -1,6 +1,14 @@
 import AsyncStorageHelper from "./AsyncStorageHelper";
 
-const api_server = 'http://ec2-34-211-51-75.us-west-2.compute.amazonaws.com'
+// dev app when you build for developers
+// const api_server = 'http://34.208.106.207'
+
+// prod app when you build for all
+ const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+
+// my local app
+// const api_server = 'http://localhost:8005'
+
 const GET = "GET" ;
 const POST = "POST" ;
 
@@ -94,6 +102,11 @@ const API =
             return fetch(apiUrl, options);
         },
 
+        User : {
+          changePicture : async ( data ) => {
+              return await makeRequest('/change-picture', {StudentAppUser: data})
+          }
+        },
 
         Post : {
             create : ( data ) => {
@@ -110,7 +123,13 @@ const API =
             },
             single: (id)=>{
                 return makeRequest('/posts/' + id, {}, GET)
-            }
+            },
+            like: (id)=>{
+                return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
+            },
+            save: (id)=>{
+                return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
+            },
         },
 
         PostTypes : {

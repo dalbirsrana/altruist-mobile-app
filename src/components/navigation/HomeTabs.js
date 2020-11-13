@@ -13,10 +13,47 @@ import HelpScreen from '../screens/SingleHelpScreen'
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
+
+import UserActivityScreen from '../screens/UserActivityScreen'
+
 import UserNotificationScreen from '../screens/userNotificationsScreen'
 
-import createPostStack from './createPostStack'
 import PostTypeSelection from '../screens/Posts/Create/PostTypeSelection';
+import PostCategorySelection from "../screens/Posts/Create/PostCategorySelection";
+import PostDataForm from "../screens/Posts/Create/PostDataForm";
+import PostUploads from "../screens/Posts/Create/PostUploads";
+import PostReview from "../screens/Posts/Create/PostReview";
+
+const CreatePostStack = createStackNavigator();
+
+function createPostStack() {
+    return (
+        <CreatePostStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#e89b8d',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }
+            }}
+        >
+            <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
+                title: 'Select type'
+            }} />
+            <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection}  options={{
+                title: 'Select Category'
+            }} />
+            <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
+            <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
+            <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
+
+        </CreatePostStack.Navigator>
+
+    );
+}
 
 const HomeStack = createStackNavigator();
 
@@ -56,6 +93,10 @@ function UserProfileScreens() {
 
 const Tab = createBottomTabNavigator();
 
+function getRandomInt() {
+    return Math.floor(Math.random() * Math.floor(100000));
+}
+
 export default function HomeTabs() {
     return (
     <Tab.Navigator
@@ -67,27 +108,28 @@ export default function HomeTabs() {
 
                 if (route.name === 'HomeStack') {
                     if( focused ){
-                        return <Ionicons name='ios-home' size={size} color={color} />;
+                        return <Ionicons style={{marginTop:12, marginBottom:0}} name='ios-home' size={size} color={color} />;
                     }else{
-                        return <Ionicons name="md-home" size={size} color={color} />;
+                        return <Ionicons style={{marginTop:12, marginBottom:0}} name="md-home" size={size} color={color} />;
                     }
                 } else if (route.name === 'Chat') {
                     iconName = focused ? 'wechat' : 'wechat';
-                    return <AntDesign name={iconName} size={size} color={color} />;
+                    return <AntDesign style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
                 } else if (route.name === 'CreatePost') {
                     iconName = focused ? 'ios-add-circle' : 'ios-add-circle-outline';
-                    return <Ionicons name={iconName} size={size} color={color} />;
+                    return <Ionicons style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
                 } else if (route.name === 'Notifications') {
                     iconName = focused ? 'ios-notifications' : 'ios-notifications-outline';
-                    return <Ionicons name={iconName} size={size} color={color} />;
+                    return <Ionicons style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
                 } else if (route.name === 'UserProfile') {
                     iconName = focused ? 'user' : 'user';
-                    return <SimpleLineIcons name={iconName} size={22} color={color} />;
+                    return <SimpleLineIcons style={{marginTop:12, marginBottom:0}} name={iconName} size={22} color={color} />;
                 }
             },
         })}
         tabBarOptions={
             {
+                paddingTop:105,
                 activeTintColor: 'tomato',
                 inactiveTintColor: 'gray',
                 showIcon: true,
@@ -96,7 +138,7 @@ export default function HomeTabs() {
 
 
     >
-        <Tab.Screen name='HomeStack' component={HomeStackScreens}  options={{ title: '', header: () => null }} />
+        <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt() }}  component={HomeStackScreens}  options={{ title: '', header: () => null }} />
         <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
         <Tab.Screen name='CreatePost' component={createPostStack} options={{
             tabBarVisible : false,

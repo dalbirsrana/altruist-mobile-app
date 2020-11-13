@@ -10,8 +10,8 @@ import colors from "../../../colors/colors";
 import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("p72@mylangara.ca");
-  const [password, setPassword] = useState("jaimin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
   const { user, login } = useContext(AuthContext);
 

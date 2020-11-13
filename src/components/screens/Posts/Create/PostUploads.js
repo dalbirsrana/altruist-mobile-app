@@ -106,7 +106,7 @@ export default function PostUploads ({navigation, route}){
 
             <View  style={styles.catBox2} >
                 <View  style={styles.imgContainer2} >
-                    <FileUploadExampleScreen imageUploaded={( event ) => {  setUploadsObj(oldArray => [...oldArray, event]);   }}  />
+                    <FileUploadExampleScreen location={"PostUpload"} imageUploaded={( event ) => {  setUploadsObj(oldArray => [...oldArray, event]);   }}  />
                 </View>
             </View>
             <BR/>
@@ -188,8 +188,6 @@ const styles = StyleSheet.create({
         paddingTop:20,
         display:"flex",
         flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
+        flexWrap: "wrap"
     }
 });
