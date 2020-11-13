@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     },
     card: {
         paddingTop: 5,
-        paddingBottom: 5,
         paddingStart: windowWidth / 20,
         paddingEnd: windowWidth / 20,
     },

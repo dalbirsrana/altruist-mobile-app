@@ -1,10 +1,10 @@
 import AsyncStorageHelper from "./AsyncStorageHelper";
 
 // dev app when you build for developers
-// const api_server = 'http://34.208.106.207'
+const api_server = 'http://34.208.106.207'
 
 // prod app when you build for all
- const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+//  const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
 // my local app
 // const api_server = 'http://localhost:8005'
@@ -131,28 +131,31 @@ const API =
                 return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
             },
         },
+        User: {
+            getSavedPosts: () => {
+                return makeRequest('/user-saved-posts', {}, GET)
+            },
+            getPosts: () => {
+                return makeRequest('/user-posts', {}, GET)
+            },
+            getNotifications: () => {
+                return makeRequest('/notifications', {}, GET)
+            },
+        },
 
         PostTypes : {
             list : ( data ) => {
                 return makeRequest('/post-types', {}, GET)
             }
         },
-
         PostCategories : {
             list : async () => {
                 return makeRequest('/post-categories', {}, GET)
             }
         },
-
-        userNotifications: () => {
-            return makeRequest('/notifications', {}, GET)
-        },
-
         topHelper: () => {
             return makeRequest('/top-helpers', {}, GET)
         }
-
-
     }
 
 export default API

@@ -60,7 +60,6 @@ const HomeStack = createStackNavigator();
 function HomeStackScreens() {
     return (
         <HomeStack.Navigator
-
             screenOptions={{
                 headerStyle: {
                     backgroundColor: '#e89b8d',
@@ -71,7 +70,6 @@ function HomeStackScreens() {
                     textAlign: 'center'
                 }
             }}
-
         >
             <HomeStack.Screen name="Home" component={HomeScreen}  options={{ title: 'ALTRUIST' }} />
             <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
@@ -83,9 +81,20 @@ const UserProfileStack = createStackNavigator();
 
 function UserProfileScreens() {
     return (
-        <UserProfileStack.Navigator>
-            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} />
-            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} />
+        <UserProfileStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#e89b8d',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }
+            }}
+        >
+            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: ''}} />
+            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'Posts' }} />
             <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} />
         </UserProfileStack.Navigator>
     )

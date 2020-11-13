@@ -95,9 +95,11 @@ const UserProfile = ({ navigation }) => {
             <View style = {styles.optionsList} >
                 <View style = {styles.option} >
                     <Image source={editPostIcon} style={styles.optionIcon} />
-                    <Text style={styles.optionTitle}>
-                        Posts
-                    </Text> 
+                    <TouchableOpacity onPress={() => navigation.navigate('UserPosts')} style={styles.optionTitle}>
+                        <Text>
+                            My Posts
+                        </Text>
+                    </TouchableOpacity>
                     <Image source={nextIcon} style={styles.optionArrow} /> 
                 </View >
 
