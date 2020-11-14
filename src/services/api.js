@@ -1,13 +1,13 @@
 import AsyncStorageHelper from "./AsyncStorageHelper";
 
-// dev app when you build for developers
+// DEV SERVER { Use in case if something is not working on prod because of it is not available there }
 // const api_server = 'http://34.208.106.207'
 
-// prod app when you build for all
-//  const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+// PROD SERVER
+ const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
-// my local app
-const api_server = 'http://192.168.0.124/capstone/capstone-api'
+// Jaimin Local MAMP Server
+// const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET" ;
 const POST = "POST" ;
@@ -130,6 +130,18 @@ const API =
             },
             save: (id)=>{
                 return makeRequest('/save/' + id, {PostActivity:{post_id:id}}, POST)
+            },
+            request: (id)=>{
+                return makeRequest('/request', {PostComments:{post_id:id}}, POST)
+            },
+            requestExist: (id)=>{
+                return makeRequest('/check-request-made/'+id, {}, GET)
+            },
+            accept: (id)=>{
+                return makeRequest('/accept' , {PostComments:{request_id:id}}, POST)
+            },
+            decline: (id)=>{
+                return makeRequest('/decline' , {PostComments:{request_id:id}}, POST)
             },
         },
 
