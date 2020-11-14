@@ -9,5 +9,4 @@ export default {
   secondaryTransparent: "rgba(255,231,194,0.3)",
   primaryTransparent:"rgba(232,155,141,0.3)",
 
-
 };

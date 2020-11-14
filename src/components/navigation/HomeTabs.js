@@ -23,6 +23,8 @@ import PostCategorySelection from "../screens/Posts/Create/PostCategorySelection
 import PostDataForm from "../screens/Posts/Create/PostDataForm";
 import PostUploads from "../screens/Posts/Create/PostUploads";
 import PostReview from "../screens/Posts/Create/PostReview";
+import colors from "../../colors/colors";
+
 
 const CreatePostStack = createStackNavigator();
 
@@ -117,22 +119,172 @@ export default function HomeTabs() {
 
                 if (route.name === 'HomeStack') {
                     if( focused ){
-                        return <Ionicons style={{marginTop:12, marginBottom:0}} name='ios-home' size={size} color={color} />;
-                    }else{
-                        return <Ionicons style={{marginTop:12, marginBottom:0}} name="md-home" size={size} color={color} />;
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Home.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+                                backgroundColor:colors.secondary,
+
+                            }}
+
+                        />
+                            ;
+
+                        }else{
+                        return <Image
+                            source={
+                               require('../../../assets/icons_png/Icons_Altruist_Home.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12, marginBottom:0
+                            }}
+
+                        />;
                     }
                 } else if (route.name === 'Chat') {
-                    iconName = focused ? 'wechat' : 'wechat';
-                    return <AntDesign style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
+
+                    if( focused ){
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Message.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+
+                    }else{
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Message.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+                    };
                 } else if (route.name === 'CreatePost') {
-                    iconName = focused ? 'ios-add-circle' : 'ios-add-circle-outline';
-                    return <Ionicons style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
+
+
+                    if( focused ){
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Add_Post.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+
+                    }else{
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Add_Post.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+                    };
+
+
+
                 } else if (route.name === 'Notifications') {
-                    iconName = focused ? 'ios-notifications' : 'ios-notifications-outline';
-                    return <Ionicons style={{marginTop:12, marginBottom:0}} name={iconName} size={size} color={color} />;
+                    if( focused ){
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Notification.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+
+                    }else{
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_Notification.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+                    };
+
+
+
                 } else if (route.name === 'UserProfile') {
-                    iconName = focused ? 'user' : 'user';
-                    return <SimpleLineIcons style={{marginTop:12, marginBottom:0}} name={iconName} size={22} color={color} />;
+                    if( focused ){
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_User.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+
+                    }else{
+                        return <Image
+                            source={
+                                require('../../../assets/icons_png/Icons_Altruist_User.png')
+                            }
+                            style={{
+                                width: size,
+                                height: size,
+                                marginTop:12,
+                                marginBottom:0,
+
+                            }}
+
+                        />;
+                    };
+
+
+
+
                 }
             },
         })}
