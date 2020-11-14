@@ -45,7 +45,7 @@ const UserActivity = ( {navigation} ) => {
                 :
                 (
                     <View>
-                        {/* {JSON.stringify(notifications)} */}
+                        <Text>{JSON.stringify(notifications)}</Text>
                     </View>
                 )
             }

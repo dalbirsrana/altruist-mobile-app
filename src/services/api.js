@@ -4,16 +4,16 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // const api_server = 'http://34.208.106.207'
 
 // prod app when you build for all
- const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+//  const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
 // my local app
-// const api_server = 'http://localhost:8005'
+const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET" ;
 const POST = "POST" ;
 
 async function makeRequest(path, data, method="POST" ) {
-        console.log(data)
+
         let result = {};
         let defaultHeaders = {
             Accept: 'application/json',
@@ -32,14 +32,14 @@ async function makeRequest(path, data, method="POST" ) {
         if( method === POST ){
             options.body = JSON.stringify(data);
         }
-        await fetch(`${api_server}${path}`,  options )
+        await fetch(`${api_server}${path}?XDEBUG_SESSION_START=17105`,  options )
         .then(response => response.json())
         .then(resData => { 
-            result = resData
+            result = resData;
         })
         .catch(  ( error ) => function(){
             console.error('Error:', error);
-            return error;
+            return  { success: false , data : {message:'Internal error occured.'} };
         });
 
         result.tokenExpired = false ;
@@ -49,6 +49,7 @@ async function makeRequest(path, data, method="POST" ) {
             }
         }
 
+        console.log( result );
         return result
     }
 
@@ -128,7 +129,7 @@ const API =
                 return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
             },
             save: (id)=>{
-                return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
+                return makeRequest('/save/' + id, {PostActivity:{post_id:id}}, POST)
             },
         },
 

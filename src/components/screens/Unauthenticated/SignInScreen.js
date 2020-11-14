@@ -10,8 +10,8 @@ import colors from "../../../colors/colors";
 import { windowHeight, windowWidth } from "../../../utils/Dimensions";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@mylangara.ca");
+  const [password, setPassword] = useState("jaimin");
   const [msg, setMsg] = useState("");
   const { user, login } = useContext(AuthContext);
 
@@ -73,16 +73,27 @@ const SignInScreen = ({ navigation }) => {
             password: password,
           };
 
-          let signIn = await login(data);
-          if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
-              setPassword("");
-              navigation.navigate( "HomeTabs");
-          } else {
-            if (signIn.data.username) setMsg(signIn.data.username);
-            if (signIn.data.verification_token)
-              setMsg(signIn.data.verification_token);
-            if (signIn.data.message) setMsg(signIn.data.message);
-          }
+            try {
+                console.log('signInStart'  )
+                let signIn = await login(data);
+                console.log('signIn' , signIn );
+                if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
+                    setPassword("");
+                    navigation.navigate( "HomeTabs");
+                } else {
+                    if( typeof signIn !== "undefined" ){
+                        if( signIn.hasOwnProperty('data') ){
+                            if (signIn.data.hasOwnProperty('username') && signIn.data.username) setMsg(signIn.data.username);
+                            if (signIn.data.hasOwnProperty('verification_token') && signIn.data.verification_token) setMsg(signIn.data.verification_token);
+                            if (signIn.data.hasOwnProperty('message') && signIn.data.message) setMsg(signIn.data.message);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log("Error" ,error)
+                throw error
+            }
+
         }}
       />
 
