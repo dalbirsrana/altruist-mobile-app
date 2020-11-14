@@ -69,7 +69,6 @@ const UserActivity = ( {navigation} ) => {
                         )
                     : (<Text style={styles.noNotification}>No notification</Text>)
                 }
-
             </ScrollView>
         </View>
     )
