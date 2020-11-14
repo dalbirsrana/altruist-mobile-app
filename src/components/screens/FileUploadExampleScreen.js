@@ -1,7 +1,8 @@
-import React, {Component, useContext} from 'react';
-import {AsyncStorage, Platform, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { AsyncStorage , Platform } from 'react-native';
 import {
     ActivityIndicator,
+    Image,
     StatusBar,
     StyleSheet,
     View,
@@ -10,10 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import API from '../../services/api';
-import colors from "../../colors/colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import {windowHeight, windowWidth} from "../../utils/Dimensions";
-import {AuthContext} from "../navigation/AuthProvider";
+import AsyncStorageHelper from "../../services/AsyncStorageHelper";
 
 export default class FileUploadExampleScreen extends Component {
 
@@ -39,19 +37,10 @@ export default class FileUploadExampleScreen extends Component {
             image
         } = this.state;
 
-        let location = this.props.location ;
-        let iconUploadName = 'plus';
-        if( location == "PostUpload" ){
-            iconUploadName = 'plus';
-        }else if( location == "ChangeProfilePicture" ){
-            iconUploadName = 'pencil';
-        }else if( location == "AddProfilePicture" ){
-            iconUploadName = 'plus-circle';
-        }
-
         return (
-            <View>
+            <View style={styles.container}>
                 <StatusBar barStyle="default" />
+
                 <Button
                     buttonStyle={
                         styles.imageUploadButton
@@ -60,14 +49,15 @@ export default class FileUploadExampleScreen extends Component {
                     type="outline"
                     icon={
                         <Icon
-                            name={iconUploadName}
+                            name="plus"
                             size={26}
-                            color={colors.primary}
+                            color="#2288dd"
                         />
                     }
                 />
-                {this._maybeRenderUploadingOverlay()}
 
+                {this._maybeRenderImage()}
+                {this._maybeRenderUploadingOverlay()}
             </View>
         );
     }
@@ -83,8 +73,27 @@ export default class FileUploadExampleScreen extends Component {
         }
     };
 
+    _maybeRenderImage = () => {
+        let {
+            image
+        } = this.state;
+
+        if (!image) {
+            return;
+        }
+
+        return (
+            <View
+                style={styles.maybeRenderContainer}>
+                <View
+                    style={styles.maybeRenderImageContainer}>
+                    <Image source={{ uri: image }} style={styles.maybeRenderImage} />
+                </View>
+            </View>
+        );
+    };
+
     _pickImage = async () => {
-        // console.log('Yes');
         const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
 
         // only if user allows permission to camera roll
@@ -112,28 +121,30 @@ export default class FileUploadExampleScreen extends Component {
                 uploadResponse = await API.uploadImageAsync(pickerResult.uri);
                 uploadResult = await uploadResponse.json();
 
-                // console.log(uploadResult);
+                console.log(uploadResult);
                 if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
+                    let key = this.props['location'];
 
                     try {
-                        this.props.imageUploaded( uploadResult['data'] );
+                        console.log(key);
+                        await AsyncStorageHelper.setObjectValue( key , uploadResult['data'] );
                     } catch (error) {
                         // Error saving data
-                        // console.log( error );
+                        console.log( error );
                     }
 
                     this.setState({
                         image: uploadResult['data']['objectUrl']
                     });
                 }else{
-                    alert('Please choose small size file!');
+                    alert('Please try again later!');
                 }
             }
         } catch (e) {
-            // console.log({ uploadResponse });
-            // console.log({ uploadResult });
+            console.log({ uploadResponse });
+            console.log({ uploadResult });
             console.log({ e });
-            alert('Please choose small size file!');
+            alert('Please try again later!');
         } finally {
             this.setState({
                 uploading: false
@@ -143,21 +154,55 @@ export default class FileUploadExampleScreen extends Component {
 
 }
 
+
 const styles = StyleSheet.create({
+
     imageUploadButton: {
-        width:windowWidth-40,
-        borderRadius:20,
-        borderWidth:0
+        minHeight : 150,
+        minWidth : 125,
+        borderRadius:10
+    },
+
+    container: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+    },
+    exampleText: {
+        fontSize: 20,
+        marginBottom: 20,
+        marginHorizontal: 15,
+        textAlign: 'center',
     },
     maybeRenderUploading: {
-        marginTop:-5,
-        borderRadius:20,
-        height:50,
         alignItems: 'center',
-        backgroundColor: "rgba(232,155,141,0.6)" ,
+        backgroundColor: 'rgba(0,0,0,0.4)',
         justifyContent: 'center',
+    },
+    maybeRenderContainer: {
+        borderRadius: 3,
+        elevation: 2,
+        marginTop: 30,
+        shadowColor: 'rgba(0,0,0,1)',
+        shadowOpacity: 0.2,
+        shadowOffset: {
+            height: 4,
+            width: 4,
+        },
+        shadowRadius: 5,
+        width: 250,
+    },
+    maybeRenderImageContainer: {
+        borderTopLeftRadius: 3,
+        borderTopRightRadius: 3,
+        overflow: 'hidden',
+    },
+    maybeRenderImage: {
+        height: 250,
+        width: 250,
+    },
+    maybeRenderImageText: {
+        paddingHorizontal: 10,
+        paddingVertical: 10,
     }
 });
-
-
-
