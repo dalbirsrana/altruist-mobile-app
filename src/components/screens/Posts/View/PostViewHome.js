@@ -17,6 +17,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import API from "../../../../services/api";
+import Loading from "../../../../common/Loading";
 
 
 const StyledTextButton = styled.Text`
@@ -53,6 +54,9 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
     const [saves, setSaves] = useState( dataProp.totalSaved );
     const [saved, setSaved] = useState( dataProp.savedPost );
 
+    const [likedInProcess, setLikedInProcess] = useState( false );
+    const [saveInProgress, setSaveInProgress] = useState( false );
+
 
     useEffect(() => {
         let isUnMount = false;
@@ -79,26 +83,34 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
     }
     
     async function likePost( id ){
-        let returnedData = await API.Post.like( id );
-        if (returnedData !== undefined && returnedData.success ) {
-            setLiked( returnedData.data.status );
-            setSaves( returnedData.data.totalLikes );
-        }else if( returnedData !== undefined && !returnedData.success ){
-            if( returnedData.tokenExpired ){
-                logout();
+        if( !likedInProcess ){
+            setLikedInProcess( true );
+            let returnedData = await API.Post.like( id );
+            if (returnedData !== undefined && returnedData.success ) {
+                setLiked( returnedData.data.status );
+                setLikes( returnedData.data.totalLikes );
+                setLikedInProcess( false );
+            }else if( returnedData !== undefined && !returnedData.success ){
+                if( returnedData.tokenExpired ){
+                    logout();
+                    setLikedInProcess( false );
+                }
             }
         }
     }
 
 
     async function savePost( id ){
-        let returnedData = await API.Post.save( id );
-        if (returnedData !== undefined && returnedData.success ) {
-            setSaved( returnedData.data.status );
-            setSaves( returnedData.data.totalSaved );
-        }else if( returnedData !== undefined && !returnedData.success ){
-            if( returnedData.tokenExpired ){
-                logout();
+        if( !saveInProgress ){
+            setSaveInProgress( true );
+            let returnedData = await API.Post.save( id );
+            if (returnedData !== undefined && returnedData.success ) {
+                setSaved( returnedData.data.status );
+                setSaves( returnedData.data.totalSaved );
+            }else if( returnedData !== undefined && !returnedData.success ){
+                if( returnedData.tokenExpired ){
+                    logout();
+                }
             }
         }
     }
@@ -126,7 +138,7 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
                     <View style={styles.headerButtonContainer} >
                         {  saved ?
                             <View style={styles.innerFlexContainer} >
-                                <TouchableOpacity  onPress={()=>{ savePost( data.id ) }} >
+                                <TouchableOpacity onPress={()=>{ savePost( data.id ) }} >
                                     <MaterialCommunityIcons style={ styles.bottomButtonContainerIcon } name={"content-save"} size={18} color={"palevioletred"} />
                                 </TouchableOpacity>
                                 <Text style={styles.innerFlexContainerText} >{saves}</Text>
@@ -189,21 +201,29 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
 
             {  !user.isSignout ?
             <View style={styles.bottomButtonContainer} >
-                {  liked ?
-                    <View style={styles.innerFlexContainer} >
-                        <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
-                            <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart"} size={18} color={"palevioletred"} />
-                        </TouchableOpacity>
-                        <Text style={styles.innerFlexContainerText} >{likes}</Text>
-                    </View>
-                    :
-                    <View style={styles.innerFlexContainer} >
-                        <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
-                            <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart-empty"} size={18} color={"palevioletred"} />
-                        </TouchableOpacity>
-                        <Text style={styles.innerFlexContainerText} >{likes}</Text>
-                    </View>
-                }
+                <View style={styles.innerFlexContainer} >
+                    {  liked ?
+                        <View style={styles.innerFlexContainer} >
+                            <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
+                                <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart"} size={18} color={"palevioletred"} />
+                            </TouchableOpacity>
+                            <Text style={styles.innerFlexContainerText} >{likes}</Text>
+                        </View>
+                        :
+                        <View style={styles.innerFlexContainer} >
+                            <TouchableOpacity  onPress={()=>{ likePost( data.id ) }} >
+                                <Ionicons style={ styles.bottomButtonContainerIcon } name={"ios-heart-empty"} size={18} color={"palevioletred"} />
+                            </TouchableOpacity>
+                            <Text style={styles.innerFlexContainerText} >{likes}</Text>
+                        </View>
+                    }
+                </View>
+                <View style={styles.innerFlexContainer} >
+                    {
+                        user.id === data.user.id
+
+                    }
+                </View>
             </View> : null }
 
         </View>
@@ -213,11 +233,11 @@ export default function PostViewHome ({ route , dataProp , key , dataKey }){
 const styles = StyleSheet.create({
 
     bottomButtonContainerIcon : {
-        padding:5
+        padding:10
     },
 
     innerFlexContainerText : {
-        padding:5,
+        padding:10,
         paddingLeft:0,
         color: "palevioletred"
     },

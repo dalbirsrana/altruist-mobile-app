@@ -165,7 +165,8 @@ export const AuthProvider = ({children , navigation}) => {
                 dispatch,
                 login: async (data) => {
                     try {
-                        let signIn = await API.signIn(data)
+                        let signIn = await API.signIn(data);
+                        console.log( signIn );
                         if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
                             // console.log( 'signIn' , signIn.data.profile_picture );
                             dispatch({
