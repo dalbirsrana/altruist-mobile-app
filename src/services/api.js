@@ -1,10 +1,10 @@
 import AsyncStorageHelper from "./AsyncStorageHelper";
 
 // dev app when you build for developers
-// const api_server = 'http://34.208.106.207'
+const api_server = 'http://34.208.106.207'
 
 // prod app when you build for all
- const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+//  const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
 // my local app
 // const api_server = 'http://localhost:8005'
@@ -128,7 +128,7 @@ const API =
                 return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
             },
             save: (id)=>{
-                return makeRequest('/like/' + id, {PostActivity:{post_id:id}}, POST)
+                return makeRequest('/save/' + id, {PostActivity:{post_id:id}}, POST)
             },
         },
         User: {
