@@ -101,7 +101,7 @@ export default function HomeTabs() {
     return (
     <Tab.Navigator
 
-
+        initialRouteName={"HomeStack"}
         screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
                 let iconName;

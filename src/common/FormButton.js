@@ -1,11 +1,21 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, TouchableOpacity, Text , ActivityIndicator } from "react-native";
 import colors from "../colors/colors";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 
-export default function FormButton({ buttonTitle, ...rest }) {
+export default function FormButton({ buttonTitle, loadingProp , ...rest }) {
+
+  const [loading, setLoading] = useState(  typeof loadingProp !== "undefined" ? loadingProp : false );
+
+  console.log( "loadingProp" , loadingProp )
+
   return (
-    <TouchableOpacity style={styles.buttonContainer} {...rest}>
+    <TouchableOpacity style={{ ...styles.buttonContainer , opacity: loading ? 0.7 : 1 }} {...rest}>
+      {
+          loading ?
+              <ActivityIndicator />
+              : null
+      }
       <Text style={styles.buttonText}>{buttonTitle}</Text>
     </TouchableOpacity>
   );

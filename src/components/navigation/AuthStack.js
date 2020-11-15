@@ -24,8 +24,6 @@ export default function AuthStack() {
         <Stack.Screen name="ResetPassword" options={{ headerTitle: "Reset Password" }} component={ResetPassword} />
 
         <Stack.Screen name="HomeTabs" component={HomeTabs} />
-
-
     </Stack.Navigator>
   );
 }

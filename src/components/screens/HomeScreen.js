@@ -30,8 +30,10 @@ const HomeScreen = ({ navigation , postCreatedProp }) => {
     const [isLoading, setLoading] = useState( false );
     const [askComponentToLoadMorePosts, setAskComponentToLoadMorePosts] = useState( postCreatedProp ? getRandomInt() : 1 );
     const [posLoadingFinished, setPosLoadingFinished] = useState( false );
-    
-    
+
+    const [mountingFinished, setMountingFinished] = useState( false );
+
+
     React.useEffect(() => {
         console.log('Here');
         let isUnMount = false;
@@ -44,6 +46,7 @@ const HomeScreen = ({ navigation , postCreatedProp }) => {
             // } , 60000 );
 
         }
+        setMountingFinished( true );
         return () => {
             isUnMount = true;
         }
@@ -55,26 +58,32 @@ const HomeScreen = ({ navigation , postCreatedProp }) => {
     }, []);
     
     return (
-        <ScrollView style={styles.container}
-                    refreshControl={
-                        <RefreshControl refreshing={isLoading} onRefresh={()=>{
-                            setLoading( true );
-                            let i = askComponentToLoadMorePosts+1;
-                            setAskComponentToLoadMorePosts(  i  );
-                        }} />
-                    }
-        >
-            
-            {/* Slider container */}
-            <HomePageTopSlider navigation={navigation} />
+        <View style={styles.container} >
+            {
+                mountingFinished ?
+                    <ScrollView style={styles.container}
+                                refreshControl={
+                                    <RefreshControl refreshing={isLoading} onRefresh={()=>{
+                                        setLoading( true );
+                                        let i = askComponentToLoadMorePosts+1;
+                                        setAskComponentToLoadMorePosts(  i  );
+                                    }} />
+                                }
+                    >
+                        {/* Slider container */}
+                        <HomePageTopSlider navigation={navigation} />
 
-            {/* Top Helper container */}
-            <TopHelper />
+                        {/* Top Helper container */}
+                        <TopHelper />
 
-            {/* Help Posts container */}
-            <HomePagePostListView askComponentToLoadMorePostsProp={askComponentToLoadMorePosts}  loadinIsFinished={()=>{ loadinIsFinished() }} />
+                        {/*/!* Help Posts container *!/*/}
+                        {/*<HomePagePostListView askComponentToLoadMorePostsProp={askComponentToLoadMorePosts}  loadinIsFinished={()=>{ loadinIsFinished() }} />*/}
 
-        </ScrollView>
+                    </ScrollView>
+                    :
+                    <Loading />
+            }
+        </View>
     )
 }
 
