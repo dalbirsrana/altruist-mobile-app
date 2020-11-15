@@ -41,9 +41,9 @@ const StyledTextButton2 = styled(StyledTextButton)`
 `
 
 function getWindowWidth( x , y ){
-    console.log( "windowWidth"  , windowWidth);
+    // console.log( "windowWidth"  , windowWidth);
     let c = (( ( windowWidth-20) / x ) * y ) ;
-    console.log( "windowWidth c"  , c);
+    // console.log( "windowWidth c"  , c);
     return c;
 }
 
@@ -67,9 +67,7 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
 
     const [requests, setRequests] = useState(dataProp.requests);
 
-
     const [requestDecisionInProcess, setRequestDecisionInProcess] = useState(false);
-
 
     useEffect(() => {
         let isUnMount = false;
@@ -121,9 +119,11 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
             if (returnedData !== undefined && returnedData.success) {
                 setSaved(returnedData.data.status);
                 setSaves(returnedData.data.totalSaved);
+                setSaveInProgress( false );
             } else if (returnedData !== undefined && !returnedData.success) {
                 if (returnedData.tokenExpired) {
                     logout();
+                    setSaveInProgress( false );
                 }
             }
         }
@@ -209,20 +209,38 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                 <TouchableOpacity onPress={() => {
                                     savePost(data.id)
                                 }}>
-                                    <MaterialCommunityIcons style={styles.bottomButtonContainerIcon}
-                                                            name={"content-save"} size={25} color={"palevioletred"}/>
+                                    <Image
+                                        source={
+                                            require('../../../../../assets/Filled_png/Icons_Altruist_Tag.png')
+                                        }
+                                        style={{
+                                            width: 20,
+                                            height: 20,
+                                            marginRight:10,
+                                            marginTop:10
+                                        }}
+                                    />
                                 </TouchableOpacity>
-                                <Text style={styles.innerFlexContainerText}>{saves > 0 ? saves : null}</Text>
+                                <Text style={{ ...styles.innerFlexContainerText , fontSize:18 }}>{saves > 0 ? saves : null}</Text>
                             </View>
                             :
                             <View style={styles.innerFlexContainer}>
                                 <TouchableOpacity onPress={() => {
                                     savePost(data.id)
                                 }}>
-                                    <MaterialCommunityIcons style={styles.bottomButtonContainerIcon}
-                                                            name={"content-save"} size={25} color={"palevioletred"}/>
+                                    <Image
+                                        source={
+                                            require('../../../../../assets/icons_png/Icons_Altruist_Tag.png')
+                                        }
+                                        style={{
+                                            width: 20,
+                                            height: 20,
+                                            marginRight:10,
+                                            marginTop:10
+                                        }}
+                                    />
                                 </TouchableOpacity>
-                                <Text style={styles.innerFlexContainerText}>{saves > 0 ? saves : null}</Text>
+                                <Text style={{ ...styles.innerFlexContainerText , fontSize:18 }}>{saves > 0 ? saves : null}</Text>
                             </View>
                         }
                     </View> : null}

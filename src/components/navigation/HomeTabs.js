@@ -31,6 +31,7 @@ const CreatePostStack = createStackNavigator();
 function createPostStack() {
     return (
         <CreatePostStack.Navigator
+            initialRouteName={ "PostTypeSelection" }
             screenOptions={{
                 headerStyle: {
                     backgroundColor: '#e89b8d',
@@ -42,7 +43,7 @@ function createPostStack() {
                 }
             }}
         >
-            <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
+            <CreatePostStack.Screen name='PostTypeSelection' component={PostTypeSelection}  options={{
                 title: 'Select type'
             }} />
             <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection}  options={{
@@ -50,7 +51,7 @@ function createPostStack() {
             }} />
             <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
             <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
-            <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
+            <CreatePostStack.Screen name='PostReview'  initialParams={{"comingFromTabButton":true}}  component={PostReview}  options={{ title: 'Review Info' }} />
 
         </CreatePostStack.Navigator>
 
@@ -95,9 +96,9 @@ function UserProfileScreens() {
                 }
             }}
         >
-            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: ''}} />
-            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'Posts' }} />
-            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} />
+            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: 'ALTRUIST'}} />
+            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'ALTRUIST' }} />
+            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} options={{ title: 'ALTRUIST' }} />
         </UserProfileStack.Navigator>
     )
 }
@@ -111,7 +112,6 @@ function getRandomInt() {
 export default function HomeTabs() {
     return (
     <Tab.Navigator
-
         initialRouteName={"HomeStack"}
         screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
@@ -121,17 +121,14 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Home.png')
+                                require('../../../assets/Filled_png/Icons_Altruist_Home.png')
                             }
                             style={{
                                 width: size,
                                 height: size,
                                 marginTop:12,
                                 marginBottom:0,
-                                backgroundColor:colors.secondary,
-
                             }}
-
                         />
                             ;
 
@@ -153,7 +150,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Message.png')
+                                require('../../../assets/Filled_png/Icons_Altruist_Message.png')
                             }
                             style={{
                                 width: size,
@@ -186,7 +183,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Add_Post.png')
+                                require('../../../assets/Filled_png/Icons_Altruist_Add_Post.png')
                             }
                             style={{
                                 width: size,
@@ -220,7 +217,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Notification.png')
+                                require('../../../assets/Filled_png/Icons_Altruist_Notification.png')
                             }
                             style={{
                                 width: size,
@@ -254,7 +251,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_User.png')
+                                require('../../../assets/Filled_png/Icons_Altruist_User.png')
                             }
                             style={{
                                 width: size,
@@ -269,8 +266,7 @@ export default function HomeTabs() {
                     }else{
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_User.png')
-                            }
+                                require('../../../assets/icons_png/Icons_Altruist_User.png')                            }
                             style={{
                                 width: size,
                                 height: size,
@@ -297,14 +293,26 @@ export default function HomeTabs() {
             }
         }
     >
-        <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt() }}  component={HomeStackScreens}  options={{ title: '', header: () => null }} />
+        <Tab.Screen name='HomeStack' component={HomeStackScreens}  options={{ title: '', header: () => null }} />
         <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
-        <Tab.Screen name='CreatePost' component={createPostStack} options={{
+        <Tab.Screen name='CreatePost' component={createPostStack}
+                    options={{
             tabBarVisible : false,
             title: '',
         }} />
         <Tab.Screen name='Notifications' component={UserNotificationScreen} options={{ title: '' }} />
-        <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{ title: '' }} />
+        <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{ title: '' }}
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: '#e89b8d',
+                        },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                            textAlign: 'center'
+                        }
+                    }}
+        />
     </Tab.Navigator>
     );
 }

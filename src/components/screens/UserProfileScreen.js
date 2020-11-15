@@ -102,7 +102,7 @@ const UserProfile = ({navigation}) => {
 
                         <Image source={editPostIcon} style={styles.optionIcon}/>
                         <Text style={styles.optionTitle}>
-                            Posts
+                            Edit Info
                         </Text>
 
                     </View>
@@ -118,7 +118,7 @@ const UserProfile = ({navigation}) => {
                         <Image source={logoutIcon} style={styles.logoutIcon}/>
                         <TouchableOpacity onPress={() => logout()} style={styles.logoutTitle}>
                             <Text style={styles.optionTitle}>
-                                Log Out
+                                Logout
                             </Text>
                         </TouchableOpacity>
 
@@ -170,9 +170,9 @@ const styles = StyleSheet.create({
     },
 
     option: {
-        height: 100,
-        width: 100,
-        borderRadius: 50,
+        height: 80,
+        width: 80,
+        borderRadius: 40,
         borderWidth: 1,
         borderColor: colors.primary,
         display: "flex",
@@ -184,15 +184,16 @@ const styles = StyleSheet.create({
 
 
     optionIcon: {
-        width: 35,
-        height: 35,
-
+        width: 25,
+        height: 25,
     },
 
     optionTitle: {
         paddingLeft: 0,
         marginTop: 3,
         fontWeight: "bold",
+        color: colors.primary,
+        fontSize: 12
     },
 
     logout: {
@@ -204,9 +205,8 @@ const styles = StyleSheet.create({
     },
 
     logoutIcon: {
-        width: 35,
-        height: 35,
-
+        width: 25,
+        height: 25,
     },
 
 
@@ -220,9 +220,7 @@ const styles = StyleSheet.create({
         marginTop: -20,
         marginLeft: 10,
         marginRight: 10,
-        height: "90%",
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
+        borderRadius: 8,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

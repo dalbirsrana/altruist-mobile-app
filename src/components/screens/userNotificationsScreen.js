@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import {Button, ScrollView, StyleSheet, Text, View} from 'react-native'
 import API from "../../services/api"
 import Loading from "../../common/Loading"
 
@@ -10,7 +10,6 @@ const UserActivity = ( {navigation} ) => {
     
     const loadNotifications = async () => {
         let N = await API.User.getNotifications()
-
         if (N != undefined) {
             setLoading(false)
             console.log(N)
@@ -37,6 +36,10 @@ const UserActivity = ( {navigation} ) => {
             <View>
                 <Text>Notifications page</Text>
             </View>
+
+
+            <Button title={"Table"} onPress={ () => {   navigation.navigate( 'HomeStack', { screen:'Home', params:{ postCreatedProp:true , postCreatedIdProp: 28 }} )  } } />
+
 
             {
                 isLoading 

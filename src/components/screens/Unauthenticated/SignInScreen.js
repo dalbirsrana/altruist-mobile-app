@@ -25,7 +25,7 @@ const SignInScreen = ({navigation}) => {
     async function checkUserLoggedIn() {
         if (!isUserSignedOut()) {
             setLoginInProgress(true);
-            await navigation.navigate("HomeTabs", {screen: 'HomeStack'});
+            await navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'} } );
         }
     }
 
@@ -86,7 +86,7 @@ const SignInScreen = ({navigation}) => {
                         if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true) {
                             setPassword("");
                             setLoginInProgress(false);
-                            navigation.navigate("HomeTabs", {screen: 'HomeStack'});
+                            navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'} } );
                         } else {
                             if (typeof signIn !== "undefined") {
                                 if (signIn.hasOwnProperty('data')) {

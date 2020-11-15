@@ -11,7 +11,11 @@ import ScaledImage from "../../../../common/ScaledImage";
 import FormButtonSmall from "../../../../common/FormButtonSmall";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
+import getRouteParam from "../../../helper/getRouteParam"
 
+function isIterableIterator(value) {
+    return !!value && typeof value.next === "function" && typeof value[Symbol.iterator] === "function";
+}
 
 export default function PostReview ({navigation, route}){
 
@@ -19,22 +23,29 @@ export default function PostReview ({navigation, route}){
 
     const [catList, setCatList] = useState([]);
 
-    const [postTypeId, setPostTypeId] = useState( route.params.postTypeIdProp );
-    const [postCategoryId, setPostCategoryId] = useState(route.params.postCategoryIdProp );
+    const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
+    const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
 
-    const [title, setTitle] = useState(  route.params.hasOwnProperty('titleProp') ?  route.params.titleProp : ""  );
-    const [description, setDescription] = useState( route.params.hasOwnProperty('descriptionProp') ?  route.params.descriptionProp : "" );
+    const [title, setTitle] = useState(  getRouteParam( route , "titleProp" , "" )   );
+    const [description, setDescription] = useState( getRouteParam( route , "descriptionProp" , "" )  );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
-    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
-    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
+    const [lat, setLat] = useState( getRouteParam( route , "latProp" , "" )  );
+    const [lang, setLang] = useState( getRouteParam( route , "langProp" , "" ) );
+    const [cityName, setCityName] = useState( getRouteParam( route , "cityNameProp" , "" ) );
 
-    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : [] );
+    const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
 
     React.useLayoutEffect(() => {
+
+        console.log( route.params );
+
+        const blur = navigation.addListener('blur', () => {
+            //navigation.popToTop();
+        });
+
         navigation.setOptions({
             headerRight : () => <Text/>,
             headerLeft: () => (
@@ -89,7 +100,8 @@ export default function PostReview ({navigation, route}){
         console.log( createPost );
 
         if( createPost && createPost.success ){
-            return navigation.navigate('HomeStack',{  postCreatedProp:true });
+            console.log( 'HomeStack navigate' , createPost.data.id );
+            return navigation.navigate( 'HomeStack', { screen:'Home', params:{ postCreatedProp:true , postCreatedIdProp:createPost.data.id }} );
         }else{
             let string = "Please try again later there is some error.";
             //let string = JSON.parse( createPost );
@@ -180,7 +192,7 @@ export default function PostReview ({navigation, route}){
             <BR/>
             <BR/>
 
-            { uploadsObj.reverse().map( function ( upload , index ) {
+            { isIterableIterator( uploadsObj ) && uploadsObj.reverse().map( function ( upload , index ) {
                 return (
                     <View  key={index} style={styles.catBox2} >
                         <View  style={styles.imgContainer2} >

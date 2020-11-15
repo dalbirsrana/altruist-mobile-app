@@ -4,6 +4,8 @@ import Loading from "../../../../common/Loading";
 import PostViewHome from "../View/PostViewHome";
 import API from "../../../../services/api";
 import {AuthContext} from "../../../navigation/AuthProvider";
+import FormButton from "../../../../common/FormButton";
+import InverseButton from "../../../../common/InverseButton";
 
 function compare( a, b ) {
     if ( a.id < b.id ){
@@ -23,7 +25,7 @@ const Item = ({ index , post })=> {
     );
 }
 
-const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , loadinIsFinished } ) =>{
+const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , loadinIsFinished , postCreatedId } ) =>{
 
     const {user, logout} = useContext(AuthContext);
 
@@ -40,14 +42,13 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
             tempPostArray.push( post );
         }
 
-        console.log( "tempPostArray" , tempPostArray.length );
+        // console.log( "tempPostArray" , tempPostArray.length );
 
         // removing duplicates
         let newPosts = Object.values(tempPostArray.reduce((acc,cur)=>Object.assign(acc,{[cur.id]:cur}),{}))
 
-
         for( let post of newPosts ){
-           console.log( 'Post Id' ,post.id ,post.title );
+           // console.log( 'Post Id' ,post.id ,post.title );
         }
 
         setPosts( newPosts.reverse() );
@@ -55,7 +56,7 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         setPosLoadingFinished( true )
         setLoadinPostsIsInProgress( false );
 
-        console.log( "loadinIsFinished" );
+        // console.log( "loadinIsFinished" );
         loadinIsFinished();
         return true;
     }
@@ -73,6 +74,20 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         }
     }
 
+    const addPost = async () => {
+        console.log("addPost");
+        setLoadinPostsIsInProgress( true );
+        let postsData = await API.Post.view();
+        if (postsData !== undefined && postsData.success ) {
+            setLoading(false)
+            prependPosts( [postsData] );
+        }else if( postsData !== undefined && !postsData.success ){
+            if( postsData.tokenExpired ){
+                logout();
+            }
+        }
+    }
+
     useEffect(() => {
 
         if( !loadinPostsIsInProgress ){
@@ -80,7 +95,12 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
             loadPost();
         }
 
-    } , [ askComponentToLoadMorePostsProp ] );
+        // if( postCreatedId ){
+        //     console.log("postCreatedId", postCreatedId);
+        //     addPost( postCreatedId )
+        // }
+
+    } , [ askComponentToLoadMorePostsProp , postCreatedId  ] );
 
     const getItem = ( data , index) => {
         return data[ index ];
@@ -88,6 +108,10 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
 
     const getItemCount = ( data ) => {
         return data.length;
+    }
+
+    const loadMorePosts = () => {
+
     }
 
     return (
@@ -108,6 +132,10 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
                         />
                     )
             }
+
+            <InverseButton onPress={() => loadMorePosts()} buttonTitle={"Load More"}
+                           iconName={"edit-location"}/>
+
         </View>
 
     )

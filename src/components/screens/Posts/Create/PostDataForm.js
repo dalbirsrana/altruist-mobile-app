@@ -27,24 +27,28 @@ import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Textarea from 'react-native-textarea';
+import getRouteParam from "../../../helper/getRouteParam"
+
 
 const PostDataForm = ({navigation, route}) => {
 
     const {user, logout} = useContext(AuthContext);
 
     const [catList, setCatList] = useState([]);
-    const [postTypeId, setPostTypeId] = useState(route.params.postTypeIdProp);
-    const [postCategoryId, setPostCategoryId] = useState(route.params.postCategoryIdProp);
+    const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
+    const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
 
-    const [title, setTitle] = useState(route.params.hasOwnProperty('titleProp') ? route.params.titleProp : "");
-    const [description, setDescription] = useState(route.params.hasOwnProperty('descriptionProp') ? route.params.descriptionProp : "");
+    const [title, setTitle] = useState(  getRouteParam( route , "titleProp" , "" )   );
+    const [description, setDescription] = useState( getRouteParam( route , "descriptionProp" , "" )  );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ?  route.params.latProp : "");
-    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ?  route.params.langProp : "");
-    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ?  route.params.cityNameProp : "");
+    const [lat, setLat] = useState( getRouteParam( route , "latProp" , "" )  );
+    const [lang, setLang] = useState( getRouteParam( route , "langProp" , "" ) );
+    const [cityName, setCityName] = useState( getRouteParam( route , "cityNameProp" , "" ) );
+
+    const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
 
 /*
     const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ? "27.2046" : "27.2046");
@@ -52,7 +56,6 @@ const PostDataForm = ({navigation, route}) => {
     const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ? "Argyle Street Vancouver" : "Argyle Street Vancouver");
 */
 
-    const [uploadsObj, setUploadsObj] = useState(route.params.hasOwnProperty('uploadsObjProp') ? route.params.uploadsObjProp : []);
 
 
     const submitForm = async () => {
@@ -114,7 +117,8 @@ const PostDataForm = ({navigation, route}) => {
                 setLat(latitude);
                 setLang(longitude);
 
-                // console.log( lat, lang );
+                console.log( "lat", "lang" );
+                 console.log( lat, lang );
 
                 let cityData = await API.Post.getCityName({
                     lat: position.coords.latitude,
@@ -212,21 +216,17 @@ const PostDataForm = ({navigation, route}) => {
                 : null
             }
 
-            <Text>Hi</Text>
-            <View style={styles.imgContainer}>
+            <View style={{marginTop:15}}>
                 {catList.map(function (cat, index) {
                     return (
                         cat.id === postCategoryId ?
                             <View key={index} style={{display:"flex"}} >
-                                <Image source={{uri: cat.s3_path}} style={{width: 120, height: 120, marginBottom: 10,alignSelf:"center",}}/>
+                                <Image source={{uri: cat.s3_path}} style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center",}}/>
                                 <Text style={styles.textColour}>{cat.title}</Text>
                             </View> : null
                     )
                 })}
-                <Text>Hi</Text>
-
             </View>
-            <Text>Hi</Text>
 
             <FormInput2
                 value={title}
@@ -286,7 +286,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: colors.white
+        backgroundColor: colors.white,
+        flexDirection: "column",
     },
     imgContainer: {
         flex: 1,
@@ -294,7 +295,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 20,
         alignItems: "center",
-        alignSelf: "center"
+        alignSelf: "center",
     },
     catBox: {
         backgroundColor: colors.white,
