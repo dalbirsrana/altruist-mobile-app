@@ -98,14 +98,15 @@ const UserProfile = ({navigation}) => {
                 </Text>
 
                 <View style={styles.optionsList}>
-                    <View style={styles.option}>
 
-                        <Image source={editPostIcon} style={styles.optionIcon}/>
-                        <Text style={styles.optionTitle}>
-                            Edit Info
-                        </Text>
-
-                    </View>
+                    <TouchableOpacity onPress={() => navigation.navigate('UserPosts')}>
+                        <View style={styles.option}>
+                            <Image source={editPostIcon} style={styles.optionIcon}/>
+                            <Text style={styles.optionTitle}>
+                                Posts
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
 
                     <View style={styles.option}>
                         <Image source={settingIcon} style={styles.optionIcon}/>
@@ -114,15 +115,14 @@ const UserProfile = ({navigation}) => {
                         </Text>
                     </View>
 
-                    <View style={styles.option}>
-                        <Image source={logoutIcon} style={styles.logoutIcon}/>
-                        <TouchableOpacity onPress={() => logout()} style={styles.logoutTitle}>
+                    <TouchableOpacity onPress={() => logout()}>
+                        <View style={styles.option}>
+                            <Image source={logoutIcon} style={styles.optionIcon}/>
                             <Text style={styles.optionTitle}>
                                 Logout
                             </Text>
-                        </TouchableOpacity>
-
-                    </View>
+                        </View>
+                    </TouchableOpacity>
                 </View>
 
             </View>
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column"
     },
+
     detailContainer: {
         backgroundColor: colors.white,
         position: "relative",
