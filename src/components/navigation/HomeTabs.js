@@ -121,14 +121,14 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Home.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Home_filled.png')
                             }
                             style={{
                                 width: size,
                                 height: size,
                                 marginTop:12,
                                 marginBottom:0,
-                                backgroundColor:colors.secondary,
+                               // backgroundColor:colors.secondary,
 
                             }}
 
@@ -138,7 +138,7 @@ export default function HomeTabs() {
                         }else{
                         return <Image
                             source={
-                               require('../../../assets/icons_png/Icons_Altruist_Home.png')
+                               require('../../../assets/Icons_svg/Icons_Altruist_Home.png')
                             }
                             style={{
                                 width: size,
@@ -153,7 +153,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Message.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Message_filled.png')
                             }
                             style={{
                                 width: size,
@@ -168,7 +168,7 @@ export default function HomeTabs() {
                     }else{
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Message.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Message.png')
                             }
                             style={{
                                 width: size,
@@ -186,7 +186,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Add_Post.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Add_Post_filled.png')
                             }
                             style={{
                                 width: size,
@@ -201,7 +201,7 @@ export default function HomeTabs() {
                     }else{
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Add_Post.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Add_Post.png')
                             }
                             style={{
                                 width: size,
@@ -220,7 +220,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Notification.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Notification_filled.png')
                             }
                             style={{
                                 width: size,
@@ -235,7 +235,7 @@ export default function HomeTabs() {
                     }else{
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_Notification.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_Notification.png')
                             }
                             style={{
                                 width: size,
@@ -254,7 +254,7 @@ export default function HomeTabs() {
                     if( focused ){
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_User.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_User_filled.png')
                             }
                             style={{
                                 width: size,
@@ -269,7 +269,7 @@ export default function HomeTabs() {
                     }else{
                         return <Image
                             source={
-                                require('../../../assets/icons_png/Icons_Altruist_User.png')
+                                require('../../../assets/Icons_svg/Icons_Altruist_User.png')
                             }
                             style={{
                                 width: size,
