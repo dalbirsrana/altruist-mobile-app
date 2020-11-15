@@ -119,13 +119,13 @@ const HomeScreen = ({navigation}) => {
                     :
                     (
                         <ScrollView>
-                            {
+                            {/* {
                                 Array.isArray(posts) && posts.map( function( post , index ) {
                                     return(
                                         <PostViewHome key={index} dataProp={post} ></PostViewHome>
                                         )
                                 })
-                            }
+                            } */}
                         </ScrollView>
                     )
                 }

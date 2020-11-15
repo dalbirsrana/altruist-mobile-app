@@ -9,7 +9,7 @@ const UserActivity = ( {navigation} ) => {
     const [isLoading, setLoading] = useState(true)
     
     const loadNotifications = async () => {
-        let N = await API.userNotifications()
+        let N = await API.User.getNotifications()
 
         if (N != undefined) {
             setLoading(false)
