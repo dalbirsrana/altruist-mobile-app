@@ -15,7 +15,6 @@ const UserActivity = ( {navigation} ) => {
     
     const loadNotifications = async () => {
         let N = await API.User.getNotifications()
-
         if (N != undefined) {
             setLoading(false)
             console.log(N)
@@ -24,16 +23,6 @@ const UserActivity = ( {navigation} ) => {
             }
         }
     }
-
-    useEffect( ()=> {
-        let isUnMount = false
-        if (!isUnMount) {
-            loadNotifications()
-        }
-        return () => {
-            isUnMount = true
-        }
-    }, [])
 
     //Rerender screen on tab press
     useEffect( ()=> {
@@ -53,7 +42,7 @@ const UserActivity = ( {navigation} ) => {
             </View>
             <ScrollView>
                 {
-                    isLoading 
+                    isLoading
                     ? <Loading />
                     : notifications.length
                     ?   (
@@ -65,7 +54,7 @@ const UserActivity = ( {navigation} ) => {
                                 keyExtractor={item => item.id.toString()}
                                 getItemCount={(data) => data.length }
                                 getItem={ (data, index) => data[index] }
-                            />  
+                            />
                         )
                     : (<Text style={styles.noNotification}>No notification</Text>)
                 }
@@ -78,20 +67,20 @@ export default UserActivity
 
 
 
-const Item = ({index, post}) => { 
+const Item = ({index, post}) => {
 
     let BGColor = color.white
 
     if (index % 2 !== 0 ) {
         BGColor = color.secondary
     }
-    
+
     return (
         <View style={{backgroundColor: BGColor}}>
         <View style={styles.postCard}>
-            { post.user.profile_picture 
+            { post.user.profile_picture
                 ?  (<Image source={{uri: post.user.profile_picture}} style={styles.postImage} />)
-                :  (<Image source={postImage} style={styles.postImage} />) 
+                :  (<Image source={postImage} style={styles.postImage} />)
             }
             <View style={styles.textContent}>
                 <Text>{post.text}</Text>
