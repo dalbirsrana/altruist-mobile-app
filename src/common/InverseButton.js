@@ -35,12 +35,10 @@ const styles = StyleSheet.create({
     minWidth: "100%"
   },
   iconStyle : {
-    flexBasis:"20%",
     fontSize: 20,
     marginLeft:10,
   },
   iconStyleRotate : {
-    flexBasis:"20%",
     fontSize: 20,
     marginLeft:10,
     transform: [{rotateY: '180deg'}]
@@ -52,7 +50,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
     marginLeft: 20 ,
-    width: 200,
     fontSize: 16,
     borderColor: colors.primary,
     borderWidth: 1,
@@ -65,13 +62,11 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start"
   },
   buttonText: {
-    flexBasis:"80%",
     paddingLeft:10,
     paddingRight:20,
-    fontSize: 20,
+    fontSize: 16,
     color: colors.primary,
     flexWrap:'nowrap',
-    minWidth:"100%",
     textAlign: "center",
   },
 });
