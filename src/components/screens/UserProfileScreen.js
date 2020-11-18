@@ -48,12 +48,8 @@ const UserProfile = ({navigation}) => {
     }
 
     return (
-
         <ScrollView style={styles.container}>
-
-
             <View style={styles.thumbnail}>
-
                 {
                     profileImage
                         ?
@@ -107,13 +103,14 @@ const UserProfile = ({navigation}) => {
                             </Text>
                         </View>
                     </TouchableOpacity>
-
+                    <TouchableOpacity onPress={() => navigation.navigate('UserSettings')}>
                     <View style={styles.option}>
                         <Image source={settingIcon} style={styles.optionIcon}/>
                         <Text style={styles.optionTitle}>
                             Settings
                         </Text>
                     </View>
+                    </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => logout()}>
                         <View style={styles.option}>
