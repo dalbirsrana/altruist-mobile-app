@@ -211,7 +211,7 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                 }}>
                                     <Image
                                         source={
-                                            require('../../../../../assets/Filled_png/Icons_Altruist_Tag.png')
+                                            require('../../../../../assets/Icons_svg/Icons_Altruist_Tag.png')
                                         }
                                         style={{
                                             width: 20,
@@ -230,7 +230,7 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                 }}>
                                     <Image
                                         source={
-                                            require('../../../../../assets/icons_png/Icons_Altruist_Tag.png')
+                                            require('../../../../../assets/Icons_svg/Icons_Altruist_Tag.png')
                                         }
                                         style={{
                                             width: 20,

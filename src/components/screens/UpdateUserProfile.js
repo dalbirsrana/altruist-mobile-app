@@ -67,7 +67,7 @@ export default function UpdateUserProfile( { navigation } ) {
             <FormInput
                 value={username}
                 placeholderText="Email"
-                onChangeText={( value ) => setUsername( value )}
+               // onChangeText={( value ) => setUsername( value )}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoCorrect={false}
@@ -76,7 +76,7 @@ export default function UpdateUserProfile( { navigation } ) {
             <FormInput
                 value={verification_token}
                 placeholderText="Verification Token"
-                onChangeText={( value ) => setVerificationToken( value )}
+               // onChangeText={( value ) => setVerificationToken( value )}
                 autoCapitalize="none"
                 autoCorrect={false}
             />
