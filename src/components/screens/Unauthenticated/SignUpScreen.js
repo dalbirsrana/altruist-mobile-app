@@ -72,7 +72,7 @@ export default function SignUpScreen({ navigation }) {
             setMsg(
               `SignUp failed: \n${signUp.data.email} \n${signUp.data.firstName} \n${signUp.data.lastName} \n${signUp.data.password} \n${signUp.data.username}`
             );
-            console.log(signUp.data);
+            // // console.log(signUp.data);
           }
         }}
       />

@@ -18,7 +18,7 @@ const userPosts = ( {navigation} ) => {
 
         if (Posts != undefined) {
             setLoading(false)
-            console.log(Posts)
+            // console.log(Posts)
             if(Posts.success) {
                 setPosts(Posts.data)
 
@@ -33,7 +33,7 @@ const userPosts = ( {navigation} ) => {
 
         if (Posts != undefined) {
             setLoading(false)
-            console.log(Posts)
+            // console.log(Posts)
             if(Posts.success) {
                 setPosts(Posts.data)
 

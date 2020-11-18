@@ -7,14 +7,17 @@ import API from "../../../../services/api";
 import logo from "../../../../../assets/icon.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
-import {windowHeight} from "../../../../utils/Dimensions";
+import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
 
 
 const PostCategorySelection = ({navigation, route }) => {
 
     const {user, logout} = useContext(AuthContext);
+
+    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
 
     const [catList, setCatList] = useState([]);
     const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
@@ -34,6 +37,9 @@ const PostCategorySelection = ({navigation, route }) => {
 
     function move( forward , postCategoryIdSelected = null ){
         navigation.navigate( forward ?  "PostDataForm" : "PostTypeSelection" , {
+
+            idProp: id,
+
             postTypeIdProp: postTypeId ,
             postCategoryIdProp: postCategoryIdSelected ,
 
@@ -99,7 +105,7 @@ const PostCategorySelection = ({navigation, route }) => {
             { catList.map( function ( cat , index ) {
                 return (
 
-                        <View  key={index} style={styles.catBox}   >
+                        <View  key={index} style={{ ...styles.catBox , borderColor : ( postCategoryId === cat.id ) ? colors.secondary : "white" , borderRadius:10 , borderWidth: 5  }}  >
                             <TouchableOpacity style={styles.imgContainer}
                                               onPress={
                                                   async ( event ) => {
@@ -108,7 +114,12 @@ const PostCategorySelection = ({navigation, route }) => {
                                                   }
                                               }
                             >
-                                <Image source={{uri:cat.s3_path}} style={{width: 100, height: 100, marginBottom:10}}/>
+                                <View style={{width: windowWidth/5, height: windowWidth/5, marginBottom:10}}>
+                                    <LoadableImage
+                                        styleData = {[{width: windowWidth/5, height: windowWidth/5, marginBottom:10  }]}
+                                        source={{uri:cat.s3_path}}
+                                    />
+                                </View>
                                 <Text style={styles.textColour} >{cat.title}</Text>
                             </TouchableOpacity>
                         </View>
@@ -152,6 +163,8 @@ const styles = StyleSheet.create({
         marginTop:10,
         marginBottom:10,
         padding:10,
+        paddingTop:20,
+        paddingBottom: 20,
         backgroundColor: colors.white,
         alignItems: "center",
         justifyContent: "center",

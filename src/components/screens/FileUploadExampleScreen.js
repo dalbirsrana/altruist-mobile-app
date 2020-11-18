@@ -132,7 +132,7 @@ export default class FileUploadExampleScreen extends Component {
         } catch (e) {
             // console.log({ uploadResponse });
             // console.log({ uploadResult });
-            console.log({ e });
+            // console.log({ e });
             alert('Please choose small size file!');
         } finally {
             this.setState({

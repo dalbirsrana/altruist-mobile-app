@@ -4,10 +4,10 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // const api_server = 'http://34.208.106.207'
 
 // PROD SERVER
-// const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
-// Jaimin Local MAMP Server
-const api_server = 'http://192.168.0.124/capstone/capstone-api'
+// // Jaimin Local MAMP Server
+// const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET";
 const POST = "POST";
@@ -111,11 +111,17 @@ const API =
             create: (data) => {
                 return makeRequest('/posts', {Posts: data})
             },
+            update: (id , data ) => {
+                return makeRequest('/update/'+id, {Post: data}, POST)
+            },
+            delete: (id) => {
+                return makeRequest('/delete/'+id, {Post: {id: id}}, POST)
+            },
             getCityName: (data) => {
                 return makeRequest('/city-name', {Posts: data})
             },
-            list: (data) => {
-                return makeRequest('/posts', {}, GET)
+            list: (lastPostId = 0 ) => {
+                return makeRequest('/posts?offset='+lastPostId, {}, GET)
             },
             view: (id) => {
                 return makeRequest('/posts/' + id, {}, GET)
@@ -144,6 +150,7 @@ const API =
             decline: (id) => {
                 return makeRequest('/decline', {PostComments: {request_id: id}}, POST)
             },
+
         },
         User: {
             getSavedPosts: () => {

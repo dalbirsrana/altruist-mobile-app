@@ -22,7 +22,7 @@ export default function UpdateUserProfile( { navigation } ) {
     }
 
     const useEffect = ( () => {
-        console.log( errors );
+        // console.log( errors );
     });
 
     const submitForm = async () => {

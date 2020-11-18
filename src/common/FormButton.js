@@ -13,6 +13,7 @@ export default function FormButton({ buttonTitle, loadingProp , ...rest }) {
     if (!isUnMount) {
       setLoading( loadingProp );
     }
+    console.log(" loadingProp ", loadingProp);
     setLoading( loadingProp );
     return () => {
       isUnMount = true;
@@ -21,7 +22,7 @@ export default function FormButton({ buttonTitle, loadingProp , ...rest }) {
   } , [loadingProp] )
 
   return (
-    <TouchableOpacity style={{ ...styles.buttonContainer , opacity: loading ? 0.5 : 1 }} {...rest}>
+    <TouchableOpacity style={{ ...styles.buttonContainer , opacity: 1 }} {...rest}>
       <Text style={styles.buttonText}>{buttonTitle}{
         loading ?
             "..."

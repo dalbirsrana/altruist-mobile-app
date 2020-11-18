@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation , route }) => {
     const isFocused = useIsFocused()
 
     React.useEffect(() => {
-        console.log('Here');
+        // console.log('Here');
         let isUnMount = false;
         if (!isUnMount){
             setLoading( false );
@@ -54,8 +54,8 @@ const HomeScreen = ({ navigation , route }) => {
         if(
             getRouteParam( route , "postCreatedProp" )
         ){
-            console.log( "postCreatedProp" , getRouteParam( route , "postCreatedProp" ) );
-            console.log( "postCreatedIdProp" , getRouteParam( route , "postCreatedIdProp" ) );
+            // console.log( "postCreatedProp" , getRouteParam( route , "postCreatedProp" ) );
+            // console.log( "postCreatedIdProp" , getRouteParam( route , "postCreatedIdProp" ) );
             setPostCreatedId( getRouteParam( route , "postCreatedIdProp" ) );
             if(  getRouteParam( route , "postCreatedProp" )  ){
                 let i = askComponentToLoadMorePosts+1;
@@ -68,7 +68,7 @@ const HomeScreen = ({ navigation , route }) => {
     } , [ navigation , route.params , isFocused ] );
     
     const loadinIsFinished = React.useCallback(() => {
-        console.log(' Loading is finished ');
+        // console.log(' Loading is finished ');
         setLoading( false )
     }, []);
     

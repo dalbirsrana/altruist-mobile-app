@@ -24,7 +24,7 @@ const HomeScreen = ({navigation}) => {
             setLoading(false)
             setPosts(P.data)
 
-            console.log(P.data)
+            // console.log(P.data)
             return true;
         }
     }
@@ -79,7 +79,7 @@ const HomeScreen = ({navigation}) => {
                     separator={0}
                     loop={false}
                     autoscroll={false}
-                    currentIndexCallback={index => console.log('Index', index)}
+                    currentIndexCallback={index =>  console.log('Index', index)}
                     indicator
                     animation
                 />

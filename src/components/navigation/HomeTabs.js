@@ -8,7 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import HomeScreen from '../screens/HomeScreen'
-import HelpScreen from '../screens/SingleHelpScreen'
+import HelpScreen from '../screens/Posts/SingleView/SingleHelpScreen'
 
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
@@ -23,6 +23,7 @@ import PostCategorySelection from "../screens/Posts/Create/PostCategorySelection
 import PostDataForm from "../screens/Posts/Create/PostDataForm";
 import PostUploads from "../screens/Posts/Create/PostUploads";
 import PostReview from "../screens/Posts/Create/PostReview";
+import Create from "../screens/Posts/Create/Create";
 import colors from "../../colors/colors";
 
 
@@ -52,6 +53,9 @@ function createPostStack() {
             <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
             <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
             <CreatePostStack.Screen name='PostReview'  initialParams={{"comingFromTabButton":true}}  component={PostReview}  options={{ title: 'Review Info' }} />
+
+            <CreatePostStack.Screen name='Create'  initialParams={{"comingFromTabButton":true}}  component={Create}  options={{ title: 'Creating Post' }} />
+
 
         </CreatePostStack.Navigator>
 
