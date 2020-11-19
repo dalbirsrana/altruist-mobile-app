@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
+import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
@@ -9,6 +9,7 @@ import postImage from "../../../../../assets/user-avatar.png";
 import styled from 'styled-components/native'
 import LoadableImage from "../../../../common/LoadableImage";
 import IconButton from "../../../../common/IconButton";
+import moment from "moment";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
@@ -48,12 +49,14 @@ function getWindowWidth( x , y ){
 }
 
 
-export default function PostViewHome({route, dataProp, key, dataKey}) {
+export default function PostViewHome({route, dataProp, removeItem , key, dataKey}) {
 
     const navigation = useNavigation();
 
     const {user, logout} = useContext(AuthContext);
     const [data, setData] = useState(dataProp);
+
+    const [postStatus, setPostStatus] = useState( dataProp.status );
 
     const [likes, setLikes] = useState(dataProp.totalLikes);
     const [liked, setLiked] = useState(dataProp.likedPost);
@@ -66,13 +69,16 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
     const [saveInProgress, setSaveInProgress] = useState(false);
 
     const [requests, setRequests] = useState(dataProp.requests);
+    const [request, setRequest] = useState(dataProp.request);
+    const [acceptedRequest, setAcceptedRequest] = useState(dataProp.acceptedRequest);
+    const [postDeleteInProcess, setPostDeleteInProcess] = useState(false);
 
     const [requestDecisionInProcess, setRequestDecisionInProcess] = useState(false);
+    const [decisionInProcessId, setDecisionInProcessId] = useState("");
 
     useEffect(() => {
         let isUnMount = false;
         if (!isUnMount) {
-
         }
         return () => {
             isUnMount = true;
@@ -130,13 +136,18 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
     }
 
     async function acceptRequest(id) {
-        if (!requestDecisionInProcess) {
-            setSaveInProgress(true);
+        if (!requestDecisionInProcess && decisionInProcessId !== id ) {
+            setRequestDecisionInProcess(true);
+            setDecisionInProcessId( id );
             let returnedData = await API.Post.accept(id);
             if (returnedData !== undefined && returnedData.success) {
-                setSaved(returnedData.data.status);
-                setSaves(returnedData.data.totalSaved);
+                setRequestDecisionInProcess(false);
+                setDecisionInProcessId( "" );
+                setAcceptedRequest( returnedData.data );
+                setPostStatus(6);
             } else if (returnedData !== undefined && !returnedData.success) {
+                setRequestDecisionInProcess(false);
+                setDecisionInProcessId( "" );
                 if (returnedData.tokenExpired) {
                     logout();
                 }
@@ -145,13 +156,73 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
     }
 
     async function declineRequest(id) {
-        if (!requestDecisionInProcess) {
-            setSaveInProgress(true);
+        if (!requestDecisionInProcess  && decisionInProcessId !== id) {
+            setRequestDecisionInProcess(true);
+            setDecisionInProcessId( id );
             let returnedData = await API.Post.decline(id);
             if (returnedData !== undefined && returnedData.success) {
-                setSaved(returnedData.data.status);
-                setSaves(returnedData.data.totalSaved);
+                setRequestDecisionInProcess(false);
+                setDecisionInProcessId( "" );
+
+                let newRequests = [] ;
+                for( let request of requests ){
+                    if( request.id !== id ){
+                        newRequests.push( request );
+                    }
+                }
+                setRequests( newRequests );
+
             } else if (returnedData !== undefined && !returnedData.success) {
+                setRequestDecisionInProcess(false);
+                setDecisionInProcessId( "" );
+                if (returnedData.tokenExpired) {
+                    logout();
+                }
+            }
+        }
+    }
+
+    async function editPost(data){
+        let postUploads = data.postUploads;
+
+        let newUploads = [] ;
+        for (let upload in postUploads){
+            newUploads.push( { key:  postUploads[upload].replace('https://altruist-project.s3.us-west-2.amazonaws.com/','') , objectUrl:postUploads[upload] } );
+        }
+
+        navigation.navigate(
+            'CreatePost' , {
+                screen :'PostTypeSelection',
+                params : {
+
+                    idProp: data.id,
+                    postTypeIdProp: data.postType.id,
+                    postCategoryIdProp: data.postCategory.id,
+
+                    titleProp: data.title,
+                    descriptionProp: data.description,
+                    cityNameProp: data.city_name,
+                    latProp: data.post_location.lat,
+                    langProp: data.post_location.lang,
+
+                    uploadsObjProp: newUploads
+
+                }
+            });
+    }
+
+    async function deletePost( id ){
+        console.log( postDeleteInProcess );
+        if( !postDeleteInProcess ){
+            setPostDeleteInProcess( true );
+            let returnedData = await API.Post.delete(id);
+            console.log( returnedData );
+            if (returnedData !== undefined && returnedData.success) {
+                console.log( returnedData );
+                setPostDeleteInProcess( false );
+                removeItem( id );
+            } else if (returnedData !== undefined && !returnedData.success) {
+                setPostDeleteInProcess( false );
                 if (returnedData.tokenExpired) {
                     logout();
                 }
@@ -161,7 +232,16 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
 
     return (
         <View
-            style={[styles.container, {backgroundColor: dataKey % 2 === 0 ? colors.primaryTransparent : colors.secondaryTransparent}]}>
+            style={[styles.container, {backgroundColor: dataKey % 2 === 0 ? colors.primaryTransparent : colors.secondaryTransparent}
+
+            ]}>
+
+            { postDeleteInProcess ?
+                <View style={styles.absoluteCenterLoader} >
+                    <Loading />
+                </View>
+                : null
+            }
 
             <View style={styles.userContainer}>
                 <View style={styles.userPicContainer}>
@@ -169,15 +249,16 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                         data.user.profile_picture ?
                             <LoadableImage
                                 source={{uri: data.user.profile_picture}}
-                                styleData={{width: 30, height: 30, borderRadius: 15}}/>
+                                styleData={{width: 40, height: 40, borderRadius: 20}}/>
                             :
                             <LoadableImage
-                                source={postImage} styleData={{width: 30, height: 30, borderRadius: 15}}/>
+                                source={postImage} styleData={{width: 40, height: 40, borderRadius: 20}}/>
                     }
                 </View>
                 <View style={{flex: 1}}>
                     <Text style={styles.userName}>{data.user.fullName}</Text>
                     <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{data.city_name}</Text>
+                    <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( data.created_at ).fromNow() }</Text>
                 </View>
 
                 {!user.isSignout && user.id === data.user.id ?
@@ -185,8 +266,8 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                         <TouchableOpacity onPress={() => {
                             editPost(data)
                         }}>
-                            <MaterialCommunityIcons style={styles.bottomButtonContainerIcon} name={"content-save"}
-                                                    size={25} color={"palevioletred"}/>
+                            <MaterialIcons style={styles.bottomButtonContainerIcon} name={"edit"}
+                                                    size={25} color={colors.primary}/>
                         </TouchableOpacity>
                     </View>
                     : null}
@@ -194,10 +275,10 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                 {!user.isSignout && user.id === data.user.id ?
                     <View style={styles.headerButtonContainer}>
                         <TouchableOpacity onPress={() => {
-                            savePost(data.id)
+                            deletePost(data.id)
                         }}>
                             <Ionicons style={styles.bottomButtonContainerIcon} name={"ios-trash"} size={25}
-                                      color={"palevioletred"}/>
+                                      color={colors.primary}/>
                         </TouchableOpacity>
                     </View>
                     : null}
@@ -217,6 +298,7 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                             width: 20,
                                             height: 20,
                                             marginRight:10,
+                                            marginLeft:5,
                                             marginTop:10
                                         }}
                                     />
@@ -236,7 +318,8 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                             width: 20,
                                             height: 20,
                                             marginRight:10,
-                                            marginTop:10
+                                            marginLeft:5,
+                                            marginTop: Platform.OS === 'ios'  ? 0 : 10
                                         }}
                                     />
                                 </TouchableOpacity>
@@ -245,10 +328,11 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                         }
                     </View> : null}
 
+
             </View>
 
             <TouchableOpacity onPress={() => {
-                navigation.navigate('SingleHelpScreen', {postId: data.id})
+                navigation.navigate('SingleHelpScreen', { postId: data.id, postTitle: data.title })
             }}>
 
 
@@ -292,7 +376,7 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                         separator={0}
                         loop={false}
                         autoscroll={false}
-                        currentIndexCallback={index => console.log('Index', index)}
+                        currentIndexCallback={index =>  console.log('Index', index)}
                         indicator
                         animation
                     />
@@ -307,14 +391,14 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
 
             {!user.isSignout ?
                 <View style={styles.bottomButtonContainer}>
-                    <View style={{ ...styles.innerFlexContainer , width: getWindowWidth( 5 , 2.3 ) }}>
+                    <View style={{ ...styles.innerFlexContainer , width: getWindowWidth( 5 , 2.4 ) }}>
                         {liked ?
                             <View style={styles.innerFlexContainer}>
                                 <TouchableOpacity onPress={() => {
                                     likePost(data.id)
                                 }}>
                                     <Ionicons style={styles.bottomButtonContainerIcon} name={"ios-heart"} size={25}
-                                              color={"palevioletred"}/>
+                                              color={colors.primary}/>
                                 </TouchableOpacity>
                                 <Text style={styles.innerFlexContainerText}>{likeString}</Text>
                             </View>
@@ -324,56 +408,74 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                     likePost(data.id)
                                 }}>
                                     <Ionicons style={styles.bottomButtonContainerIcon} name={"ios-heart-empty"}
-                                              size={25} color={"palevioletred"}/>
+                                              size={25} color={colors.primary}/>
                                 </TouchableOpacity>
                                 <Text style={styles.innerFlexContainerText}>{likeString}</Text>
                             </View>
                         }
                     </View>
-                    <View style={styles.innerFlexContainer}>
-                        {
-                            user.id === data.user.id ?
-                                <UserIsPostOwnerMenu dataProp={data}/>
-                                :
-                                <UserIsNotPostOwnerMenu dataProp={data}/>
+                    { postStatus === 1 ?
+                        <View style={styles.innerFlexContainer}>
+                            {
+                                user.id === data.user.id ?
+                                    <UserIsPostOwnerMenu dataProp={data} requestsProp={requests} />
+                                    :
+                                    <UserIsNotPostOwnerMenu dataProp={data} requestProp={data.request} />
 
-                        }
-                    </View>
+                            }
+                        </View> : null
+                    }
+
                 </View> : null}
 
-            {!user.isSignout && requests.length > 0 ?
+            {!user.isSignout && requests.length > 0 && postStatus === 1  ?
                 <View>
                     {requests.map(function (requestsItem, index) {
-                        console.log( requestsItem );
+                        // console.log( requestsItem );
                         return (
                             <View style={styles.requestContainerParent}  key={index}>
-                                <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between"  }} >
-                                    <View style={{ ...styles.innerFlexContainer }} >
-                                        <View style={styles.innerFlexContainer}>
-                                            <View style={styles.userContainer}>
-                                                <View style={styles.userPicContainer}>
-                                                    {
-                                                        requestsItem.user.profile_picture ?
-                                                            <LoadableImage
-                                                                source={{uri: requestsItem.user.profile_picture}}
-                                                                styleData={{width: 30, height: 30, borderRadius: 15}}/>
-                                                            :
-                                                            <LoadableImage
-                                                                source={postImage}
-                                                                styleData={{width: 30, height: 30, borderRadius: 15}}/>
-                                                    }
-                                                </View>
+
+                                { requestDecisionInProcess && decisionInProcessId === requestsItem.id ?
+                                    <View style={styles.absoluteCenterLoader} >
+                                        <Loading />
+                                    </View>
+                                    : null
+                                }
+
+
+                                <View style={{ ...styles.userContainer , marginBottom:0 }} >
+                                    <View style={{ ...styles.userPicContainer , width: 25,
+                                        height: 20,
+                                        borderRadius: 12 }}>
+                                        <View style={styles.userContainer}>
+                                            <View style={{ ...styles.userPicContainer,   width: 20,
+                                                height: 20,
+                                                borderRadius: 12 }}>
+                                                {
+                                                    requestsItem.user.profile_picture ?
+                                                        <LoadableImage
+                                                            source={{uri: requestsItem.user.profile_picture}}
+                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                                        :
+                                                        <LoadableImage
+                                                            source={postImage}
+                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                                }
                                             </View>
-                                        </View>
-                                        <View style={styles.innerFlexContainer}>
-                                            <Text style={{ ...styles.userName , paddingTop:5 }}>{requestsItem.user.fullName}</Text>
                                         </View>
                                     </View>
-                                    <View style={{ ...styles.innerFlexContainer , marginTop:-20 }}>
-                                        <View style={{ ...styles.innerFlexContainer }}>
-                                            <View style={{...styles.tagsContainer2 }}>
-                                                <Text style={{...styles.tag, paddingBottom: 0}}>Request</Text>
-                                            </View>
+                                    <View style={{flex: 1}}>
+                                        <Text style={{ ...styles.userName , fontSize: 12 }}>
+                                            {requestsItem.user.fullName}
+                                        </Text>
+                                        <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( requestsItem.created_at ).fromNow() }</Text>
+                                    </View>
+                                    <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
+                                        <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
+                                            <Text style={{...styles.tag , fontSize: 8,
+                                                marginRight: 5,
+                                                padding: 4,
+                                                borderRadius: 3 }}>Request</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -381,23 +483,23 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                                     <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" , width :  (  ((windowWidth - 20)/5)*4  )  }}>
                                         <Text >{requestsItem.text}</Text>
                                     </View>
-                                    <View style={{ ...styles.innerFlexContainer }} >
+                                    <View style={{ ...styles.innerFlexContainer , marginTop:10 }} >
 
                                         <TouchableOpacity onPress={() => {
                                             acceptRequest(requestsItem.id)
                                         }}>
                                             <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 , paddingTop: 0, marginTop : -5}}
-                                                      name={"ios-checkmark-circle-outline"} size={30} color={"palevioletred"}/>
+                                                      name={"ios-checkmark-circle-outline"} size={30} color={colors.primary}/>
                                         </TouchableOpacity>
 
                                     </View>
-                                    <View style={{ ...styles.innerFlexContainer }} >
+                                    <View style={{ ...styles.innerFlexContainer, marginTop:10  }} >
 
                                         <TouchableOpacity onPress={() => {
                                             declineRequest(requestsItem.id)
                                         }}>
                                             <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
-                                                      name={"ios-close-circle-outline"} size={30} color={"palevioletred"}/>
+                                                      name={"ios-close-circle-outline"} size={30} color={colors.primary}/>
                                         </TouchableOpacity>
 
                                     </View>
@@ -407,6 +509,104 @@ export default function PostViewHome({route, dataProp, key, dataKey}) {
                     })}
                 </View>
                 : null}
+
+            {!user.isSignout && postStatus === 6 && acceptedRequest !== null ?
+                <View style={styles.requestContainerParent}  >
+
+                    <View style={{ ...styles.userContainer , marginBottom:0 }} >
+                        <View style={{ ...styles.userPicContainer , width: 25,
+                            height: 20,
+                            borderRadius: 12 }}>
+                            <View style={styles.userContainer}>
+                                <View style={{ ...styles.userPicContainer,   width: 20,
+                                    height: 20,
+                                    borderRadius: 12 }}>
+                                    {
+                                        acceptedRequest.user.profile_picture ?
+                                            <LoadableImage
+                                                source={{uri: acceptedRequest.user.profile_picture}}
+                                                styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                            :
+                                            <LoadableImage
+                                                source={postImage}
+                                                styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                    }
+                                </View>
+                            </View>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <Text style={{ ...styles.userName , fontSize: 12 }}>
+                                {acceptedRequest.user.fullName}
+                            </Text>
+                            <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( acceptedRequest.created_at ).fromNow() }</Text>
+                        </View>
+                        <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
+                            <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
+                                <Text style={{...styles.tag , fontSize: 8,
+                                    borderColor: colors.success,
+                                    color: colors.success,
+                                    marginRight: 5,
+                                    padding: 4,
+                                    borderRadius: 3 }}>Accepted</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
+                        <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
+
+                            <View style={{ ...styles.requestContainerParent , marginLeft:50, borderWidth:2,  borderTopColor: colors.primary, borderColor: colors.primary, marginTop:10 ,  borderRadius: 10 , padding:10 , paddingTop: 10,
+                                paddingBottom: 10 , paddingLeft:10, paddingRight:10 }}  >
+                                <View style={{ ...styles.userContainer , marginBottom:0 }} >
+                                    <View style={{ ...styles.userPicContainer , width: 25,
+                                        height: 20,
+                                        borderRadius: 12 }}>
+                                        <View style={styles.userContainer}>
+                                            <View style={{ ...styles.userPicContainer,   width: 20,
+                                                height: 20,
+                                                borderRadius: 12 }}>
+                                                {
+                                                    acceptedRequest.request.user.profile_picture ?
+                                                        <LoadableImage
+                                                            source={{uri: acceptedRequest.request.user.profile_picture}}
+                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                                        :
+                                                        <LoadableImage
+                                                            source={postImage}
+                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
+                                                }
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={{flex: 1}}>
+                                        <Text style={{ ...styles.userName , fontSize: 12 }}>
+                                            {acceptedRequest.request.user.fullName}
+                                        </Text>
+                                        <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( acceptedRequest.request.created_at ).fromNow() }</Text>
+                                    </View>
+                                    <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
+                                        <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
+                                            <Text style={{...styles.tag , fontSize: 8,
+                                                marginRight: 5,
+                                                padding: 4,
+                                                borderRadius: 3 }}>Request</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
+                                    <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
+                                        <Text >{acceptedRequest.request.text}</Text>
+                                    </View>
+                                </View>
+                            </View>
+
+
+                        </View>
+                    </View>
+                </View>
+                : null
+            }
+
+
 
 
         </View>
@@ -422,7 +622,7 @@ const styles = StyleSheet.create({
     innerFlexContainerText: {
         padding: 8,
         paddingLeft: 0,
-        color: "palevioletred",
+        color: colors.primary,
         fontSize: 14,
     },
 
@@ -439,11 +639,12 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         flexWrap: "nowrap",
-        marginBottom:10,
+        marginBottom:0,
         paddingTop: 10,
-        paddingBottom: 10,
+        paddingBottom: 0,
         borderTopWidth: 2,
-        borderTopColor: "palevioletred",
+        borderTopColor: colors.primary,
+        position: "relative"
     },
 
     bottomRequestContainer: {
@@ -458,7 +659,9 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         flexWrap: "nowrap",
-        alignSelf: "flex-end"
+        alignSelf: "flex-end",
+        paddingLeft:3,
+        paddingRight:3
     },
 
     innerFlexContainer: {
@@ -487,24 +690,24 @@ const styles = StyleSheet.create({
         flexWrap: "nowrap"
     },
     userPicContainer: {
-        width: 35,
-        height: 30,
+        width: 45,
+        height: 35,
         borderRadius: 15
     },
     locationLabel: {
-        color: "palevioletred",
+        color: colors.primary,
         fontSize: 12,
         marginTop: 0,
         marginBottom: 0,
     },
     tag: {
-        color: "palevioletred",
+        color: colors.primary,
         backgroundColor: "transparent",
         fontSize: 12,
         marginRight: 10,
         padding: 5,
         borderWidth: 1,
-        borderColor: "palevioletred",
+        borderColor: colors.primary,
         borderRadius: 10,
         textAlign: "center",
         textTransform: "capitalize",
@@ -539,7 +742,18 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: colors.white,
         marginBottom: 10,
-        padding: 10
+        padding: 10,
+        position: "relative"
+    },
+    absoluteCenterLoader : {
+        position:'absolute',
+        alignSelf:"center",
+        zIndex:1001,
+        backgroundColor:colors.loadingTransparent,
+        top:0,
+        bottom:0,
+        left:0,
+        right:0
     },
     imgContainer: {
         flexBasis: "100%",

@@ -28,11 +28,14 @@ import {AuthContext} from "../../../navigation/AuthProvider";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Textarea from 'react-native-textarea';
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
 
 
 const PostDataForm = ({navigation, route}) => {
 
     const {user, logout} = useContext(AuthContext);
+
+    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
 
     const [catList, setCatList] = useState([]);
     const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
@@ -48,7 +51,7 @@ const PostDataForm = ({navigation, route}) => {
     const [lang, setLang] = useState( getRouteParam( route , "langProp" , "" ) );
     const [cityName, setCityName] = useState( getRouteParam( route , "cityNameProp" , "" ) );
 
-    const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
+    const [uploadsObj, setUploadsObj] = useState( getRouteParam( route , "uploadsObjProp" , [] )  );
 
 /*
     const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ? "27.2046" : "27.2046");
@@ -56,9 +59,15 @@ const PostDataForm = ({navigation, route}) => {
     const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ? "Argyle Street Vancouver" : "Argyle Street Vancouver");
 */
 
-
+    useEffect(() => {
+        // console.log( "uploadsObjProp" , uploadsObj );
+        setUploadsObj( getRouteParam( route , "uploadsObjProp" , [] )  );
+    } , [] )
 
     const submitForm = async () => {
+
+        // console.log( "uploadsObjProp whie submit" , uploadsObj );
+
 
         let requiredCheck = {
             "Title": title,
@@ -78,6 +87,8 @@ const PostDataForm = ({navigation, route}) => {
             // now go to next setp
             navigation.navigate('PostUploads', {
 
+                idProp: id,
+
                 postTypeIdProp: postTypeId,
                 postCategoryIdProp: postCategoryId,
 
@@ -87,7 +98,7 @@ const PostDataForm = ({navigation, route}) => {
                 latProp: lat,
                 langProp: lang,
 
-                uploadsObj: uploadsObj
+                uploadsObjProp: uploadsObj
 
             });
         }
@@ -117,8 +128,8 @@ const PostDataForm = ({navigation, route}) => {
                 setLat(latitude);
                 setLang(longitude);
 
-                console.log( "lat", "lang" );
-                 console.log( lat, lang );
+                // console.log( "lat", "lang" );
+                //  // console.log( lat, lang );
 
                 let cityData = await API.Post.getCityName({
                     lat: position.coords.latitude,
@@ -192,7 +203,22 @@ const PostDataForm = ({navigation, route}) => {
                 >
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate("PostCategorySelection", {postTypeIdProp: postTypeId})
+                            navigation.navigate('PostUploads', {
+
+                                idProp: id,
+
+                                postTypeIdProp: postTypeId,
+                                postCategoryIdProp: postCategoryId,
+
+                                titleProp: title,
+                                descriptionProp: description,
+                                cityNameProp: cityName,
+                                latProp: lat,
+                                langProp: lang,
+
+                                uploadsObjProp: uploadsObj
+
+                            });
                         }
                         }
                     >
@@ -221,7 +247,12 @@ const PostDataForm = ({navigation, route}) => {
                     return (
                         cat.id === postCategoryId ?
                             <View key={index} style={{display:"flex"}} >
-                                <Image source={{uri: cat.s3_path}} style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center",}}/>
+                                <View style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}}>
+                                    <LoadableImage
+                                        styleData = {[{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}]}
+                                        source={{uri:cat.s3_path}}
+                                    />
+                                </View>
                                 <Text style={styles.textColour}>{cat.title}</Text>
                             </View> : null
                     )

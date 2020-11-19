@@ -6,9 +6,12 @@ import logo from "../../../../../assets/Feature_Icons-03.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
 
 
 const PostTypeSelection = ({ navigation , route}) => {
+
+    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
 
     const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
     const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
@@ -30,6 +33,9 @@ const PostTypeSelection = ({ navigation , route}) => {
              navigation.navigate( "HomeStack" );
         }else{
             navigation.navigate(  "PostCategorySelection" , {
+
+                idProp: id,
+
                 postTypeIdProp: postTypeIdSelected ,
                 postCategoryIdProp: postCategoryId ,
 
@@ -69,10 +75,13 @@ const PostTypeSelection = ({ navigation , route}) => {
     return (
         <View style={styles.container}>
 
-            <Image source={logo} style={{width: 300, height: 300, marginBottom: 60 }}/>
+            <LoadableImage
+                styleData = {[{width: 300, height: 300, marginBottom: 60, marginTop: 60 }]}
+                source={logo}
+            />
 
             <TouchableOpacity
-                style={styles.button}
+                style={{ ...styles.button , backgroundColor: ( postTypeId === 1 ) ? colors.secondaryBold  : colors.secondary  }}
                 onPress={
                     async ( event ) => {
                         await setPostTypeId( 1 );
@@ -84,7 +93,7 @@ const PostTypeSelection = ({ navigation , route}) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={styles.button}
+                style={{ ...styles.button , backgroundColor: ( postTypeId === 2 ) ? colors.secondaryBold : colors.secondary  }}
                 onPress={
                     async ( event ) => {
                         await setPostTypeId( 2 );

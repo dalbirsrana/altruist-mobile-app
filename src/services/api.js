@@ -111,11 +111,17 @@ const API =
             create: (data) => {
                 return makeRequest('/posts', {Posts: data})
             },
+            update: (id , data ) => {
+                return makeRequest('/update/'+id, {Post: data}, POST)
+            },
+            delete: (id) => {
+                return makeRequest('/delete/'+id, {Post: {id: id}}, POST)
+            },
             getCityName: (data) => {
                 return makeRequest('/city-name', {Posts: data})
             },
-            list: (data) => {
-                return makeRequest('/posts', {}, GET)
+            list: (lastPostId = 0 ) => {
+                return makeRequest('/posts?offset='+lastPostId, {}, GET)
             },
             view: (id) => {
                 return makeRequest('/posts/' + id, {}, GET)
@@ -144,6 +150,7 @@ const API =
             decline: (id) => {
                 return makeRequest('/decline', {PostComments: {request_id: id}}, POST)
             },
+
         },
         User: {
             getSavedPosts: () => {

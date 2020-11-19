@@ -10,6 +10,7 @@ import FileUploadExampleScreen from "../../FileUploadExampleScreen";
 import ScaledImage from "../../../../common/ScaledImage";
 import FormButtonSmall from "../../../../common/FormButtonSmall";
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
 
 
 function isIterableIterator(value) {
@@ -19,6 +20,8 @@ function isIterableIterator(value) {
 export default function PostUploads ({navigation, route}){
 
     const {user, logout} = useContext(AuthContext);
+
+    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
 
     const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
     const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
@@ -47,6 +50,8 @@ export default function PostUploads ({navigation, route}){
                         onPress={() =>
                         {
                             navigation.navigate( "PostDataForm" , {
+
+                                idProp: id,
                                 postTypeIdProp: postTypeId ,
                                 postCategoryIdProp: postCategoryId ,
 
@@ -76,6 +81,8 @@ export default function PostUploads ({navigation, route}){
         if( pObject.length > 0 ){
             await navigation.navigate( 'PostReview' , {
 
+                idProp: id,
+
                 postTypeIdProp: postTypeId ,
                 postCategoryIdProp: postCategoryId ,
 
@@ -95,8 +102,8 @@ export default function PostUploads ({navigation, route}){
     }
 
     useEffect(() => {
-        console.log( "uploadsObj" ,getRouteParam( route , "uploadsObjProp" , [] )  )
-        console.log( "uploadsObj" ,uploadsObj )
+        // console.log( "uploadsObj" ,getRouteParam( route , "uploadsObjProp" , [] )  )
+        // console.log( "uploadsObj" ,uploadsObj )
     } ,  [] );
 
     const removeItem = async ( url ) => {
@@ -115,26 +122,33 @@ export default function PostUploads ({navigation, route}){
             <View  style={styles.catBox2} >
                 <View  style={styles.imgContainer2} >
                     <FileUploadExampleScreen location={"PostUpload"} imageUploaded={( event ) => {
-                        console.log( "Just beforre set" , uploadsObj );
-                        console.log( "Just beforre set" , event );
+                        // console.log( "Just beforre set" , uploadsObj );
+                        // console.log( "Just beforre set" , event );
                         setUploadsObj(oldArray => [...oldArray, event]);
                     }}  />
                 </View>
             </View>
             <BR/>
 
-            { isIterableIterator( uploadsObj ) && uploadsObj.reverse().map( function ( upload , index ) {
+            {  uploadsObj.reverse().map( function ( upload , index ) {
                 return (
                     <View  key={index} style={styles.catBox} >
                         <FormButtonSmall  buttonTitle={"X"}  align={"right"} onPress={()=> removeItem( upload.objectUrl )}  />
                         <View  style={styles.imgContainer} >
-                            <Image style={styles.img}  source={{uri:upload.objectUrl}} />
+                            <LoadableImage
+                                styleData = {[ {
+                                    borderRadius:20,
+                                    height:250,
+                                    width:windowWidth-40
+                                } ]}
+                                source={{uri:upload.objectUrl}}
+                            />
                         </View>
                     </View>
                 )
             } ) }
 
-            { isIterableIterator( uploadsObj ) && uploadsObj.length > 0 ?
+            {  uploadsObj.length > 0 ?
                 <FormButtonSmall  buttonTitle={"Review"}  align={"right"} onPress={()=> submitForm()}  />
             : null }
 
