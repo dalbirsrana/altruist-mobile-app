@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
@@ -11,22 +11,33 @@ import LoadableImage from "../../../../common/LoadableImage";
 
 const PostTypeSelection = ({ navigation , route}) => {
 
-    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
+    let idProp = getRouteParam( route , "idProp" , "" );
+    let postTypeIdProp = getRouteParam( route , "postTypeIdProp" , "" );
+    let postCategoryIdProp = getRouteParam( route , "postCategoryIdProp" , "" ) ;
+    let titleProp = getRouteParam( route , "titleProp" , "" ) ;
+    let descriptionProp = getRouteParam( route , "descriptionProp" , "" );
+    let latProp = getRouteParam( route , "latProp" , "" );
+    let cityNameProp = getRouteParam( route , "cityNameProp" , "" );
+    let langProp = getRouteParam( route , "langProp" , "" );
+    let uploadsObjProp = getRouteParam( route , "uploadsObjProp" , [] );
 
-    const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
-    const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
+    const [id, setId] = useState(  idProp );
 
-    const [title, setTitle] = useState(  getRouteParam( route , "titleProp" , "" )   );
-    const [description, setDescription] = useState( getRouteParam( route , "descriptionProp" , "" )  );
+    const [catList, setCatList] = useState([]);
+    const [postTypeId, setPostTypeId] = useState( postTypeIdProp  );
+    const [postCategoryId, setPostCategoryId] = useState( postCategoryIdProp );
+
+    const [title, setTitle] = useState(titleProp);
+    const [description, setDescription] = useState(  descriptionProp );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState( getRouteParam( route , "latProp" , "" )  );
-    const [lang, setLang] = useState( getRouteParam( route , "langProp" , "" ) );
-    const [cityName, setCityName] = useState( getRouteParam( route , "cityNameProp" , "" ) );
+    const [lat, setLat] = useState( latProp );
+    const [lang, setLang] = useState( langProp );
+    const [cityName, setCityName] = useState(cityNameProp );
 
-    const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
+    const [uploadsObj, setUploadsObj] = useState( uploadsObjProp  );
 
     function move( forward , postTypeIdSelected = null  ){
         if( !forward ){
@@ -70,7 +81,20 @@ const PostTypeSelection = ({ navigation , route}) => {
                 </View>
             ),
         });
-    }, [navigation]);
+    }, [ navigation ]);
+
+    useEffect(() => {
+        setId( idProp );
+        setPostTypeId( postTypeIdProp );
+        setPostCategoryId( postCategoryIdProp );
+        setTitle( titleProp );
+        setDescription( descriptionProp );
+        setLat( latProp );
+        setLang( langProp );
+        setCityName( cityNameProp );
+        setUploadsObj( uploadsObjProp );
+
+    } , [ navigation , route.params  ] );
 
     return (
         <View style={styles.container}>
@@ -89,7 +113,7 @@ const PostTypeSelection = ({ navigation , route}) => {
                     }
                 }
             >
-                <Text style={styles.buttonText}>I want to help.</Text>
+                <Text style={styles.buttonText}>I need a help.</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -101,7 +125,7 @@ const PostTypeSelection = ({ navigation , route}) => {
                     }
                 }
             >
-                <Text style={styles.buttonText}>I need a help.</Text>
+                <Text style={styles.buttonText}>I want to help.</Text>
             </TouchableOpacity>
 
         </View>

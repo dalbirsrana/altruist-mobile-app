@@ -292,7 +292,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                 }}>
                                     <Image
                                         source={
-                                            require('../../../../../assets/Filled_png/Icons_Altruist_Tag.png')
+                                            require('../../../../../assets/Icons_svg/Icons_Altruist_Tag.png')
                                         }
                                         style={{
                                             width: 20,
@@ -312,7 +312,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                 }}>
                                     <Image
                                         source={
-                                            require('../../../../../assets/icons_png/Icons_Altruist_Tag.png')
+                                            require('../../../../../assets/Icons_svg/Icons_Altruist_Tag.png')
                                         }
                                         style={{
                                             width: 20,
@@ -331,7 +331,9 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
             </View>
 
-            <TouchableOpacity onPress={() => {
+            <TouchableOpacity
+                style={{ minHeight:350 }}
+                onPress={() => {
                 navigation.navigate('SingleHelpScreen', { postId: data.id, postTitle: data.title })
             }}>
 
@@ -745,7 +747,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         marginBottom: 10,
         padding: 10,
-        position: "relative"
+        position: "relative",
+        width: windowWidth
     },
     absoluteCenterLoader : {
         position:'absolute',

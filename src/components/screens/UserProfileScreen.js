@@ -35,13 +35,16 @@ const UserProfile = ({navigation}) => {
 
     const changeProfilePicture = async (uploadObject) => {
         setLoading(true);
-        setProfileImage(uploadObject.objectUrl);
+        setProfileImage( uploadObject.objectUrl );
         let data = {
             profile_picture: uploadObject.key
         };
-        let changePicture = await API.User.changePicture(data);
+        let changePicture = await API.User.updateProfile(data);
+        console.log( "changePicture" , changePicture );
         if (changePicture.success) {
             pictureUploaded(changePicture.data);
+            console.log( "changeProfilePicture" , changePicture.data );
+
             setProfileImage(changePicture.data.profile_picture);
             setLoading(false);
         }
@@ -62,6 +65,7 @@ const UserProfile = ({navigation}) => {
                                         style={buttonStyles.buttonContainer}>
                                         <FileUploadExampleScreen location={"ChangeProfilePicture"}
                                                                  imageUploaded={(event) => {
+                                                                     console.log( event );
                                                                      changeProfilePicture(event);
                                                                  }}/>
                                     </View>
@@ -77,6 +81,7 @@ const UserProfile = ({navigation}) => {
                                         style={buttonStyles.buttonContainer}>
                                         <FileUploadExampleScreen location={"AddProfilePicture"}
                                                                  imageUploaded={(event) => {
+                                                                     console.log( event );
                                                                      changeProfilePicture(event);
                                                                  }}/>
                                     </View>

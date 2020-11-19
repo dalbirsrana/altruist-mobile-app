@@ -15,6 +15,7 @@ import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
 import getRouteParam from "../../../helper/getRouteParam"
 import LoadableImage from "../../../../common/LoadableImage";
+import Loading from "../../../../common/Loading";
 
 function isIterableIterator(value) {
     return !!value && typeof value.next === "function" && typeof value[Symbol.iterator] === "function";
@@ -22,8 +23,6 @@ function isIterableIterator(value) {
 
 export default function PostReview ({navigation, route}){
 
-
-    const isFocused = useIsFocused()
     const {user, logout} = useContext(AuthContext);
 
     const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
@@ -45,6 +44,7 @@ export default function PostReview ({navigation, route}){
     const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
 
     const [inProcess, setInProcess] = useState(false);
+
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
@@ -80,7 +80,7 @@ export default function PostReview ({navigation, route}){
                 </View>
             ),
         });
-    }, [navigation , isFocused]);
+    }, [navigation]);
 
     const submitForm = async () => {
 
@@ -91,6 +91,7 @@ export default function PostReview ({navigation, route}){
         });
 
         if( (id === null || id === "") ){
+            console.log( "CreatePost" );
             let createPost = await API.Post.create({
                 title: title,
                 post_type_id : postTypeId ,
@@ -101,9 +102,6 @@ export default function PostReview ({navigation, route}){
                 PostUploads : PostUploads,
                 city_name : cityName
             });
-
-            // console.log( createPost );
-
             if( createPost && createPost.success ){
                 // console.log( 'HomeStack navigate' , createPost.data.id );
                 setInProcess( false );
@@ -129,8 +127,6 @@ export default function PostReview ({navigation, route}){
                 PostUploads : PostUploads,
                 city_name : cityName
             });
-
-            // console.log( createPost );
 
             if( createPost && createPost.success ){
                 // console.log( 'HomeStack navigate' , createPost.data.id );
@@ -184,7 +180,7 @@ export default function PostReview ({navigation, route}){
             isUnMount = true ;
         }
 
-    } ,  [ navigation , isFocused] );
+    } ,  [ navigation ] );
 
     return (
         <ScrollView style={styles.container}>
@@ -242,8 +238,12 @@ export default function PostReview ({navigation, route}){
                 )
             } ) }
 
+            {  inProcess ?
+                <Loading />
+                :
+                <FormButtonSmall loadingProp={false} buttonTitle={ ( id === null || id === "" ) ? "Create Post" : "Edit Post" }  align={"right"} onPress={()=> submitForm()}  />
+            }
 
-            <FormButtonSmall loadingProp={false} buttonTitle={ ( id === null || id === "" ) ? "Create Post" : "Edit Post" }  align={"right"} onPress={()=> submitForm()}  />
 
 
         </ScrollView>

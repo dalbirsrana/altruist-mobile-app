@@ -18,12 +18,12 @@
     ],
     "ios": {
       "bundleIdentifier": "com.toffee.altruist",
-      "buildNumber": "1.0.3",
+      "buildNumber": "1.0.5",
       "supportsTablet": true
     },
     "android": {
       "package": "com.toffee.altruist",
-      "versionCode": 3
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"

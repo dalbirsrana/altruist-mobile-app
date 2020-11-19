@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Button, StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
 import API from "../../../../services/api"
-import PostViewHome from "../View/PostViewHome";
+import PostViewViewPage from "../View/PostViewViewPage";
 import Loading from "../../../../common/Loading";
 import colors from "../../../../colors/colors";
 import {windowWidth} from "../../../../utils/Dimensions";
@@ -63,7 +63,7 @@ const SingleHelp = ({route, navigation}) => {
                             :
                             <View style={{flex: 1}}>
                                 {post !== null ?
-                                    <PostViewHome dataProp={post} removeItem={(id) => removeItem(post.id)}/> :
+                                    <PostViewViewPage dataProp={post} removeItem={(id) => removeItem(post.id)} /> :
                                     <Loading/>}
                             </View>
                         }
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        marginLeft: 20
     },
     textColour2: {
         marginTop: 10,
