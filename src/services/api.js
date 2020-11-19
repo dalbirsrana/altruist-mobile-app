@@ -6,7 +6,7 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // PROD SERVER
 const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
-// // Jaimin Local MAMP Server
+// Jaimin Local MAMP Server
 // const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET";

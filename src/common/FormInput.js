@@ -18,13 +18,12 @@ export default function FormInput({ labelValue, placeholderText, ...rest }) {
 
 const styles = StyleSheet.create({
   input: {
-    padding: 10,
-    marginTop: 5,
-    marginBottom: 10,
+    padding: 6,
+    marginBottom: 15,
     width: windowWidth / 1.5,
-    height: windowHeight / 15,
+    height: windowHeight / 18,
     fontSize: 16,
-    borderRadius: 8,
+    borderRadius: 6,
     borderColor: colors.black,
     borderWidth: 1,
   },
