@@ -43,8 +43,10 @@ const SignInScreen = ({navigation}) => {
         <View style={styles.container}>
             <Image
                 source={logo}
-                style={{width: 200, height: 200, marginBottom: 20}}
+                style={{width: 150, height: 150, marginBottom: 10}}
             />
+
+            <Text style={styles.heading}>Find and Give Help Fast</Text>
 
             <Text>{msg}</Text>
 
@@ -106,26 +108,32 @@ const SignInScreen = ({navigation}) => {
                 }}
             />
 
+            <View>
+                <Text style={styles.textOR}>or</Text>
+            </View>
+
+            <FormButton 
+                    buttonTitle="Sign Up"
+                    onPress={() => navigation.navigate("SignUp")} 
+            />
+
             <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")}>
                 <Text style={styles.forgot}>Forget Password?</Text>
             </TouchableOpacity>
+
             <TouchableOpacity onPress={() => navigation.navigate("VerifyAccount")}>
                 <Text style={styles.forgot}>Verify Account?</Text>
             </TouchableOpacity>
-            <View style={styles.container2}>
-                <Text style={styles.forgot}>Don't have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-                    <Text style={styles.signup}>SignUp</Text>
-                </TouchableOpacity>
-            </View>
+            
             <TouchableOpacity
-                style={styles.button}
+                style={styles.skipButton}
                 onPress={() => {
                     return navigation.navigate("UnauthenticatedHomeScreen");
                 }}
             >
                 <Text style={styles.buttonText}>Skip</Text>
             </TouchableOpacity>
+
         </View>
     );
 };
@@ -139,10 +147,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    container2: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "baseline",
+    heading: {
+        fontSize: 22,
+        marginBottom: 20,
+    },
+    textOR: {
+        fontSize: 18,
+        marginBottom: 25,
     },
     forgot: {
         fontSize: 16,
@@ -150,23 +161,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 10,
     },
-    signup: {
-        fontSize: 18,
-        marginBottom: 30,
-        color: colors.primary,
-        fontWeight: "bold",
-    },
-    button: {
+    skipButton: {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: colors.secondary,
-        width: windowWidth / 3.5,
-        height: windowHeight / 17,
-        padding: 10,
+        width: windowWidth / 3,
+        height: windowHeight / 18,
         borderWidth: 1,
         borderColor: "white",
-        borderRadius: 25,
-        marginBottom: 10,
+        borderRadius: 24,
+        marginTop: 30,
     },
     buttonText: {
         fontSize: 18,

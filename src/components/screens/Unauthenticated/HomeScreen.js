@@ -1,141 +1,139 @@
 import React, {useState, useEffect } from "react";
-import {Image, StyleSheet, Text, Button, View} from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import API from "../../../services/api";
- 
-import colors from "../../../colors/colors";
-import logo from "../../../../assets/icon.png";
-import Loading from "../../../common/Loading";
-import PostViewHome from "../Posts/View/PostViewHome"
-import FlatListSlider from "../../helper/Slider/FlatListSlider";
-import {windowWidth} from "../../../utils/Dimensions";
+import {Image, StyleSheet, Text, View, VirtualizedList} from "react-native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import Loading from "../../../common/Loading"
 
-// const DisplayPosts = (props, {navigation}) => ()
+import colors from "../../../colors/colors";
+import postImage from "../../../../assets/user-avatar.png"
+import HomePageTopSlider from "../../helper/HomePageTopSlider/HomePageTopSlider"
+import TopHelper from "../../screens/partials/home/TopHelpers"
+import API from "../../../services/api";
+import {windowHeight, windowWidth} from "../../../utils/Dimensions";
+import FlatListSlider from '../../helper/Slider/FlatListSlider';
 
 const HomeScreen = ({navigation}) => {
 
-    const [posts, setPosts] = useState([]);
     const [isLoading, setLoading] = useState(true);
+    const [posts, setPosts] = useState([])
 
-    const loadPost = async () => {
-        let P = await API.Post.openList();
-        if (P !== undefined ) {
-
+    const loadPost = async() => {
+        let postsList = await API.Post.openList()
+        if(postsList !== undefined && postsList.success) {
+            console.log(postsList.data)
+            setPosts(postsList.data)
             setLoading(false)
-            setPosts(P.data)
-
-            console.log(P.data)
-            return true;
         }
     }
 
-    useEffect( ()=> {
-        let isUnMount = false;
-        if (!isUnMount){
-            loadPost();
+    useEffect(() => {
+        let isUnMount = false
+        if (!isUnMount) {
+            loadPost()
         }
+
         return () => {
-            isUnMount = true;
+            isUnMount = true
         }
-    }, []);
+    }, [])
 
-
-    let images = [
-        {
-            image:'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
-            desc: '1',
-        },
-        {
-            image:'https://images.unsplash.com/photo-1455620611406-966ca6889d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1130&q=80',
-            desc: '2',
-        },
-        {
-            image:'https://images.unsplash.com/photo-1465572089651-8fde36c892dd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=889&q=80',
-            desc: '3',
-        },
-        {
-            image:'https://images.unsplash.com/photo-1533299346856-b1a85808f2ec?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=889&q=80',
-            desc: '4',
-        },
-        {
-            image:'https://images.unsplash.com/photo-1589011352120-510c9fca6d31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80',
-            desc: '5',
-        },
-    ] ;
-
-    const screenWidth = Math.round(windowWidth);
 
     return (
         <ScrollView style={styles.container}>
 
             {/* Slider container */}
-            <View>
-                <FlatListSlider
-                    data={images}
-                    timer={100}
-                    imageKey={'image'}
-                    local={false}
-                    width={screenWidth}
-                    separator={0}
-                    loop={false}
-                    autoscroll={false}
-                    currentIndexCallback={index => console.log('Index', index)}
-                    indicator
-                    animation
-                />
-
-                <View style={{ 
-                    position: 'absolute', 
-                    bottom: 40, 
-                    left: 50, 
-                    right: 50,
-                    borderWidth: 1,
-                    borderColor: 'white'
-                    }}>
-
-                    <Button 
-                        onPress={()=>{navigation.navigate("SignIn")}} 
-                        title="Looking for help" 
-                        color="red"
-                        backgroundColor="white"
-                        accessibilityLabel="looking for help in your area" 
-                    />
-                </View>
-                
-
-            </View>
+            <HomePageTopSlider navigation={navigation} />
 
             {/* Top Helper container */}
-            <View style={{ height: 200 }}>
-                <Text>Top Helper's</Text>
-            </View>
+            <TopHelper />
 
             {/* Help Posts container */}
-            <View>
-                {
-                    isLoading
-                    ?
-                    <Loading />
-                    :
-                    (
-                        <ScrollView>
-                            {/* {
-                                Array.isArray(posts) && posts.map( function( post , index ) {
-                                    return(
-                                        <PostViewHome key={index} dataProp={post} ></PostViewHome>
-                                        )
-                                })
-                            } */}
-                        </ScrollView>
-                    )
-                }
-            </View>
-
+            {
+            isLoading || posts.length == 0 ? <Loading /> :
+            <VirtualizedList
+                data={posts}
+                renderItem={({index, item}) => <PostItem index={index} data={item} /> }
+                keyExtractor={item => item.id.toString()}
+                getItemCount={(data)=>data.length}
+                getItem={(data, index)=>data[index]}
+            />
+            }
+ 
         </ScrollView>
     )
 }
 
 export default HomeScreen;
+
+
+const PostItem = ({ index, data }) => {
+    return (
+        <View key={index} id={index} style={{flex:1}}  >
+            <View style={styles.userContainer}>
+                <View style={styles.userPicContainer}>
+                    {
+                        data.user.profile_picture ?
+                            <Image
+                                source={{uri: data.user.profile_picture}}
+                                style={{width: 30, height: 30, borderRadius: 15}} />
+                            :
+                            <Image source={postImage}
+                            style={{width: 30, height: 30, borderRadius: 15}} />
+                    } 
+                </View>
+                <View style={{flex: 1}}>
+                    <Text style={styles.userName}>{data.user.fullName}</Text>
+                    <Text style={{textAlign: "left", fontSize: 8}}>{data.city_name}</Text>
+                </View>
+            </View>
+
+            {/* <View>
+                    <Text>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                    <Text>{data.postCategory.title}</Text>
+            </View> */}
+
+
+            <View style={styles.containerReview}>
+                <Text style={{}}>{data.title}</Text>
+                <Text style={{}}>{data.description}</Text>
+
+            </View>
+
+                {data.postUploads.length > 0 ? (data.postUploads.length > 1 ?
+                    <FlatListSlider
+                        style={
+                            {
+                                width: windowWidth
+                            }
+                        }
+                        data={data.postUploads}
+                        timer={100}
+                        imageKey={'image'}
+                        local={false}
+                        width={windowWidth}
+                        separator={0}
+                        loop={false}
+                        autoscroll={false}
+                        currentIndexCallback={index => console.log('Index', index)}
+                        indicator
+                        animation
+                    />
+                    :
+
+                    <FlatList
+                    data={data.postUploads}
+                    renderItem={({item})=>(
+                        <Image source={{uri:item}} style={{width:100, height:100}} />
+                    )}
+                    keyExtractor={(item)=>item.id}
+                    />
+                    
+                    ) : null
+                }
+
+
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -153,5 +151,15 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "green",
         marginVertical: 25,
+    },
+    userContainer: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "nowrap"
+    },
+    userPicContainer: {
+        width: 35,
+        height: 30,
+        borderRadius: 15
     },
 });

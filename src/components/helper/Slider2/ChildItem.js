@@ -1,34 +1,36 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import {TouchableOpacity, Image, StyleSheet, View, Text} from 'react-native';
 import {windowHeight, windowWidth} from "../../../utils/Dimensions";
-import styled from 'styled-components/native'
 import colors from "../../../colors/colors";
-import {color} from "react-native-reanimated";
-import LoadableImage from "../../../common/LoadableImage"
+import LoadableImage from "../../../common/LoadableImage";
 
-const StyledTextButton = styled.Button`
-  color: red;
-  background-color: blue;
-  font-size: 10px;
-  margin: 10px;
-  padding: 0.25px 1px;
-  border: 2px solid palevioletred;
-  border-radius: 3px;
-`
-
+import {AuthContext} from "../../navigation/AuthProvider";
 
 export default function ChildItem({
-        navigation,
-                                      item,
-                                      style,
-                                      onPress,
-                                      index,
-                                      imageKey,
-                                      buttonLable,
-                                      local,
-                                      height,
-                                      active
-                                  }) {
+                                    navigation,
+                                    item,
+                                    style,
+                                    onPress,
+                                    index,
+                                    imageKey,
+                                    buttonLable,
+                                    local,
+                                    height,
+                                    active
+                                }) {
+
+        const {user, dispatch} = useContext(AuthContext)
+
+        function stateChanged(user) {
+            dispatch(user);
+        }
+
+        useEffect(() => {
+            return () => {
+                stateChanged(user)
+            }
+        }, [])
+
     return (
 
         <View style={styles.container}>
@@ -36,10 +38,12 @@ export default function ChildItem({
                 styleData={[styles.image, style]}
                 source={local ? item[imageKey] : {uri: item[imageKey]}}
             />
+
             <TouchableOpacity style={buttonStyles.buttonContainer}
                               onPress={()=>{
-                                  console.log( navigation );
-                                  navigation.navigate('CreatePost');
+                                  (typeof user !== "undefined" && user !== null && !user.isSignout) ?
+                                  navigation.navigate('CreatePost') :
+                                  navigation.navigate('SignIn')
                               }}
             >
                 <Text style={buttonStyles.buttonText}

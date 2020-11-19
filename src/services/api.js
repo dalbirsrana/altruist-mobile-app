@@ -4,10 +4,10 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // const api_server = 'http://34.208.106.207'
 
 // PROD SERVER
-// const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
 
 // Jaimin Local MAMP Server
-const api_server = 'http://192.168.0.124/capstone/capstone-api'
+// const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET";
 const POST = "POST";

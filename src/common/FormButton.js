@@ -34,14 +34,13 @@ export default function FormButton({ buttonTitle, loadingProp , ...rest }) {
 const styles = StyleSheet.create({
   buttonContainer: {
     display:"flex",
-    marginBottom: 20,
+    marginBottom: 25,
     width: windowWidth / 1.5,
-    height: windowHeight / 15,
+    height: windowHeight / 18,
     backgroundColor: colors.primary,
-    padding: 10,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
+    borderRadius: 6,
   },
   buttonText: {
     fontSize: 20,

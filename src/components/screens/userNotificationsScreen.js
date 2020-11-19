@@ -83,6 +83,7 @@ const Item = ({index, post}) => {
                 :  (<Image source={postImage} style={styles.postImage} />)
             }
             <View style={styles.textContent}>
+                <Text style={styles.textCommentType}>{post.post_comment_type}</Text>
                 <Text>{post.text}</Text>
             </View>
         </View>
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
     },
     header: {
         paddingBottom: 10,
-        marginBottom: 10,
         height: windowHeight / 10,
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -135,4 +135,9 @@ const styles = StyleSheet.create({
         width: windowWidth / 1.3,
         paddingLeft: 20,
     },
+    textCommentType: {
+        color: color.primary,
+        fontWeight: 'bold',
+        marginBottom: 5,
+    }
   });

@@ -1,6 +1,9 @@
 import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
+
 import colors from "../../../colors/colors";
+import logo from "../../../../assets/icon.png";
+
 import FormButton from "../../../common/FormButton";
 import FormInput from "../../../common/FormInput";
 import { AuthContext } from "../../navigation/AuthProvider";
@@ -11,15 +14,53 @@ export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [msg, setMsg] = useState("");
-
   const { register } = useContext(AuthContext);
+
+  const [signUpSuccess, setSignUpSuccess] = useState(undefined);
+  const [signUpData, setSignUpData] = useState([]);
+
+  const signUp = async() => {
+
+    const data = {
+      firstName: firstName,
+      lastName: lastName,
+      username: email,
+      password: password,
+    };
+
+    let signUpQuery = await register(data);
+
+    if (signUpQuery !== undefined && signUpQuery.success) {
+      navigation.navigate("SignIn");
+    } else if (signUpQuery.success === false) {
+      
+      setSignUpSuccess(false)
+      setSignUpData(signUpQuery.data)
+
+      console.log(signUpQuery.data);
+    }
+  }
+
+  const emailTrim = () => {
+    let e = signUpData.email[0]
+      return e.substring(0, 62)
+  }
 
   return (
     <View style={styles.container}>
+        <Image
+            source={logo}
+            style={styles.logo}
+        />
+
+
+      <Text style={styles.heading}>Find and Give Help Fast</Text>
+
+
       {/* error messages  */}
-      <Text style={styles.errorMsg}>{msg}</Text>
-      <Text style={styles.text}>Create an account</Text>
+      <Text style={styles.errorMsg}>{
+        signUpSuccess === false &&  signUpData.firstName !== undefined ? (signUpData.firstName) : ('')
+      }</Text>
       <FormInput
         value={firstName}
         placeholderText="First Name"
@@ -28,6 +69,10 @@ export default function SignUpScreen({ navigation }) {
         keyboardType="first-name"
         autoCorrect={false}
       />
+            {/* error messages  */}
+      <Text style={styles.errorMsg}>{
+        signUpSuccess === false &&  signUpData.lastName !== undefined ? (signUpData.lastName) : ('')
+      }</Text>
       <FormInput
         value={lastName}
         placeholderText="Last Name"
@@ -36,6 +81,10 @@ export default function SignUpScreen({ navigation }) {
         keyboardType="last-name"
         autoCorrect={false}
       />
+            {/* error messages  */}
+      <Text style={styles.errorMsg}>{
+        signUpSuccess === false &&  signUpData.email !== undefined ? ( emailTrim() ) : ('')
+      }</Text>
       <FormInput
         value={email}
         placeholderText="Email"
@@ -44,6 +93,10 @@ export default function SignUpScreen({ navigation }) {
         keyboardType="email-address"
         autoCorrect={false}
       />
+            {/* error messages  */}
+      <Text style={styles.errorMsg}>{
+        signUpSuccess === false &&  signUpData.password !== undefined ? (signUpData.password) : ('')
+      }</Text>
       <FormInput
         value={password}
         placeholderText="Password"
@@ -51,30 +104,8 @@ export default function SignUpScreen({ navigation }) {
         secureTextEntry={true}
       />
       <FormButton
-        buttonTitle="Signup"
-        onPress={async () => {
-          const data = {
-            firstName: firstName,
-            lastName: lastName,
-            username: email,
-            password: password,
-          };
-
-          let signUp = await register(data);
-
-          if (signUp.success) {
-            setMsg(
-              `Sign Up Success with user ID: ${signUp.data.id} \nRedirecting to login page...`
-            );
-
-            navigation.navigate("SignIn");
-          } else {
-            setMsg(
-              `SignUp failed: \n${signUp.data.email} \n${signUp.data.firstName} \n${signUp.data.lastName} \n${signUp.data.password} \n${signUp.data.username}`
-            );
-            console.log(signUp.data);
-          }
-        }}
+        buttonTitle="Create an account"
+        onPress={ ()=> signUp() }
       />
     </View>
   );
@@ -84,16 +115,21 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
-  text: {
-    fontSize: 24,
-    marginBottom: 10,
+  heading: {
+    fontSize: 22,
+    marginBottom: 20,
+  },
+  logo: {
+    height: 150,
+    width: 150,
+    marginTop: 20,
   },
   errorMsg: {
-    fontSize: 16,
+    fontSize: 12,
     color: "red",
-    marginVertical: 10,
+    marginBottom: 4,
   },
 });
