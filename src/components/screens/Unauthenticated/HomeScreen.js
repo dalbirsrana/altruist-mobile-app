@@ -10,6 +10,7 @@ import TopHelper from "../../screens/partials/home/TopHelpers"
 import API from "../../../services/api";
 import {windowHeight, windowWidth} from "../../../utils/Dimensions";
 import FlatListSlider from '../../helper/Slider/FlatListSlider';
+import { color } from "react-native-reanimated";
 
 const HomeScreen = ({navigation}) => {
 
@@ -56,6 +57,7 @@ const HomeScreen = ({navigation}) => {
                 keyExtractor={item => item.id.toString()}
                 getItemCount={(data)=>data.length}
                 getItem={(data, index)=>data[index]}
+                style={{marginTop: 10}}
             />
             }
  
@@ -68,7 +70,7 @@ export default HomeScreen;
 
 const PostItem = ({ index, data }) => {
     return (
-        <View key={index} id={index} style={{flex:1}}  >
+        <View key={index} id={index} style={{flex:1, paddingHorizontal: 5, paddingVertical: 10, backgroundColor: index%2==0 ? colors.primaryTransparent : colors.secondaryTransparent}}>
             <View style={styles.userContainer}>
                 <View style={styles.userPicContainer}>
                     {
@@ -85,17 +87,19 @@ const PostItem = ({ index, data }) => {
                     <Text style={styles.userName}>{data.user.fullName}</Text>
                     <Text style={{textAlign: "left", fontSize: 8}}>{data.city_name}</Text>
                 </View>
+
+                <View style={styles.postCatType}>
+                    <Text style={styles.postCatTypeTitle}>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                    <Text style={styles.postCatTypeTitle}>{data.postCategory.title}</Text>
+                </View>
             </View>
 
-            {/* <View>
-                    <Text>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
-                    <Text>{data.postCategory.title}</Text>
-            </View> */}
+
 
 
             <View style={styles.containerReview}>
-                <Text style={{}}>{data.title}</Text>
-                <Text style={{}}>{data.description}</Text>
+                <Text style={{fontWeight: 'bold',}}>{data.title}</Text>
+                <Text style={{marginVertical: 4,}}>{data.description.substring(0, 120)}</Text>
 
             </View>
 
@@ -123,7 +127,7 @@ const PostItem = ({ index, data }) => {
                     <FlatList
                     data={data.postUploads}
                     renderItem={({item})=>(
-                        <Image source={{uri:item}} style={{width:100, height:100}} />
+                        <Image source={{uri:item}} style={{width:windowWidth, height:200}} />
                     )}
                     keyExtractor={(item)=>item.id}
                     />
@@ -156,11 +160,30 @@ const styles = StyleSheet.create({
     userContainer: {
         display: "flex",
         flexDirection: "row",
-        flexWrap: "nowrap"
+        flexWrap: "nowrap",
+        marginBottom: 5,
     },
     userPicContainer: {
         width: 35,
         height: 30,
         borderRadius: 15
     },
+    userName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    postCatType: {
+        flexDirection: 'row'
+    },
+    postCatTypeTitle: {
+        borderWidth: 1,
+        borderRadius: 4,
+        padding: 6,
+        borderColor: colors.primary,
+        marginHorizontal: 6,
+    },
+    containerReview: {
+        marginVertical: 5,
+    }
+
 });
