@@ -42,6 +42,7 @@ const HomeScreen = ({navigation}) => {
         <ScrollView style={styles.container}>
 
             {/* Slider container */}
+
             <HomePageTopSlider navigation={navigation} />
 
             {/* Top Helper container */}

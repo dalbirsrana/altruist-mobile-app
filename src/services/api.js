@@ -33,8 +33,8 @@ async function makeRequest(path, data, method = "POST") {
         options.body = JSON.stringify(data);
     }
 
-    // console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
-    // console.log(options);
+     console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
+     console.log(options);
 
     await fetch(`${api_server}${path}?XDEBUG_SESSION_START=12744`, options)
         .then(response => response.json())
@@ -111,11 +111,17 @@ const API =
             create: (data) => {
                 return makeRequest('/posts', {Posts: data})
             },
+            update: ( id , data ) => {
+                return makeRequest('/posts/'+id, {Posts: data} )
+            },
+            delete: (id) => {
+                return makeRequest('/delete/'+id, {Posts: {id: id}}, POST)
+            },
             getCityName: (data) => {
                 return makeRequest('/city-name', {Posts: data})
             },
-            list: (data) => {
-                return makeRequest('/posts', {}, GET)
+            list: (lastPostId = 0 ) => {
+                return makeRequest('/posts?offset='+lastPostId, {}, GET)
             },
             view: (id) => {
                 return makeRequest('/posts/' + id, {}, GET)
@@ -144,6 +150,7 @@ const API =
             decline: (id) => {
                 return makeRequest('/decline', {PostComments: {request_id: id}}, POST)
             },
+
         },
         User: {
             getSavedPosts: () => {
@@ -155,8 +162,8 @@ const API =
             getNotifications: () => {
                 return makeRequest('/notifications', {}, GET)
             },
-            changePicture: async (data) => {
-                return await makeRequest('/change-picture', {StudentAppUser: data})
+            updateProfile: async (data) => {
+                return await makeRequest('/update-profile', {StudentAppUser: data})
             }
         },
 

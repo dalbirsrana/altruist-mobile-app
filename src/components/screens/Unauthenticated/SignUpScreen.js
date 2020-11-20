@@ -107,6 +107,7 @@ export default function SignUpScreen({ navigation }) {
         buttonTitle="Create an account"
         onPress={ ()=> signUp() }
       />
+          
     </View>
   );
 }

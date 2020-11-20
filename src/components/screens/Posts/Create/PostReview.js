@@ -1,4 +1,6 @@
 import React, {useContext, useState, useEffect} from "react";
+import { useIsFocused } from '@react-navigation/native'
+import { StackActions  } from '@react-navigation/native';
 import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
@@ -12,6 +14,8 @@ import FormButtonSmall from "../../../../common/FormButtonSmall";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import API from "../../../../services/api";
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
+import Loading from "../../../../common/Loading";
 
 function isIterableIterator(value) {
     return !!value && typeof value.next === "function" && typeof value[Symbol.iterator] === "function";
@@ -21,6 +25,7 @@ export default function PostReview ({navigation, route}){
 
     const {user, logout} = useContext(AuthContext);
 
+    const [id, setId] = useState(  getRouteParam( route , "idProp" , "" ) );
     const [catList, setCatList] = useState([]);
 
     const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
@@ -38,14 +43,10 @@ export default function PostReview ({navigation, route}){
 
     const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
 
+    const [inProcess, setInProcess] = useState(false);
+
+
     React.useLayoutEffect(() => {
-
-        console.log( route.params );
-
-        const blur = navigation.addListener('blur', () => {
-            //navigation.popToTop();
-        });
-
         navigation.setOptions({
             headerRight : () => <Text/>,
             headerLeft: () => (
@@ -57,6 +58,8 @@ export default function PostReview ({navigation, route}){
                         onPress={() =>
                         {
                             navigation.navigate( "PostUploads" , {
+
+                                idProp: id,
                                 postTypeIdProp: postTypeId ,
                                 postCategoryIdProp: postCategoryId ,
 
@@ -81,33 +84,64 @@ export default function PostReview ({navigation, route}){
 
     const submitForm = async () => {
 
+        setInProcess( true );
         let PostUploads = [] ;
         uploadsObj.map(function ( upload ) {
             PostUploads.push( upload.key );
         });
 
-        let createPost = await API.Post.create({
-            title: title,
-            post_type_id : postTypeId ,
-            post_category_id : postCategoryId ,
-            description : description ,
-            lat : lat,
-            lang: lang,
-            PostUploads : PostUploads,
-            city_name : cityName
-        });
+        if( (id === null || id === "") ){
+            console.log( "CreatePost" );
+            let createPost = await API.Post.create({
+                title: title,
+                post_type_id : postTypeId ,
+                post_category_id : postCategoryId ,
+                description : description ,
+                lat : lat,
+                lang: lang,
+                PostUploads : PostUploads,
+                city_name : cityName
+            });
+            if( createPost && createPost.success ){
+                // console.log( 'HomeStack navigate' , createPost.data.id );
+                setInProcess( false );
 
-        console.log( createPost );
+                navigation.navigate( 'Create', { postCreatedProp:true , postCreatedIdProp:createPost.data.id } );
+                //navigation.dispatch(replaceAction);
 
-        if( createPost && createPost.success ){
-            console.log( 'HomeStack navigate' , createPost.data.id );
-            return navigation.navigate( 'HomeStack', { screen:'Home', params:{ postCreatedProp:true , postCreatedIdProp:createPost.data.id }} );
+            }else{
+                let string = "Please try again later there is some error.";
+                //let string = JSON.parse( createPost );
+                setErrorList( [<Text style={styles.errorLabel} key={0} >{string}</Text>] );
+                setInProcess( false );
+            }
+
         }else{
-            let string = "Please try again later there is some error.";
-            //let string = JSON.parse( createPost );
-            setErrorList( [<Text style={styles.errorLabel} key={0} >{string}</Text>] );
-        }
+            let createPost = await API.Post.update( id,{
+                title: title,
+                post_type_id : postTypeId ,
+                post_category_id : postCategoryId ,
+                description : description ,
+                lat : lat,
+                lang: lang,
+                PostUploads : PostUploads,
+                city_name : cityName
+            });
 
+            if( createPost && createPost.success ){
+                // console.log( 'HomeStack navigate' , createPost.data.id );
+                setInProcess( false );
+
+                navigation.navigate( 'Create', { postCreatedProp:true , postCreatedIdProp:createPost.data.id } );
+                //navigation.dispatch(replaceAction);
+
+            }else{
+                let string = "Please try again later there is some error.";
+                //let string = JSON.parse( createPost );
+                setErrorList( [<Text style={styles.errorLabel} key={0} >{string}</Text>] );
+                setInProcess( false );
+            }
+        }
     }
 
     function setErrorsInStart() {
@@ -146,7 +180,7 @@ export default function PostReview ({navigation, route}){
             isUnMount = true ;
         }
 
-    } ,  [] );
+    } ,  [ navigation ] );
 
     return (
         <ScrollView style={styles.container}>
@@ -163,7 +197,12 @@ export default function PostReview ({navigation, route}){
                     return (
                         cat.id === postCategoryId ?
                             <View  key={index} >
-                                <Image source={ {uri:cat.s3_path} } style={{width: 150, height: 150, marginBottom:15}}/>
+                                <View style={{width: 100, height: 100, marginBottom:15}}>
+                                    <LoadableImage
+                                        styleData = {[{width: 100, height: 100, marginBottom:15}]}
+                                        source={{uri:cat.s3_path}}
+                                    />
+                                </View>
                                 <Text style={styles.textColour} >{cat.title}</Text>
                             </View> : null
                     )
@@ -177,32 +216,35 @@ export default function PostReview ({navigation, route}){
 
                 <Text style={styles.textColour} >Title</Text>
                 <Text style={styles.containerReviewHeader} >{title}</Text>
-                <BR/>
 
                 <Text style={styles.textColour} >Description</Text>
                 <Text style={styles.containerReviewHeader} >{description}</Text>
-                <BR/>
 
                 <Text style={styles.textColour} >Location</Text>
                 <Text style={styles.containerReviewHeader} >{cityName}</Text>
-                <BR/>
 
             </View>
 
-            <BR/>
-            <BR/>
-
-            { isIterableIterator( uploadsObj ) && uploadsObj.reverse().map( function ( upload , index ) {
+            { uploadsObj.reverse().map( function ( upload , index ) {
                 return (
                     <View  key={index} style={styles.catBox2} >
                         <View  style={styles.imgContainer2} >
-                            <Image style={styles.img2}  source={{uri:upload.objectUrl}} />
+                            <LoadableImage
+                                styleData = {[styles.img2]}
+                                source={{uri:upload.objectUrl}}
+                            />
                         </View>
                     </View>
                 )
             } ) }
 
-            <FormButtonSmall  buttonTitle={"Create Post"}  align={"right"} onPress={()=> submitForm()}  />
+            {  inProcess ?
+                <Loading />
+                :
+                <FormButtonSmall loadingProp={false} buttonTitle={ ( id === null || id === "" ) ? "Create Post" : "Edit Post" }  align={"right"} onPress={()=> submitForm()}  />
+            }
+
+
 
         </ScrollView>
     )
@@ -232,7 +274,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         color: "rgb(16,14,14)",
         textAlign: "center",
-
+        marginBottom:10
     },
 
 
@@ -252,7 +294,7 @@ const styles = StyleSheet.create({
     imgContainer: {
         flexBasis: "100%",
         flex: 1,
-        height: 170,
+        height: 100,
         backgroundColor: colors.white,
         textAlign: "center",
         marginBottom: 20,
@@ -309,11 +351,11 @@ const styles = StyleSheet.create({
 
     img2 : {
         borderRadius:20,
-        width:"100%",
+        width: windowWidth-40,
         height:250
     },
     catBox2: {
-        height: 350,
+        marginTop:30,
         alignContent: 'center',
         justifyContent: 'center',
         alignItems: "center",

@@ -7,13 +7,15 @@ import {windowWidth} from "../../../../utils/Dimensions";
 import colors from "../../../../colors/colors";
 import API from "../../../../services/api";
 
-export default function UserIsPostOwnerMenu( { dataProp } ){
+export default function UserIsPostOwnerMenu( { dataProp , requestProp } ){
 
     const navigation = useNavigation();
 
     const {user, logout} = useContext(AuthContext);
     const [data, setData] = useState( dataProp );
-    const [request, setRequest] = useState( dataProp.request );
+    const [request, setRequest] = useState( requestProp );
+    const [postStatus, setPostStatus] = useState( dataProp.status );
+
 
     const [requestInProgress, setRequestInProgress] = useState( false );
 
@@ -40,14 +42,20 @@ export default function UserIsPostOwnerMenu( { dataProp } ){
                     <View style={styles.innerFlexContainer} >{
                         request.post_comment_type === "REQUEST" ?
                             <View style={styles.innerFlexContainer}>
-                                <Ionicons style={{ ...styles.bottomButtonContainerIcon , paddingRight: 5 }} name={"ios-send"} size={25} color={"palevioletred"} />
+                                <Ionicons style={{ ...styles.bottomButtonContainerIcon , paddingRight: 5 }} name={"ios-send"} size={25} color={colors.primary} />
                                 <Text style={{ ...styles.innerFlexContainerText }} >Request Pending</Text>
                             </View>
-                            : <Text style={{ ...styles.innerFlexContainerText  }} >Request {request.post_comment_type}ed</Text>
+                            :
+                            <View style={styles.innerFlexContainer}>
+                                <Ionicons style={{ ...styles.bottomButtonContainerIcon , paddingRight: 5 }} name={"ios-send"} size={25} color={colors.primary} />
+                                <Text style={{ ...styles.innerFlexContainerText  }} >Request {request.post_comment_type.toLowerCase()}{ request.post_comment_type === "ACCEPT" ? "ed"
+                                    : "d"
+                                }</Text>
+                            </View>
                     }</View>
                      :
                     <TouchableOpacity style={styles.innerFlexContainer}  onPress={()=>{ requestPost( data.id ) }} >
-                        <Ionicons style={{ ...styles.bottomButtonContainerIcon , paddingRight: 5 }} name={"ios-send"} size={25} color={"palevioletred"} />
+                        <Ionicons style={{ ...styles.bottomButtonContainerIcon , paddingRight: 5 }} name={"ios-send"} size={25} color={colors.primary} />
                         <Text style={{ ...styles.innerFlexContainerText , paddingTop:10 }} >Send Request</Text>
                     </TouchableOpacity>
                 }
@@ -65,7 +73,7 @@ const styles = StyleSheet.create({
     innerFlexContainerText : {
         padding:8,
         paddingLeft:0,
-        color: "palevioletred",
+        color: colors.primary,
         fontSize: 14,
     },
 

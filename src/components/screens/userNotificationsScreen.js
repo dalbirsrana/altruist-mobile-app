@@ -1,38 +1,53 @@
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import { Image, StyleSheet, Text, View, VirtualizedList } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 import API from "../../services/api"
 import Loading from "../../common/Loading"
 import { ScrollView } from 'react-native-gesture-handler'
 import postImage from "../../../assets/user-avatar.png";
 import { windowHeight, windowWidth } from '../../utils/Dimensions'
 import color from '../../colors/colors'
+import {AuthContext} from "../navigation/AuthProvider";
 
 
 const UserActivity = ( {navigation} ) => {
+
+    const {user, logout} = useContext(AuthContext);
+
+    const isFocused = useIsFocused()
 
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setLoading] = useState(true)
     
     const loadNotifications = async () => {
         let N = await API.User.getNotifications()
-        if (N != undefined) {
+        if (N !== undefined && N.success ) {
+            // console.log( N );
             setLoading(false)
-            console.log(N)
-            if(N.success) {
-                setNotifications(N.data)
+            setNotifications(N.data)
+        }else if( N !== undefined && !N.success ){
+            setLoading(false)
+            if( N.tokenExpired ){
+                logout();
             }
+            return true;
         }
     }
 
     //Rerender screen on tab press
-    useEffect( ()=> {
-        const unMount = navigation.addListener('tabPress', e=> {
-            // e.preventDefault()
+    React.useEffect( ()=> {
+        console.log('page load');
+        let isUnMount = false;
+        if (!isUnMount){
             loadNotifications()
-            console.log('page load')
-        })
-        return unMount
-    }, [navigation])
+        }
+        if( isFocused ){
+            loadNotifications()
+        }
+        return () => {
+            isUnMount = true;
+        }
+    }, [navigation, isFocused])
 
 
     return (

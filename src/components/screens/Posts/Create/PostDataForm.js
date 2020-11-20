@@ -28,27 +28,40 @@ import {AuthContext} from "../../../navigation/AuthProvider";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Textarea from 'react-native-textarea';
 import getRouteParam from "../../../helper/getRouteParam"
+import LoadableImage from "../../../../common/LoadableImage";
 
 
 const PostDataForm = ({navigation, route}) => {
 
     const {user, logout} = useContext(AuthContext);
 
-    const [catList, setCatList] = useState([]);
-    const [postTypeId, setPostTypeId] = useState(  getRouteParam( route , "postTypeIdProp" , "" ) );
-    const [postCategoryId, setPostCategoryId] = useState( getRouteParam( route , "postCategoryIdProp" , "" ) );
+    let idProp = getRouteParam( route , "idProp" , "" );
+    let postTypeIdProp = getRouteParam( route , "postTypeIdProp" , "" );
+    let postCategoryIdProp = getRouteParam( route , "postCategoryIdProp" , "" ) ;
+    let titleProp = getRouteParam( route , "titleProp" , "" ) ;
+    let descriptionProp = getRouteParam( route , "descriptionProp" , "" );
+    let latProp = getRouteParam( route , "latProp" , "" );
+    let cityNameProp = getRouteParam( route , "cityNameProp" , "" );
+    let langProp = getRouteParam( route , "langProp" , "" );
+    let uploadsObjProp = getRouteParam( route , "uploadsObjProp" , [] );
 
-    const [title, setTitle] = useState(  getRouteParam( route , "titleProp" , "" )   );
-    const [description, setDescription] = useState( getRouteParam( route , "descriptionProp" , "" )  );
+    const [id, setId] = useState(  idProp );
+
+    const [catList, setCatList] = useState([]);
+    const [postTypeId, setPostTypeId] = useState( postTypeIdProp  );
+    const [postCategoryId, setPostCategoryId] = useState( postCategoryIdProp );
+
+    const [title, setTitle] = useState(titleProp);
+    const [description, setDescription] = useState(  descriptionProp );
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState( getRouteParam( route , "latProp" , "" )  );
-    const [lang, setLang] = useState( getRouteParam( route , "langProp" , "" ) );
-    const [cityName, setCityName] = useState( getRouteParam( route , "cityNameProp" , "" ) );
+    const [lat, setLat] = useState( latProp );
+    const [lang, setLang] = useState( langProp );
+    const [cityName, setCityName] = useState(cityNameProp );
 
-    const [uploadsObj, setUploadsObj] = useState(getRouteParam( route , "uploadsObjProp" , [] )  );
+    const [uploadsObj, setUploadsObj] = useState( uploadsObjProp  );
 
 /*
     const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ? "27.2046" : "27.2046");
@@ -56,10 +69,9 @@ const PostDataForm = ({navigation, route}) => {
     const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ? "Argyle Street Vancouver" : "Argyle Street Vancouver");
 */
 
-
-
     const submitForm = async () => {
 
+        // console.log( "uploadsObjProp whie submit" , uploadsObj );
         let requiredCheck = {
             "Title": title,
             "Description": description,
@@ -78,6 +90,8 @@ const PostDataForm = ({navigation, route}) => {
             // now go to next setp
             navigation.navigate('PostUploads', {
 
+                idProp: id,
+
                 postTypeIdProp: postTypeId,
                 postCategoryIdProp: postCategoryId,
 
@@ -87,7 +101,7 @@ const PostDataForm = ({navigation, route}) => {
                 latProp: lat,
                 langProp: lang,
 
-                uploadsObj: uploadsObj
+                uploadsObjProp: uploadsObj
 
             });
         }
@@ -117,8 +131,8 @@ const PostDataForm = ({navigation, route}) => {
                 setLat(latitude);
                 setLang(longitude);
 
-                console.log( "lat", "lang" );
-                 console.log( lat, lang );
+                // console.log( "lat", "lang" );
+                //  // console.log( lat, lang );
 
                 let cityData = await API.Post.getCityName({
                     lat: position.coords.latitude,
@@ -159,6 +173,8 @@ const PostDataForm = ({navigation, route}) => {
 
     useEffect(() => {
 
+        console.log( "routeInfo" ,route );
+
         let isUnMount = false;
         if (!isUnMount) {
             getCatList();
@@ -166,9 +182,7 @@ const PostDataForm = ({navigation, route}) => {
         return () => {
             isUnMount = true;
         }
-
     }, []);
-
 
     function setErrorsInStart() {
         let errorListVar = [];
@@ -181,9 +195,47 @@ const PostDataForm = ({navigation, route}) => {
         setErrorList(errorListVar);
     }
 
+    function moveBack(){
+        console.log( title , "title"  );
+
+        console.log( {
+
+            idProp: id,
+
+            postTypeIdProp: postTypeId,
+            postCategoryIdProp: postCategoryId,
+
+            titleProp: title,
+            descriptionProp: description,
+            cityNameProp: cityName,
+            latProp: lat,
+            langProp: lang,
+
+            uploadsObjProp: uploadsObj
+
+        } );
+
+        navigation.navigate('PostCategorySelection', {
+
+            idProp: id,
+
+            postTypeIdProp: postTypeId,
+            postCategoryIdProp: postCategoryId,
+
+            titleProp: title,
+            descriptionProp: description,
+            cityNameProp: cityName,
+            latProp: lat,
+            langProp: lang,
+
+            uploadsObjProp: uploadsObj
+
+        });
+    }
+
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: postTypeId === 1 ? "I want to help!" : "I need help!",
+            headerTitle: postTypeId === 1 ? "I need help!" : "I want to help!",
             headerRight: () => <Text/>,
             headerLeft: () => (
                 <View style={{
@@ -191,18 +243,16 @@ const PostDataForm = ({navigation, route}) => {
                 }}
                 >
                     <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate("PostCategorySelection", {postTypeIdProp: postTypeId})
-                        }
-                        }
+                        onPress={() => {  moveBack()  }}
                     >
                         <Ionicons name='md-arrow-back' color={"white"} size={32}/>
                     </TouchableOpacity>
                 </View>
             ),
         });
-    }, [navigation]);
-
+    }, [
+        title , description, lat, lang, cityName
+    ]);
 
     return (
         <KeyboardAvoidingView style={styles.container}
@@ -221,7 +271,12 @@ const PostDataForm = ({navigation, route}) => {
                     return (
                         cat.id === postCategoryId ?
                             <View key={index} style={{display:"flex"}} >
-                                <Image source={{uri: cat.s3_path}} style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center",}}/>
+                                <View style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}}>
+                                    <LoadableImage
+                                        styleData = {[{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}]}
+                                        source={{uri:cat.s3_path}}
+                                    />
+                                </View>
                                 <Text style={styles.textColour}>{cat.title}</Text>
                             </View> : null
                     )

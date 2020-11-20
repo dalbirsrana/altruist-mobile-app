@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {Image, Button, StyleSheet, Text, View} from "react-native";
+import React, {useState, useEffect} from "react";
+import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import FormButton from "../../../../common/FormButton";
 import colors from "../../../../colors/colors";
 import BR from "../../../helper/BR";
@@ -7,55 +7,113 @@ import API from "../../../../services/api";
 import PostCategorySelection from "./PostCategorySelection";
 import PostTypeSelection from "./PostTypeSelection";
 import PostDataForm from "./PostDataForm";
+import {useIsFocused} from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import getRouteParam from "../../../helper/getRouteParam";
+import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
+import Loading from "../../../../common/Loading";
 
-const Create = ({navigation}) => {
+const Create = ({route, navigation}) => {
 
-    const [id, setId] = useState("");
-    const [title, setTitle] = useState("");
+    const [homeBtn, setHomeBut] = useState("");
 
-    const [postTypeId, setPostTypeId] = useState("");
-    const [postCategoryId, setPostCategoryId] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    React.useEffect(() => {
+
+        // if( typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params === "undefined" ){
+        //      console.log('Move to home');
+        //      console.log( "homeBtn" ,homeBtn );
+        //      navigation.navigate( 'HomeStack', { screen : 'Home' , params: route.params }  );
+        // }else if( typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params !== "undefined" &&
+        //     getRouteParam( navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params , 'postCreatedIdProp' ) ===
+        //     getRouteParam( route , 'postCreatedIdProp' )
+        // ){
+        //     console.log('Move to Create');
+        //     return navigation.navigate( 'PostTypeSelection' );
+        // }else if( typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params !== "undefined" &&
+        //     getRouteParam( navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params , 'postCreatedIdProp' ) !==
+        //     getRouteParam( route , 'postCreatedIdProp' )
+        // ){
+        //     console.log( "homeBtn" , homeBtn );
+        //     console.log('Move to home');
+        //     return navigation.navigate( 'HomeStack', { screen : 'Home' , params: route.params }  );
+        // }
+
+        handleNavigation();
+
+    }, []);
 
 
-    const [description, setDescription] = useState("");
-    const [userId, setUserId] = useState("");
-    const [lat, setLat] = useState("");
-    const [lang, setLang] = useState("");
-    const [uploads, setUploads] = useState([]);
+    function handleNavigation(){
+        setTimeout(function () {
 
+            setTimeout(function () {
+                setLoading(false)
+            }, 1000)
 
-    const [setpOne, setStepOne] = useState(false );
-    const [setpTwo, setStepTwo] = useState(false );
-    const [setpThree, setStepThree] = useState(false );
-    const [setpFour, setStepFour] = useState(false );
-    const [setpFive, setStepFive] = useState(false );
+            if (typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params === "undefined") {
+                console.log('Move to home');
+                console.log("homeBtn", homeBtn);
+                navigation.navigate('HomeStack', {screen: 'Home', params: route.params});
+            } else if (typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params !== "undefined" &&
+                getRouteParam(navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params, 'postCreatedIdProp') ===
+                getRouteParam(route, 'postCreatedIdProp')
+            ) {
+                console.log('Move to Create');
+                navigation.navigate('PostTypeSelection');
+            } else if (typeof navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params !== "undefined" &&
+                getRouteParam(navigation.dangerouslyGetParent().dangerouslyGetState().routes[0].params, 'postCreatedIdProp') !==
+                getRouteParam(route, 'postCreatedIdProp')
+            ) {
+                console.log("homeBtn", homeBtn);
+                console.log('Move to home');
+                navigation.navigate('HomeStack', {screen: 'Home', params: route.params});
+            }
 
-
-    function goBack( step ){
-        switch ( step ) {
-            case 1:
-                setStepOne(false);
-                break;
-            case 2:
-                setStepTwo(false);
-                break;
-            case 3:
-                setStepThree(false);
-                break;
-            case 4:
-                setStepFour(false);
-                break;
-        }
+        }, 1000);
     }
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "ALTRUIST",
+            headerRight: () => <Text/>,
+            headerLeft: () => <Text/>,
+        });
+
+    }, [navigation]);
 
     return (
         <View style={styles.container}>
+            {
+                loading ?
+                    <Loading/>
+                    : <View style={styles.container}>
 
-            { setpOne === false ? <PostTypeSelection back={() => { navigation.pop() }}  selection={( value ) => {  setPostTypeId( value ); setStepOne(true); } } /> : null }
-            { setpTwo === false && setpOne === true ? <PostCategorySelection back={() => goBack(1) } selection={( value ) => { setPostCategoryId( value ); setStepTwo(true); }} /> : null }
-            { setpThree === false && setpTwo === true ? <PostDataForm back={() => goBack(2) }  selection={( value ) => setPostCategoryId( value )} /> : null }
+                        <TouchableOpacity id={"home"} style={styles.button} onPress={() => {
+                            navigation.navigate('HomeStack', {screen: 'Home', params: route.params})
+                        }}>
+                            <Text style={styles.buttonText} ref={input => setHomeBut(input)}>Go Home</Text>
+                        </TouchableOpacity>
 
+                        <TouchableOpacity id={"post"} style={styles.button} onPress={() => {
+                            navigation.navigate('PostTypeSelection', {
+                                postTypeIdProp : "",
+                                idProp: "",
+                                postCategoryIdProp: "" ,
+                                titleProp: "" ,
+                                descriptionProp: "" ,
+                                cityNameProp: "" ,
+                                latProp: "" ,
+                                langProp: "" ,
+                                uploadsObjProp : []
+                            })
+                        }} ref={input => setHomeBut(input)}>
+                            <Text style={styles.buttonText}>Create New Post</Text>
+                        </TouchableOpacity>
 
+                    </View>
+            }
         </View>
     )
 }
@@ -76,5 +134,22 @@ const styles = StyleSheet.create({
         color: "red",
         textAlign: "center",
         marginVertical: 30,
+    },
+    button: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.secondary,
+        width: windowWidth / 1.5,
+        height: windowHeight / 10,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "white",
+        borderRadius: 25,
+        marginBottom: 20,
+    },
+    buttonText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: colors.black,
     },
 });

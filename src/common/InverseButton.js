@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     textAlign: "center",
-    alignSelf: "flex-start"
+    alignSelf: "center"
   },
   buttonText: {
     paddingLeft:10,

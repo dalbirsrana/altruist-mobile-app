@@ -82,9 +82,9 @@ const SignInScreen = ({navigation}) => {
                     };
 
                     try {
-                        console.log('signInStart')
+                        // console.log('signInStart')
                         let signIn = await login(data);
-                        console.log('signIn', signIn);
+                        // console.log('signIn', signIn);
                         if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true) {
                             setPassword("");
                             setLoginInProgress(false);
@@ -101,7 +101,7 @@ const SignInScreen = ({navigation}) => {
                         }
                     } catch (error) {
                         setLoginInProgress(false);
-                        console.log("Error", error)
+                        // console.log("Error", error)
                         throw error
                     }
 

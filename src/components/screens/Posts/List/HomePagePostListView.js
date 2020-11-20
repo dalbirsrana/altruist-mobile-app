@@ -17,10 +17,10 @@ function compare( a, b ) {
     return 0;
 }
 
-const Item = ({ index , post })=> {
+const Item = ({ index , post , removeItem })=> {
     return (
         <View key={index} style={{flex:1}}  >
-            <PostViewHome dataKey={index} dataProp={post} />
+            <PostViewHome dataKey={index} dataProp={post} removeItem={(id)=>removeItem(id)} />
         </View>
     );
 }
@@ -35,6 +35,9 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
     const [askComponentToLoadMorePosts, setAskComponentToLoadMorePosts] = useState( askComponentToLoadMorePostsProp );
     const [posLoadingFinished, setPosLoadingFinished] = useState( false );
 
+    const [appendingPostsProcess, setAppendingPostsInProgress] = useState( false );
+
+
     const prependPosts = async ( postsData ) =>  {
 
         let tempPostArray = postsData.data ;
@@ -48,7 +51,7 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         let newPosts = Object.values(tempPostArray.reduce((acc,cur)=>Object.assign(acc,{[cur.id]:cur}),{}))
 
         for( let post of newPosts ){
-           // console.log( 'Post Id' ,post.id ,post.title );
+            // console.log( 'Post Id' ,post.id ,post.title );
         }
 
         setPosts( newPosts.reverse() );
@@ -60,7 +63,29 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         loadinIsFinished();
         return true;
     }
-    
+
+    const appendPosts = async ( postsData ) =>  {
+
+        let tempPostArray = posts ;
+        for( let post of postsData.data ){
+            tempPostArray.push( post );
+        }
+
+        // console.log( "tempPostArray" , tempPostArray.length );
+
+        // removing duplicates
+        let newPosts = Object.values(tempPostArray.reduce((acc,cur)=>Object.assign(acc,{[cur.id]:cur}),{}))
+
+        for( let post of newPosts ){
+            // console.log( 'Post Id' ,post.id ,post.title );
+        }
+
+        setPosts( newPosts.reverse() );
+
+        setAppendingPostsInProgress(false)
+        return true;
+    }
+
     const loadPost = async () => {
         setLoadinPostsIsInProgress( true );
         let postsData = await API.Post.list();
@@ -75,7 +100,7 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
     }
 
     const addPost = async () => {
-        console.log("addPost");
+        // console.log("addPost");
         setLoadinPostsIsInProgress( true );
         let postsData = await API.Post.view();
         if (postsData !== undefined && postsData.success ) {
@@ -91,12 +116,12 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
     useEffect(() => {
 
         if( !loadinPostsIsInProgress ){
-            console.log('Asked to lad more posts');
+            // console.log('Asked to lad more posts');
             loadPost();
         }
 
         // if( postCreatedId ){
-        //     console.log("postCreatedId", postCreatedId);
+        //     // console.log("postCreatedId", postCreatedId);
         //     addPost( postCreatedId )
         // }
 
@@ -110,8 +135,30 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         return data.length;
     }
 
-    const loadMorePosts = () => {
+    const removeItem = ( id ) => {
+        let tempPosts = [] ;
+        for( let post of posts ){
+            if( post.id !== id ){
+                tempPosts.push( post );
+            }
+        }
+        setPosts( tempPosts );
+    }
 
+    const loadMorePosts = async () => {
+        if( !appendingPostsProcess && posts.length > 0){
+            let lastPostId = posts[ posts.length-1 ].id ;
+            setAppendingPostsInProgress( true );
+            let postsData = await API.Post.list( lastPostId );
+            if (postsData !== undefined && postsData.success ) {
+                setLoading(false)
+                appendPosts( postsData );
+            }else if( postsData !== undefined && !postsData.success ){
+                if( postsData.tokenExpired ){
+                    logout();
+                }
+            }
+        }
     }
 
     return (
@@ -125,7 +172,7 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
                         <VirtualizedList
                             data={posts}
                             initialNumToRender={1}
-                            renderItem={({ item, index }) => <Item index={index} post={item} />}
+                            renderItem={({ item, index }) => <Item index={index} post={item} removeItem={(id)=>removeItem(id)} />}
                             keyExtractor={item => item.id.toString()}
                             getItemCount={getItemCount}
                             getItem={getItem}
@@ -133,8 +180,19 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
                     )
             }
 
-            <InverseButton onPress={() => loadMorePosts()} buttonTitle={"Load More"}
-                           iconName={"edit-location"}/>
+            {
+                isLoading ? null :
+                    <View style={{display: "flex"}} >
+                        {  appendingPostsProcess ?
+                            <Loading />
+                            :
+                            <View style={{display: "flex", justifyContent:"center", marginBottom: 30 }} >
+                                <InverseButton onPress={() =>loadMorePosts()} buttonTitle={"Load More"}
+                                               iconName={"add-circle"}/>
+                            </View>
+                        }
+                    </View>
+            }
 
         </View>
 

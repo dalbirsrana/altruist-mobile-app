@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {StyleSheet, TouchableOpacity, Text, View} from "react-native";
 import colors from "../colors/colors";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 
-export default function FormButtonSmall({ buttonTitle, align, ...rest }) {
+export default function FormButtonSmall({ buttonTitle, align, loadingProp , ...rest }) {
 
   let justifyContent = "flex-end" ;
   if( align === "center" ){
@@ -41,11 +41,29 @@ export default function FormButtonSmall({ buttonTitle, align, ...rest }) {
     },
   });
 
+  const [loading, setLoading] = useState(  typeof loadingProp !== "undefined" ? loadingProp : false );
+
+  useEffect(() => {
+
+    let isUnMount = false;
+    if (!isUnMount) {
+      setLoading( loadingProp );
+    }
+    setLoading( loadingProp );
+    return () => {
+      isUnMount = true;
+    }
+
+  } , [loadingProp] )
 
   return (
-    <View  style={styles.buttonTopContainer}  >
-      <TouchableOpacity style={styles.buttonContainer} {...rest} >
-        <Text style={styles.buttonText}>{buttonTitle}</Text>
+    <View style={styles.buttonTopContainer}  >
+      <TouchableOpacity style={{ ...styles.buttonContainer , opacity: loading ? 0.5 : 1  }} {...rest} >
+        <Text style={styles.buttonText}>{buttonTitle}{
+          loading ?
+              "..."
+              : null
+        }</Text>
       </TouchableOpacity>
     </View>
   );

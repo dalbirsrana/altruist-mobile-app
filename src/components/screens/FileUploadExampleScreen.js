@@ -112,14 +112,14 @@ export default class FileUploadExampleScreen extends Component {
                 uploadResponse = await API.uploadImageAsync(pickerResult.uri);
                 uploadResult = await uploadResponse.json();
 
-                // console.log(uploadResult);
+                 console.log("uploadResult",uploadResult);
                 if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
 
                     try {
                         this.props.imageUploaded( uploadResult['data'] );
                     } catch (error) {
                         // Error saving data
-                        // console.log( error );
+                         console.log( error );
                     }
 
                     this.setState({
@@ -132,7 +132,7 @@ export default class FileUploadExampleScreen extends Component {
         } catch (e) {
             // console.log({ uploadResponse });
             // console.log({ uploadResult });
-            console.log({ e });
+            // console.log({ e });
             alert('Please choose small size file!');
         } finally {
             this.setState({
