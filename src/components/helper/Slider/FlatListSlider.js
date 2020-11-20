@@ -78,7 +78,8 @@ export default class FlatListSlider extends Component {
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item, index}) =>(
 
-                        // console.log( item ) ,
+                        // console.log( item ),
+
                         React.cloneElement(this.props.component, {
                             style: {width: this.props.width},
                             item: item,
