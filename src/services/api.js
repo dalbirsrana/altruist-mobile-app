@@ -3,8 +3,11 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // DEV SERVER { Use in case if something is not working on prod because of it is not available there }
 // const api_server = 'http://34.208.106.207'
 
-// PROD SERVER
-const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+// PROD SERVER OLD
+// const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+
+// PROD SERVER 
+const api_server = 'http://3.138.80.213'
 
 // Jaimin Local MAMP Server
 // const api_server = 'http://192.168.0.124/capstone/capstone-api'

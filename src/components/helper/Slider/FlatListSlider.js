@@ -12,6 +12,7 @@ import Indicator from './Indicator';
 import ChildItem from './ChildItem';
 
 export default class FlatListSlider extends Component {
+    
     slider = createRef();
 
     static defaultProps = {
@@ -30,7 +31,7 @@ export default class FlatListSlider extends Component {
         indicatorActiveWidth: 6,
         animation: true,
         autoscroll: true,
-        timer: 3000,
+        timer: 1000,
         onPress: {},
         contentContainerStyle: {position:'relative'},
         component: <ChildItem/>,
@@ -112,6 +113,8 @@ export default class FlatListSlider extends Component {
                     maxToRenderPerBatch={1}
                     removeClippedSubviews={true}
                 />
+
+
                 {this.props.indicator && (
                     <Indicator
                         itemCount={this.props.data.length}

@@ -16,32 +16,40 @@ const UserSettings = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.settingsContainers}>
                 <Text style={styles.txtColor}>Name:</Text>
                 <FormInput3>{name}</FormInput3>
             </View>
+
             <View style={styles.settingsContainers}>
                 <Text style={styles.txtColor}>Mail:</Text>
                 <FormInput3>{email}</FormInput3>
             </View>
+
             <View style={styles.settingsContainers}>
                 <Text style={styles.txtColor}>College:</Text>
                 <FormInput3>{college}</FormInput3>
             </View>
+
             <View style={styles.settingsContainers}>
                 <Text style={styles.txtColor}>Contact:</Text>
                 <FormInput3>{contact}</FormInput3>
             </View>
-            <View style={styles.settingsContainers}>
+
+            <View style={styles.settingsContainerTextArea}>
                 <Text style={styles.txtColor}>Bio:</Text>
                 <FormTextArea2>{bio}</FormTextArea2>
             </View>
-            <View>
+
+            <View style={styles.settingsContainers}>
+                <Text style={styles.txtColor}> </Text>
                 <FormButton
                     buttonTitle="Login"
                     onPress={() => navigation.navigate('UserProfile')}
                 />
             </View>
+
         </View>
     )
 }
@@ -57,11 +65,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     settingsContainers: {
-        flexGrow: 1,
+        flexGrow: 0,
+        flexBasis: 60,
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
+        marginBottom: 10,
 
+    },
+    settingsContainerTextArea :{
+        flexGrow: 0,
+        flexBasis: 140,
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "flex-start",
     },
     txtColor: {
         flex: 0.5,

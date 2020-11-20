@@ -51,6 +51,7 @@ const HomeScreen = ({navigation}) => {
             {/* Help Posts container */}
             {
             isLoading || posts.length == 0 ? <Loading /> :
+            <View>
             <VirtualizedList
                 data={posts}
                 renderItem={({index, item}) => <PostItem index={index} data={item} /> }
@@ -59,6 +60,7 @@ const HomeScreen = ({navigation}) => {
                 getItem={(data, index)=>data[index]}
                 style={{marginTop: 10}}
             />
+            </View>
             }
  
         </ScrollView>
@@ -103,36 +105,23 @@ const PostItem = ({ index, data }) => {
 
             </View>
 
-                {data.postUploads.length > 0 ? (data.postUploads.length > 1 ?
-                    <FlatListSlider
-                        style={
-                            {
-                                width: windowWidth
-                            }
-                        }
-                        data={data.postUploads}
-                        timer={100}
-                        imageKey={'image'}
-                        local={false}
-                        width={windowWidth}
-                        separator={0}
-                        loop={false}
-                        autoscroll={false}
-                        currentIndexCallback={index => console.log('Index', index)}
-                        indicator
-                        animation
-                    />
-                    :
+                {
+                    data.postUploads.length > 0 ? 
 
                     <FlatList
-                    data={data.postUploads}
-                    renderItem={({item})=>(
-                        <Image source={{uri:item}} style={{width:windowWidth, height:200}} />
-                    )}
-                    keyExtractor={(item)=>item.id}
+                        data={data.postUploads}
+                        renderItem={({item})=>(
+                            <Image source={{uri:item}} style={{width:windowWidth-12, height:200}} />
+                        )}
+                        keyExtractor={(item)=>item.id}
+                        horizontal
+                        pagingEnabled={true}
+                        showsHorizontalScrollIndicator={false}
+                        legacyImplementation={false}
+                        style={{ width:windowWidth-10, height:'100%', }}
                     />
                     
-                    ) : null
+                    : null
                 }
 
 

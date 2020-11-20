@@ -100,8 +100,8 @@ function UserProfileScreens() {
             }}
         >
             <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: ''}} />
-            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'Posts' }} />
-            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} />
+            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'User Posts' }} />
+            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} options={{ title: 'Edit User Profile'}} />
         </UserProfileStack.Navigator>
     )
 }

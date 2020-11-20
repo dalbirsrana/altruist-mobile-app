@@ -9,6 +9,7 @@ export default function FormInput({ labelValue, placeholderText, error, ...rest 
         <TextInput
             value={labelValue}
             style={styles.input}
+            multiline = {true}
             numberOfLines={4}
             placeholder={placeholderText}
             placeholderTextColor="#666"
@@ -22,15 +23,14 @@ export default function FormInput({ labelValue, placeholderText, error, ...rest 
 const styles = StyleSheet.create({
 
   input: {
-marginBottom:20,
-    height:100,
-     textAlignVertical: 'top',
+    padding: 10,
+    marginBottom:20,
+    height: 100,
+    textAlignVertical: 'top',
     width: windowWidth-140,
     fontSize: 16,
     borderRadius: 8,
     borderColor: colors.black,
     borderWidth: 1,
-    display:"flex",
-    alignContent:'flex-start'
   },
 });
