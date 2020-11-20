@@ -9,6 +9,7 @@ export default function FormInput({ labelValue, placeholderText, error, ...rest 
         <TextInput
             value={labelValue}
             style={styles.input}
+            multiline = {true}
             numberOfLines={2}
             placeholder={placeholderText}
             placeholderTextColor="#666"

@@ -22,7 +22,7 @@ export default function FormInput2({ labelValue, placeholderText, error = "" , .
 const styles = StyleSheet.create({
 
   input: {
-margin:0,
+    margin:0,
     padding: 15,
     width: windowWidth-140,
     fontSize: 16,
