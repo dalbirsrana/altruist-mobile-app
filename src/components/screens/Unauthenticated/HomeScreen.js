@@ -51,15 +51,15 @@ const HomeScreen = ({navigation}) => {
             {/* Help Posts container */}
             {
             isLoading || posts.length == 0 ? <Loading /> :
-            <View>
-            <VirtualizedList
-                data={posts}
-                renderItem={({index, item}) => <PostItem index={index} data={item} /> }
-                keyExtractor={item => item.id.toString()}
-                getItemCount={(data)=>data.length}
-                getItem={(data, index)=>data[index]}
-                style={{marginTop: 10}}
-            />
+            <View style={{flex:1}}>
+                <VirtualizedList
+                    data={posts}
+                    renderItem={({index, item}) => <PostItem index={index} data={item} /> }
+                    keyExtractor={item => item.id.toString()}
+                    getItemCount={(data)=>data.length}
+                    getItem={(data, index)=>data[index]}
+                    style={{marginTop: 10}}
+                />
             </View>
             }
  
@@ -101,7 +101,7 @@ const PostItem = ({ index, data }) => {
 
             <View style={styles.containerReview}>
                 <Text style={{fontWeight: 'bold',}}>{data.title}</Text>
-                <Text style={{marginVertical: 4,}}>{data.description.substring(0, 120)}</Text>
+                <Text style={{marginVertical: 8,}}>{data.description.substring(0, 100)}</Text>
 
             </View>
 
@@ -149,16 +149,16 @@ const styles = StyleSheet.create({
     userContainer: {
         display: "flex",
         flexDirection: "row",
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
         flexWrap: "nowrap",
-        marginBottom: 5,
+        marginBottom: 10,
     },
     userPicContainer: {
-        width: 35,
-        height: 30,
-        borderRadius: 15
+        width: 40,
     },
     userName: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     postCatType: {
@@ -167,12 +167,12 @@ const styles = StyleSheet.create({
     postCatTypeTitle: {
         borderWidth: 1,
         borderRadius: 4,
-        padding: 6,
+        padding: 4,
         borderColor: colors.primary,
-        marginHorizontal: 6,
+        marginHorizontal: 2,
     },
     containerReview: {
-        marginVertical: 5,
+        marginVertical: 6,
     }
 
 });

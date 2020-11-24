@@ -14,19 +14,17 @@ export default function FormInput2({ labelValue, placeholderText, error = "" , .
             placeholderTextColor="#666"
             {...rest}
         />
-
       </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   input: {
     margin:0,
-    padding: 15,
-    width: windowWidth-140,
+    padding: 12,
+    width: windowWidth/1.4,
     fontSize: 16,
-    borderRadius: 8,
+    borderRadius: 6,
     borderColor: colors.black,
     borderWidth: 1,
   },

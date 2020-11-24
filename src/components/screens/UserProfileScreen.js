@@ -241,11 +241,12 @@ const styles = StyleSheet.create({
 const buttonStyles = StyleSheet.create({
     buttonContainer: {
         position: 'absolute',
-        bottom: 10,
+        bottom: 0,
+        right: -15,
         marginBottom: 10,
-        width: windowWidth / 2.5,
+        width: 50,
         height: 'auto',
-        borderColor: colors.primary,
+        borderColor: colors.secondary,
         backgroundColor: colors.transparent,
         borderWidth: 2,
         padding: 0,

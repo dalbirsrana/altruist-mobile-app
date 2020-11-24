@@ -24,12 +24,11 @@ const styles = StyleSheet.create({
 
   input: {
     padding: 10,
-    marginBottom:20,
-    height: 100,
+    height: 80,
     textAlignVertical: 'top',
-    width: windowWidth-140,
+    width: windowWidth/1.4,
     fontSize: 16,
-    borderRadius: 8,
+    borderRadius: 6,
     borderColor: colors.black,
     borderWidth: 1,
   },
