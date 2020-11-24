@@ -87,7 +87,9 @@ const Item = ({index, post}) => {
     let BGColor = color.white
 
     if (index % 2 !== 0 ) {
-        BGColor = color.secondary
+        BGColor = color.primaryTransparent
+    } else {
+        BGColor = color.secondaryTransparent
     }
 
     return (
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
     },
     header: {
-        paddingBottom: 10,
+        paddingBottom: 15,
         height: windowHeight / 10,
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -124,8 +126,9 @@ const styles = StyleSheet.create({
         color: '#ffffff',
     },
     headerText: {
-        fontSize: 22,
+        fontSize: 18,
         color: 'white',
+        fontWeight: 'bold'
     },
     noNotification: {
         paddingTop: 100,

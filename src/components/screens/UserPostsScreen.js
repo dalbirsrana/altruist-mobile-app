@@ -4,6 +4,8 @@ import API from "../../services/api"
 import Loading from "../../common/Loading"
 import { ScrollView } from 'react-native-gesture-handler'
 import { windowWidth } from '../../utils/Dimensions'
+import colors from '../../colors/colors'
+import { color } from 'react-native-reanimated'
 
 const userPosts = ( {navigation} ) => {
 
@@ -57,17 +59,23 @@ const userPosts = ( {navigation} ) => {
     return (
         <View style={styles.container}>
             <View style={styles.headLinks}>
-                <TouchableWithoutFeedback onPress={()=> loadActivePosts() }>
+                <TouchableWithoutFeedback onPress={()=> { 
+                    setLoading(true) 
+                    return loadActivePosts() 
+                    }}>
                     <Text style={
                         activeLink ? btnStyle.highlighted : btnStyle.normal
                     }>Active</Text>
                 </TouchableWithoutFeedback>
-                <Text> | </Text>
+                <Text style={styles.headSeprator}> | </Text>
                 <TouchableWithoutFeedback>
                     <Text style={btnStyle.normal}>Pending</Text>
                 </TouchableWithoutFeedback>
-                <Text> | </Text>
-                <TouchableWithoutFeedback onPress={()=> loadSavedPosts() }>
+                <Text style={styles.headSeprator}> | </Text>
+                <TouchableWithoutFeedback onPress={()=> {
+                    setLoading(true)
+                    return loadSavedPosts() 
+                    }}>
                     <Text style={
                         savedLink ? btnStyle.highlighted : btnStyle.normal
                     }>Saved</Text>
@@ -99,7 +107,11 @@ const userPosts = ( {navigation} ) => {
 export default userPosts
 
 const Item = ({index, post}) => (
-    <View style={styles.postCard}>
+    <View style={
+     index%2==0 ? 
+     {backgroundColor: colors.secondaryTransparent, ...styles.postCard } : 
+     {backgroundColor: colors.primaryTransparent, ...styles.postCard} 
+     }>
         <Image source={{uri: post.postUploads[0]}} style={styles.postImage} />
         <View style={styles.textContent}>
             <Text style={styles.category}>{post.postCategory.title}</Text>
@@ -118,33 +130,28 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
     },
     postCard: {
-        borderTopWidth: 1,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        padding: 5,
-        paddingTop: 10,
-        paddingBottom: 10,
+        padding: 4,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
 
     },
     postImage: {
-        width: windowWidth / 3,
-        height: windowWidth / 3,
-        borderRadius: 10,
+        width: windowWidth / 4,
+        height: windowWidth / 4,
+        borderRadius: 6,
     },
     textContent: {
-        width: windowWidth / 1.6,
-        paddingLeft: 10,
+        width: windowWidth / 1.4,
+        paddingLeft: 20,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
     },
     category: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 5,
     },
     title: {
         fontWeight: 'bold',
@@ -156,17 +163,21 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'space-around',
         marginVertical: 20,
+    },
+    headSeprator: {
+        marginHorizontal: 8,
     }
   });
 
 
 const btnStyle = StyleSheet.create({
     normal: {
-        fontSize: 18,
-        fontWeight: 'normal'
+        fontSize: 20,
+        fontWeight: 'normal',
     },
     highlighted: {
         fontWeight: 'bold',
-        fontSize: 22,
+        fontSize: 20,
+        color: colors.primary,
     },
   })

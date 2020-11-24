@@ -357,7 +357,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                         marginBottom: 10,
                         fontSize: 14,
                         paddingRight: 20
-                    }}>{data.description}</Text>
+                    }}>{data.description.length >85 ? data.description.substring(0, 80) + "..." : data.description}</Text>
 
                 </View>
 
