@@ -22,11 +22,27 @@ const UserProfile = ({navigation}) => {
     const [profileImage, setProfileImage] = useState("");
     const [loading, setLoading] = useState(true);
 
+    const [userdata, setUserData] = useState({});
+
+    const getUserData = async () => {
+        let N = await API.User.getInfo()
+        if (N !== undefined && N.success ) {
+            setProfileImage(N.data.profile_picture);
+            setUserData(N.data);
+            setLoading(false);
+        }else if( N !== undefined && !N.success ){
+            setLoading(false)
+            if( N.tokenExpired ){
+                logout();
+            }
+        }
+    }
+
+
     useEffect(() => {
         let isUnMount = false;
         if (!isUnMount) {
-            setProfileImage(user.profileImage);
-            setLoading(false);
+            getUserData();
         }
         return () => {
             isUnMount = true;
@@ -92,11 +108,18 @@ const UserProfile = ({navigation}) => {
             </View>
             <View style={styles.detailContainer}>
                 <Text style={styles.userName}>
-                    {user.firstName} {user.lastName}
+                    {userdata.firstName} {userdata.lastName}
                 </Text>
                 <Text style={styles.userCollege}>
-                    Langara College
+                    {userdata.college}
                 </Text>
+                <Text style={styles.userCollege}>
+                    Help points: {userdata.helps_provided}
+                </Text>
+                <Text style={styles.userCollege}>
+                    {userdata.bio}
+                </Text>
+
 
                 <View style={styles.optionsList}>
 
@@ -128,9 +151,7 @@ const UserProfile = ({navigation}) => {
                 </View>
 
             </View>
-
         </ScrollView>
-
     );
 };
 

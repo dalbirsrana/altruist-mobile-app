@@ -5,7 +5,7 @@ import {windowWidth} from "../../../utils/Dimensions";
 
 let images = [
     {
-        image:'https://images.unsplash.com/photo-1460518451285-97b6aa326961?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80%27',
+        image:'https://images.unsplash.com/photo-1460518451285-97b6aa326961?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80%27',
         desc: '1',
         buttonLable : "Books help"
     },
@@ -15,7 +15,7 @@ let images = [
         buttonLable : "Get Help"
     },
     {
-        image:'https://images.unsplash.com/photo-1515459961680-58264ee27219?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80%27',
+        image:'https://images.unsplash.com/photo-1515459961680-58264ee27219?ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80%27',
         desc: '3',
         buttonLable : "Give Essentials"
     },

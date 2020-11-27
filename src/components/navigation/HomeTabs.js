@@ -15,6 +15,7 @@ import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
 
 import UserActivityScreen from '../screens/UserActivityScreen'
+import ChatSingleScreen from '../screens/ChatScreen/Chat'
 
 import UserNotificationScreen from '../screens/userNotificationsScreen'
 
@@ -79,6 +80,7 @@ function HomeStackScreens() {
         >
             <HomeStack.Screen name="Home" component={HomeScreen}  options={{ title: 'ALTRUIST' }} />
             <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
+            <HomeStack.Screen name="ChatSingleScreen" component={ChatSingleScreen}  options={{ title: 'ALTRUIST' }} />
         </HomeStack.Navigator>
     )
 }
@@ -99,7 +101,7 @@ function UserProfileScreens() {
                 }
             }}
         >
-            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: ''}} />
+            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: 'User Profile'}} />
             <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'Your Posts' }} />
             <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} options={{ title: 'Edit Profile'}} />
         </UserProfileStack.Navigator>
@@ -152,7 +154,7 @@ export default function HomeTabs() {
 
                         />;
                     }
-                } else if (route.name === 'Chat') {
+                } else if (route.name === 'ChatList') {
 
                     if( focused ){
                         return <Image
@@ -302,7 +304,7 @@ export default function HomeTabs() {
         }
     >
         <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt() }}  component={HomeStackScreens}  options={{ title: '', header: () => null }} />
-        <Tab.Screen name='Chat' component={UserProfileScreens} options={{ title: '', header: () => null }} />
+        <Tab.Screen name='ChatList' component={UserNotificationScreen} options={{ title: '', header: () => null }} />
         <Tab.Screen name='CreatePost' component={createPostStack} options={{
             tabBarVisible : false,
             title: '',

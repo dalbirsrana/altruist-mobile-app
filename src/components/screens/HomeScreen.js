@@ -42,29 +42,25 @@ const HomeScreen = ({ navigation , route }) => {
         let isUnMount = false;
         if (!isUnMount){
             setLoading( false );
-
-            // setInterval(() => {
-            //     let i = askComponentToLoadMorePosts+1;
-            //     setAskComponentToLoadMorePosts(  i  );
-            // } , 60000 );
-
         }
         setMountingFinished( true );
 
         if(
             getRouteParam( route , "postCreatedProp" )
         ){
-            // console.log( "postCreatedProp" , getRouteParam( route , "postCreatedProp" ) );
-            // console.log( "postCreatedIdProp" , getRouteParam( route , "postCreatedIdProp" ) );
+            // // console.log( "postCreatedProp" , getRouteParam( route , "postCreatedProp" ) );
+            // // console.log( "postCreatedIdProp" , getRouteParam( route , "postCreatedIdProp" ) );
             setPostCreatedId( getRouteParam( route , "postCreatedIdProp" ) );
             if(  getRouteParam( route , "postCreatedProp" )  ){
                 let i = askComponentToLoadMorePosts+1;
                 setAskComponentToLoadMorePosts( i );
             }
         }
+
         return () => {
             isUnMount = true;
         }
+
     } , [ navigation , route.params , isFocused ] );
     
     const loadinIsFinished = React.useCallback(() => {
@@ -76,20 +72,7 @@ const HomeScreen = ({ navigation , route }) => {
         <View style={styles.container} >
             {
                 mountingFinished ?
-                    <ScrollView style={styles.container}
-                                refreshControl={
-                                    <RefreshControl refreshing={isLoading} onRefresh={()=>{
-                                        setLoading( true );
-                                        let i = askComponentToLoadMorePosts+1;
-                                        setAskComponentToLoadMorePosts(  i  );
-                                    }} />
-                                }
-                    >
-                        {/* Slider container */}
-                        <HomePageTopSlider navigation={navigation} />
-
-                        {/* Top Helper container */}
-                        <TopHelper />
+                    <SafeAreaView style={styles.container} >
 
                         {/* Help Posts container */}
                         <HomePagePostListView
@@ -97,7 +80,7 @@ const HomeScreen = ({ navigation , route }) => {
                             loadinIsFinished={()=>{ loadinIsFinished() }}
                             postCreatedIdProp={postCreatedId} />
 
-                    </ScrollView>
+                    </SafeAreaView>
                     :
                     <Loading />
             }

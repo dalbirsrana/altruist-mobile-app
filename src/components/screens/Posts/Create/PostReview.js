@@ -227,7 +227,7 @@ export default function PostReview ({navigation, route}){
 
             { uploadsObj.reverse().map( function ( upload , index ) {
                 return (
-                    <View  key={index} style={styles.catBox2} >
+                    <View  key={index} style={{ ...styles.catBox2 , marginTop:60 }} >
                         <View  style={styles.imgContainer2} >
                             <LoadableImage
                                 styleData = {[styles.img2]}
@@ -253,6 +253,7 @@ export default function PostReview ({navigation, route}){
 const styles = StyleSheet.create({
 
     containerReview : {
+        flex:1,
         display: "flex",
         height: 100,
         margin:20,
@@ -313,7 +314,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     textColour: {
-        fontSize: 16,
+          fontSize: 16,
         fontWeight: "bold",
         justifyContent: "center",
         alignItems: "center",

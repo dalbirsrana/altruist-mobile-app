@@ -7,10 +7,11 @@ export default {
 
   secondaryBold: "#d2ae80",
 
-  success: "#bbe88d",
+  success: "#516237",
 
 
   secondaryTransparent: "rgba(255,231,194,0.1)",
+  secondaryTransparent2: "rgba(255,231,194,0.6)",
   primaryTransparent:"rgba(232,155,141,0.1)",
 
   loadingTransparent: "rgba(255,255,255,0.8)",

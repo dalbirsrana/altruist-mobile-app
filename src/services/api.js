@@ -4,10 +4,10 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // const api_server = 'http://34.208.106.207'
 
 // PROD SERVER OLD
-// const api_server = 'http://ec2-3-134-106-137.us-east-2.compute.amazonaws.com'
+const api_server = 'https://cmetric-app.com'
 
 // PROD SERVER 
-const api_server = 'http://3.138.80.213'
+// const api_server = 'http://3.138.80.213'
 
 // Jaimin Local MAMP Server
 // const api_server = 'http://192.168.0.124/capstone/capstone-api'
@@ -36,8 +36,8 @@ async function makeRequest(path, data, method = "POST") {
         options.body = JSON.stringify(data);
     }
 
-     console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
-     console.log(options);
+     // console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
+     // console.log(options);
 
     await fetch(`${api_server}${path}?XDEBUG_SESSION_START=12744`, options)
         .then(response => response.json())
@@ -167,7 +167,10 @@ const API =
             },
             updateProfile: async (data) => {
                 return await makeRequest('/update-profile', {StudentAppUser: data})
-            }
+            },
+            getInfo: () => {
+                return makeRequest('/user', {}, GET)
+            },
         },
 
         PostTypes: {

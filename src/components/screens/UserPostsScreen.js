@@ -68,10 +68,6 @@ const userPosts = ( {navigation} ) => {
                     }>Active</Text>
                 </TouchableWithoutFeedback>
                 <Text style={styles.headSeprator}> | </Text>
-                <TouchableWithoutFeedback>
-                    <Text style={btnStyle.normal}>Pending</Text>
-                </TouchableWithoutFeedback>
-                <Text style={styles.headSeprator}> | </Text>
                 <TouchableWithoutFeedback onPress={()=> {
                     setLoading(true)
                     return loadSavedPosts() 
@@ -174,6 +170,7 @@ const btnStyle = StyleSheet.create({
     normal: {
         fontSize: 20,
         fontWeight: 'normal',
+        color: colors.black,
     },
     highlighted: {
         fontWeight: 'bold',

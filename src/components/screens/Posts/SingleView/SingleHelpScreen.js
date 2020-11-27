@@ -1,5 +1,15 @@
 import React, {useState, useEffect} from 'react'
-import {Button, StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
+import {
+    Button,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    RefreshControl,
+    FlatList,
+    ScrollView
+} from 'react-native'
 import API from "../../../../services/api"
 import PostViewViewPage from "../View/PostViewViewPage";
 import Loading from "../../../../common/Loading";
@@ -19,7 +29,7 @@ const SingleHelp = ({route, navigation}) => {
         try {
             let P = await API.Post.single(postId);
             if (P !== undefined && P.success) {
-                console.log(P.data);
+                // console.log(P.data);
                 setLoading(false);
                 setPost(P.data);
             } else {
@@ -54,7 +64,15 @@ const SingleHelp = ({route, navigation}) => {
     }, [postTitle]);
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}
+
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={()=>{
+                            getPost();
+                        }} />
+                    }
+
+        >
             {
                 loading ? <Loading/> :
                     <View style={{display: "flex",flex: 1}}>
@@ -69,7 +87,7 @@ const SingleHelp = ({route, navigation}) => {
                         }
                     </View>
             }
-        </View>
+        </ScrollView>
     )
 }
 
@@ -78,9 +96,7 @@ export default SingleHelp
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#fff'
     },
     textColour2: {
         marginTop: 10,

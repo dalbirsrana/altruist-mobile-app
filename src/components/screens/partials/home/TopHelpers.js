@@ -14,20 +14,22 @@ export default function TopHelpers() {
     const [topHelper, setTopHelper] = useState([])
     const [isLoading, setLoading] = useState(true);
 
-    const loadPost = async () => {
-        let P = await API.topHelper()
-        if (P !== undefined && P.success) {
-            setTopHelper(P.data)
-            setLoading(false)
-        }else{
-            setTopHelper([])
-            setLoading(false)
-        }
-    }
 
-    useEffect(() => {
+    useEffect( () => {
         let isUnMount = false
         if (!isUnMount) {
+            async function loadPost(){
+                let P = await API.topHelper()
+                if( !isUnMount ){
+                    if (P !== undefined && P.success) {
+                        setTopHelper(P.data)
+                        setLoading(false)
+                    }else{
+                        setTopHelper([])
+                        setLoading(false)
+                    }
+                }
+            }
             loadPost()
         }
         return () => {

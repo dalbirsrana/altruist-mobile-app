@@ -41,6 +41,7 @@ export default function ChildItem({
 
             <TouchableOpacity style={buttonStyles.buttonContainer}
                               onPress={()=>{
+                                  // alert('Hi');
                                   (typeof user !== "undefined" && user !== null && !user.isSignout) ?
                                   navigation.navigate('CreatePost') :
                                   navigation.navigate('SignIn')

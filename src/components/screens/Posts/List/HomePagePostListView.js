@@ -1,11 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {ScrollView, Text, View, VirtualizedList} from 'react-native'
+import {RefreshControl, ScrollView, Text, View, VirtualizedList, FlatList, SafeAreaView} from 'react-native'
 import Loading from "../../../../common/Loading";
 import PostViewHome from "../View/PostViewHome";
 import API from "../../../../services/api";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import FormButton from "../../../../common/FormButton";
 import InverseButton from "../../../../common/InverseButton";
+import HomePageTopSlider from "../../../helper/HomePageTopSlider/HomePageTopSlider";
+import TopHelper from "../../partials/home/TopHelpers";
 
 function compare( a, b ) {
     if ( a.id < b.id ){
@@ -25,7 +27,19 @@ const Item = ({ index , post , removeItem })=> {
     );
 }
 
-const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , loadinIsFinished , postCreatedId } ) =>{
+function renderBody( navigation ){
+    return (
+            <View style={{flex:1}}>
+                {/* Slider container */}
+                <HomePageTopSlider navigation={navigation} />
+
+                {/* Top Helper container */}
+                <TopHelper />
+            </View>
+    );
+}
+
+const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , loadinIsFinished , postCreatedId  } ) =>{
 
     const {user, logout} = useContext(AuthContext);
 
@@ -37,6 +51,21 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
 
     const [appendingPostsProcess, setAppendingPostsInProgress] = useState( false );
 
+    const addLoadedPosts = async ( postsData ) =>  {
+
+        let tempPostArray = postsData.data ;
+        // removing duplicates
+        let newPosts = Object.values(tempPostArray.reduce((acc,cur)=>Object.assign(acc,{[cur.id]:cur}),{}))
+
+        setPosts( newPosts.reverse() );
+        setAskComponentToLoadMorePosts( false )
+        setPosLoadingFinished( true )
+        setLoadinPostsIsInProgress( false );
+
+        // console.log( "loadinIsFinished" );
+        loadinIsFinished();
+        return true;
+    }
 
     const prependPosts = async ( postsData ) =>  {
 
@@ -91,7 +120,7 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
         let postsData = await API.Post.list();
         if (postsData !== undefined && postsData.success ) {
             setLoading(false)
-            prependPosts( postsData );
+            addLoadedPosts( postsData );
         }else if( postsData !== undefined && !postsData.success ){
             if( postsData.tokenExpired ){
                 logout();
@@ -115,15 +144,17 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
 
     useEffect(() => {
 
-        if( !loadinPostsIsInProgress ){
-            // console.log('Asked to lad more posts');
-            loadPost();
+        console.log('page load');
+        let isUnMount = false;
+        if (!isUnMount){
+            if( !loadinPostsIsInProgress ){
+                // console.log('Asked to lad more posts');
+                loadPost();
+            }
         }
-
-        // if( postCreatedId ){
-        //     // console.log("postCreatedId", postCreatedId);
-        //     addPost( postCreatedId )
-        // }
+        return () => {
+            isUnMount = true;
+        }
 
     } , [ askComponentToLoadMorePostsProp , postCreatedId  ] );
 
@@ -162,39 +193,47 @@ const HomePagePostListView = ( {navigation , askComponentToLoadMorePostsProp , l
     }
 
     return (
-        <View style={{marginTop:10}} >
+        <SafeAreaView style={{flex:1}} >
             {
                 isLoading
                     ?
                     <Loading />
                     :
                     (
-                        <VirtualizedList
+                        <FlatList
+                            ListHeaderComponentStyle={{flex:1}}
+                            ListHeaderComponent={renderBody( navigation )}
+
+                            refreshControl={
+                                <RefreshControl refreshing={isLoading} onRefresh={()=>{
+                                    loadPost();
+                                }} />
+                            }
+
                             data={posts}
-                            initialNumToRender={1}
                             renderItem={({ item, index }) => <Item index={index} post={item} removeItem={(id)=>removeItem(id)} />}
                             keyExtractor={item => item.id.toString()}
-                            getItemCount={getItemCount}
-                            getItem={getItem}
+                            ListFooterComponent=            {
+                                isLoading ? null :
+                                    <View style={{display: "flex"}} >
+                                        {  appendingPostsProcess ?
+                                            <Loading />
+                                            :
+                                            <View style={{display: "flex", justifyContent:"center", marginBottom: 30 }} >
+                                                <InverseButton onPress={() =>loadMorePosts()} buttonTitle={"Load More"}
+                                                               iconName={"add-circle"}/>
+                                            </View>
+                                        }
+                                    </View>
+                            }
+
+
                         />
                     )
             }
 
-            {
-                isLoading ? null :
-                    <View style={{display: "flex"}} >
-                        {  appendingPostsProcess ?
-                            <Loading />
-                            :
-                            <View style={{display: "flex", justifyContent:"center", marginBottom: 30 }} >
-                                <InverseButton onPress={() =>loadMorePosts()} buttonTitle={"Load More"}
-                                               iconName={"add-circle"}/>
-                            </View>
-                        }
-                    </View>
-            }
 
-        </View>
+        </SafeAreaView>
 
     )
 }

@@ -21,6 +21,8 @@ import API from "../../../../services/api";
 import Loading from "../../../../common/Loading";
 import UserIsPostOwnerMenu from "./UserIsPostOwnerMenu";
 import UserIsNotPostOwnerMenu from "./UserIsNotPostOwnerMenu";
+import Fire from "../../../../services/Fire";
+import UserIsPostOwnerMenuRequest from "./UserIsPostOwnerMenuRequest";
 
 
 const StyledTextButton = styled.Text`
@@ -76,15 +78,74 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
     const [requestDecisionInProcess, setRequestDecisionInProcess] = useState(false);
     const [decisionInProcessId, setDecisionInProcessId] = useState("");
 
+    const [numberOfChats, setNumberOfChats] = useState( 0 );
+    const [userStartedChat, setUserStartedChat] = useState( false );
+
+    async function isCHatAvailable( requestId ){
+
+        console.log( "requestId" , requestId  );
+
+        if( typeof requestId !== "undefined" &&  requestId !== "" && requestId !== null ){
+            Fire.shared.requestId = requestId;
+            Fire.shared.doesChatExists( requestId , ( message ) => {
+                if( message !== null ){
+                    setUserStartedChat( true );
+                }
+            });
+
+            Fire.shared.isRequestCHatAvailable( ( message ) => {
+                if( message.key === "request-"+requestId ){
+                    setUserStartedChat( true );
+                }
+            });
+
+            let tempChatUpdated = 0 ;
+            Fire.shared.isRequestCHatUpdated( requestId , ( message ) => {
+                setUserStartedChat( true );
+
+                if( message.val().user._id === user.id ){
+                    tempChatUpdated--;
+                }else{
+                    tempChatUpdated++;
+                }
+                if( tempChatUpdated < 0 ){
+                    tempChatUpdated = 0;
+                }
+                setNumberOfChats( tempChatUpdated );
+
+            });
+        }
+
+    }
+
     useEffect(() => {
         let isUnMount = false;
         if (!isUnMount) {
+
+            setData(dataProp);
+
+            setPostStatus( dataProp.status );
+
+            setLikes(dataProp.totalLikes);
+            setLiked(dataProp.likedPost);
+
+            setSaves(dataProp.totalSaved);
+            setSaved(dataProp.savedPost);
+            setLikeString(dataProp.likeString);
+            setRequests(dataProp.requests);
+            setRequest(dataProp.request);
+            setAcceptedRequest(dataProp.acceptedRequest);
+
+            if(  dataProp.acceptedRequest !== null && dataProp.acceptedRequest.hasOwnProperty('request') ){
+                isCHatAvailable(  dataProp.acceptedRequest.request.id  );
+            }
+
         }
         return () => {
             isUnMount = true;
         }
 
-    }, []);
+    }, [ dataProp ]);
 
     const screenWidth = Math.round(windowWidth);
 
@@ -117,7 +178,6 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
         }
     }
 
-
     async function savePost(id) {
         if (!saveInProgress) {
             setSaveInProgress(true);
@@ -130,53 +190,6 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                 if (returnedData.tokenExpired) {
                     logout();
                     setSaveInProgress( false );
-                }
-            }
-        }
-    }
-
-    async function acceptRequest(id) {
-        if (!requestDecisionInProcess && decisionInProcessId !== id ) {
-            setRequestDecisionInProcess(true);
-            setDecisionInProcessId( id );
-            let returnedData = await API.Post.accept(id);
-            if (returnedData !== undefined && returnedData.success) {
-                setRequestDecisionInProcess(false);
-                setDecisionInProcessId( "" );
-                setAcceptedRequest( returnedData.data );
-                setPostStatus(6);
-            } else if (returnedData !== undefined && !returnedData.success) {
-                setRequestDecisionInProcess(false);
-                setDecisionInProcessId( "" );
-                if (returnedData.tokenExpired) {
-                    logout();
-                }
-            }
-        }
-    }
-
-    async function declineRequest(id) {
-        if (!requestDecisionInProcess  && decisionInProcessId !== id) {
-            setRequestDecisionInProcess(true);
-            setDecisionInProcessId( id );
-            let returnedData = await API.Post.decline(id);
-            if (returnedData !== undefined && returnedData.success) {
-                setRequestDecisionInProcess(false);
-                setDecisionInProcessId( "" );
-
-                let newRequests = [] ;
-                for( let request of requests ){
-                    if( request.id !== id ){
-                        newRequests.push( request );
-                    }
-                }
-                setRequests( newRequests );
-
-            } else if (returnedData !== undefined && !returnedData.success) {
-                setRequestDecisionInProcess(false);
-                setDecisionInProcessId( "" );
-                if (returnedData.tokenExpired) {
-                    logout();
                 }
             }
         }
@@ -212,13 +225,13 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
     }
 
     async function deletePost( id ){
-        console.log( postDeleteInProcess );
+        //console.log( postDeleteInProcess );
         if( !postDeleteInProcess ){
             setPostDeleteInProcess( true );
             let returnedData = await API.Post.delete(id);
-            console.log( returnedData );
+            //console.log( returnedData );
             if (returnedData !== undefined && returnedData.success) {
-                console.log( returnedData );
+                //console.log( returnedData );
                 setPostDeleteInProcess( false );
                 removeItem( id );
             } else if (returnedData !== undefined && !returnedData.success) {
@@ -228,6 +241,10 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                 }
             }
         }
+    }
+
+    function startChat( id ){
+        navigation.navigate("ChatSingleScreen",{"requestIdProp": id , title: dataProp.title });
     }
 
     return (
@@ -433,80 +450,15 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             {!user.isSignout && requests.length > 0 && postStatus === 1  ?
                 <View>
                     {requests.map(function (requestsItem, index) {
-                        // console.log( requestsItem );
                         return (
-                            <View style={styles.requestContainerParent}  key={index}>
-
-                                { requestDecisionInProcess && decisionInProcessId === requestsItem.id ?
-                                    <View style={styles.absoluteCenterLoader} >
-                                        <Loading />
-                                    </View>
-                                    : null
-                                }
-
-
-                                <View style={{ ...styles.userContainer , marginBottom:0 }} >
-                                    <View style={{ ...styles.userPicContainer , width: 25,
-                                        height: 20,
-                                        borderRadius: 12 }}>
-                                        <View style={styles.userContainer}>
-                                            <View style={{ ...styles.userPicContainer,   width: 20,
-                                                height: 20,
-                                                borderRadius: 12 }}>
-                                                {
-                                                    requestsItem.user.profile_picture ?
-                                                        <LoadableImage
-                                                            source={{uri: requestsItem.user.profile_picture}}
-                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
-                                                        :
-                                                        <LoadableImage
-                                                            source={postImage}
-                                                            styleData={{width: 20, height: 20, borderRadius: 10}}/>
-                                                }
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View style={{flex: 1}}>
-                                        <Text style={{ ...styles.userName , fontSize: 12 }}>
-                                            {requestsItem.user.fullName}
-                                        </Text>
-                                        <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( requestsItem.created_at ).fromNow() }</Text>
-                                    </View>
-                                    <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
-                                        <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
-                                            <Text style={{...styles.tag , fontSize: 8,
-                                                marginRight: 5,
-                                                padding: 4,
-                                                borderRadius: 3 }}>Request</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
-                                    <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" , width :  (  ((windowWidth - 20)/5)*4  )  }}>
-                                        <Text >{requestsItem.text}</Text>
-                                    </View>
-                                    <View style={{ ...styles.innerFlexContainer , marginTop:10 }} >
-
-                                        <TouchableOpacity onPress={() => {
-                                            acceptRequest(requestsItem.id)
-                                        }}>
-                                            <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 , paddingTop: 0, marginTop : -5}}
-                                                      name={"ios-checkmark-circle-outline"} size={30} color={colors.primary}/>
-                                        </TouchableOpacity>
-
-                                    </View>
-                                    <View style={{ ...styles.innerFlexContainer, marginTop:10  }} >
-
-                                        <TouchableOpacity onPress={() => {
-                                            declineRequest(requestsItem.id)
-                                        }}>
-                                            <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
-                                                      name={"ios-close-circle-outline"} size={30} color={colors.primary}/>
-                                        </TouchableOpacity>
-
-                                    </View>
-                                </View>
-                            </View>
+                            <UserIsPostOwnerMenuRequest key={index}
+                                                        dataProp={dataProp}
+                                                        requestProp={requestsItem}
+                                                        setAcceptedRequest={ val => setAcceptedRequest(val) }
+                                                        setPostStatus={ val => setPostStatus(val) }
+                                                        setRequests={ val => setRequests(val) }
+                                                        requests={ requests }
+                            />
                         )
                     })}
                 </View>
@@ -514,7 +466,6 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
             {!user.isSignout && postStatus === 6 && acceptedRequest !== null ?
                 <View style={styles.requestContainerParent}  >
-
                     <View style={{ ...styles.userContainer , marginBottom:0 }} >
                         <View style={{ ...styles.userPicContainer , width: 25,
                             height: 20,
@@ -597,6 +548,37 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                 <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
                                     <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
                                         <Text >{acceptedRequest.request.text}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ ...styles.bottomRequestContainer, justifyContent:"flex-end" }} >
+                                    <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
+                                        <View style={{ ...styles.innerFlexContainer, marginTop:10 , position:"relative"  }} >
+
+                                            <TouchableOpacity onPress={() => {
+                                                startChat(acceptedRequest.request.id)
+                                            }}>
+                                                <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
+                                                          name={"ios-chatbubbles"} size={30} color={colors.primary}/>
+                                                {
+                                                    numberOfChats > 0 ?
+                                                        <Text style={{ ...styles.innerFlexContainerText ,
+                                                            position:"absolute" ,
+                                                            color: colors.white ,
+                                                            padding:3,
+                                                            fontSize:10,
+                                                            textAlign: "center" ,
+                                                            borderRadius:20,
+                                                            width: 16,
+                                                            height:16,
+                                                            top:-2,
+                                                            left:12
+                                                        }}
+                                                        >{numberOfChats}</Text>
+                                                        : null
+                                                }
+                                            </TouchableOpacity>
+
+                                        </View>
                                     </View>
                                 </View>
                             </View>

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import {TouchableOpacity, Text, Image, StyleSheet, View} from "react-native";
+import {TouchableOpacity, Text, Image, StyleSheet, View, Platform} from "react-native";
 
 import FormButton from "../../../common/FormButton";
 import FormInput from "../../../common/FormInput";
@@ -10,8 +10,8 @@ import colors from "../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../utils/Dimensions";
 
 const SignInScreen = ({navigation}) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("user_"+Platform.OS+"@mylangara.ca");
+    const [password, setPassword] = useState("jaimin");
 
     const [loginInProgress, setLoginInProgress] = useState(false);
 
@@ -46,7 +46,7 @@ const SignInScreen = ({navigation}) => {
                 style={{width: 150, height: 150, marginBottom: 10}}
             />
 
-            <Text style={styles.heading}>Find and Give Help Fast</Text>
+            <Text style={styles.heading}>Let's help each other out</Text>
 
             <Text>{msg}</Text>
 

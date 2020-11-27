@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from "react-native";
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "../../../../colors/colors";
+import Fire from "../../../../services/Fire";
 
 export default function UserIsNotPostOwnerMenu( { dataProp , requestsProp } ){
 
