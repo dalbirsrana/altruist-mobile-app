@@ -1,5 +1,5 @@
-import React, {useState, useContext, useEffect} from "react";
-import {TouchableOpacity, Text, Image, StyleSheet, View, Platform} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
 import FormButton from "../../../common/FormButton";
 import FormInput from "../../../common/FormInput";
@@ -10,8 +10,8 @@ import colors from "../../../colors/colors";
 import {windowHeight, windowWidth} from "../../../utils/Dimensions";
 
 const SignInScreen = ({navigation}) => {
-    const [email, setEmail] = useState("user_"+Platform.OS+"@mylangara.ca");
-    const [password, setPassword] = useState("jaimin");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const [loginInProgress, setLoginInProgress] = useState(false);
 
@@ -25,7 +25,7 @@ const SignInScreen = ({navigation}) => {
     async function checkUserLoggedIn() {
         if (!isUserSignedOut()) {
             setLoginInProgress(true);
-            await navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'} } );
+            await navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'}});
         }
     }
 
@@ -88,7 +88,7 @@ const SignInScreen = ({navigation}) => {
                         if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true) {
                             setPassword("");
                             setLoginInProgress(false);
-                            navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'} } );
+                            navigation.navigate("HomeTabs", {screen: 'HomeStack', params: {screen: 'Home'}});
                         } else {
                             if (typeof signIn !== "undefined") {
                                 if (signIn.hasOwnProperty('data')) {
@@ -112,9 +112,9 @@ const SignInScreen = ({navigation}) => {
                 <Text style={styles.textOR}>or</Text>
             </View>
 
-            <FormButton 
-                    buttonTitle="Sign Up"
-                    onPress={() => navigation.navigate("SignUp")} 
+            <FormButton
+                buttonTitle="Sign Up"
+                onPress={() => navigation.navigate("SignUp")}
             />
 
             <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")}>
@@ -124,7 +124,7 @@ const SignInScreen = ({navigation}) => {
             <TouchableOpacity onPress={() => navigation.navigate("VerifyAccount")}>
                 <Text style={styles.forgot}>Verify Account?</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
                 style={styles.skipButton}
                 onPress={() => {

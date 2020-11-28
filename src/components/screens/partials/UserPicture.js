@@ -1,18 +1,18 @@
-import React, {useContext, useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity, ScrollView} from "react-native";
+import React, {useEffect, useState} from "react";
+import {Image, StyleSheet, View} from "react-native";
 import postImage from "../../../../assets/user-avatar.png";
 import FileUploadExampleScreen from "../FileUploadExampleScreen";
 
-const UserPicture = ({ picture }) => {
+const UserPicture = ({picture}) => {
 
-    const [profileImage, setProfileImage] = useState( "" );
-    const [loading, setLoading] = useState( true );
+    const [profileImage, setProfileImage] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         let isUnMount = false;
-        if (!isUnMount){
-            setProfileImage( picture );
-            setLoading( false );
+        if (!isUnMount) {
+            setProfileImage(picture);
+            setLoading(false);
         }
         return () => {
             isUnMount = true;
@@ -20,14 +20,16 @@ const UserPicture = ({ picture }) => {
     });
 
     return (
-        <View style = {styles.container}>
-            <View opacity={ loading ? 0.5 : 1} >
-                <View style = {styles.thumbnail} >
-                    <Image source = {postImage} style = {{height: 200, width: 200, borderRadius: 100 }} />
+        <View style={styles.container}>
+            <View opacity={loading ? 0.5 : 1}>
+                <View style={styles.thumbnail}>
+                    <Image source={postImage} style={{height: 200, width: 200, borderRadius: 100}}/>
                     <View
-                        style={buttonStyles.buttonContainer} >
+                        style={buttonStyles.buttonContainer}>
                         <FileUploadExampleScreen location={"AddProfilePicture"}
-                                                 imageUploaded={( event ) => {  changeProfilePicture( event );   }}  />
+                                                 imageUploaded={(event) => {
+                                                     changeProfilePicture(event);
+                                                 }}/>
                     </View>
                 </View>
             </View>
@@ -120,13 +122,13 @@ const styles = StyleSheet.create({
 const buttonStyles = StyleSheet.create({
     buttonContainer: {
         position: 'absolute',
-        bottom:10,
+        bottom: 10,
         marginBottom: 10,
         width: windowWidth / 2.5,
         height: 'auto',
         borderColor: colors.primary,
         backgroundColor: colors.transparent,
-        borderWidth:2,
+        borderWidth: 2,
         padding: 0,
         alignItems: "center",
         justifyContent: "center",
@@ -134,7 +136,7 @@ const buttonStyles = StyleSheet.create({
         borderRadius: 4,
     },
     buttonText: {
-        fontWeight:'bold',
+        fontWeight: 'bold',
         fontSize: 12,
         color: colors.white,
     },

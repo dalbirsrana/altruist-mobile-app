@@ -1,22 +1,17 @@
-import React, {useContext, useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, ScrollView, TouchableOpacity, Platform} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../../../colors/colors";
-import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
+import {windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import {useNavigation} from '@react-navigation/native';
 import FlatListSlider from './../../../helper/Slider/FlatListSlider';
 import postImage from "../../../../../assets/user-avatar.png";
 import styled from 'styled-components/native'
 import LoadableImage from "../../../../common/LoadableImage";
-import IconButton from "../../../../common/IconButton";
 import moment from "moment";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import API from "../../../../services/api";
 import Loading from "../../../../common/Loading";
 import UserIsPostOwnerMenu from "./UserIsPostOwnerMenu";
@@ -43,22 +38,22 @@ const StyledTextButton2 = styled(StyledTextButton)`
   width:150px;
 `
 
-function getWindowWidth( x , y ){
+function getWindowWidth(x, y) {
     // console.log( "windowWidth"  , windowWidth);
-    let c = (( ( windowWidth-20) / x ) * y ) ;
+    let c = (((windowWidth - 20) / x) * y);
     // console.log( "windowWidth c"  , c);
     return c;
 }
 
 
-export default function PostViewHome({route, dataProp, removeItem , key, dataKey}) {
+export default function PostViewHome({route, dataProp, removeItem, key, dataKey}) {
 
     const navigation = useNavigation();
 
     const {user, logout} = useContext(AuthContext);
     const [data, setData] = useState(dataProp);
 
-    const [postStatus, setPostStatus] = useState( dataProp.status );
+    const [postStatus, setPostStatus] = useState(dataProp.status);
 
     const [likes, setLikes] = useState(dataProp.totalLikes);
     const [liked, setLiked] = useState(dataProp.likedPost);
@@ -78,40 +73,40 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
     const [requestDecisionInProcess, setRequestDecisionInProcess] = useState(false);
     const [decisionInProcessId, setDecisionInProcessId] = useState("");
 
-    const [numberOfChats, setNumberOfChats] = useState( 0 );
-    const [userStartedChat, setUserStartedChat] = useState( false );
+    const [numberOfChats, setNumberOfChats] = useState(0);
+    const [userStartedChat, setUserStartedChat] = useState(false);
 
-    async function isCHatAvailable( requestId ){
+    async function isCHatAvailable(requestId) {
 
-        console.log( "requestId" , requestId  );
+        console.log("requestId", requestId);
 
-        if( typeof requestId !== "undefined" &&  requestId !== "" && requestId !== null ){
+        if (typeof requestId !== "undefined" && requestId !== "" && requestId !== null) {
             Fire.shared.requestId = requestId;
-            Fire.shared.doesChatExists( requestId , ( message ) => {
-                if( message !== null ){
-                    setUserStartedChat( true );
+            Fire.shared.doesChatExists(requestId, (message) => {
+                if (message !== null) {
+                    setUserStartedChat(true);
                 }
             });
 
-            Fire.shared.isRequestCHatAvailable( ( message ) => {
-                if( message.key === "request-"+requestId ){
-                    setUserStartedChat( true );
+            Fire.shared.isRequestCHatAvailable((message) => {
+                if (message.key === "request-" + requestId) {
+                    setUserStartedChat(true);
                 }
             });
 
-            let tempChatUpdated = 0 ;
-            Fire.shared.isRequestCHatUpdated( requestId , ( message ) => {
-                setUserStartedChat( true );
+            let tempChatUpdated = 0;
+            Fire.shared.isRequestCHatUpdated(requestId, (message) => {
+                setUserStartedChat(true);
 
-                if( message.val().user._id === user.id ){
+                if (message.val().user._id === user.id) {
                     tempChatUpdated--;
-                }else{
+                } else {
                     tempChatUpdated++;
                 }
-                if( tempChatUpdated < 0 ){
+                if (tempChatUpdated < 0) {
                     tempChatUpdated = 0;
                 }
-                setNumberOfChats( tempChatUpdated );
+                setNumberOfChats(tempChatUpdated);
 
             });
         }
@@ -124,7 +119,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
             setData(dataProp);
 
-            setPostStatus( dataProp.status );
+            setPostStatus(dataProp.status);
 
             setLikes(dataProp.totalLikes);
             setLiked(dataProp.likedPost);
@@ -136,8 +131,8 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             setRequest(dataProp.request);
             setAcceptedRequest(dataProp.acceptedRequest);
 
-            if(  dataProp.acceptedRequest !== null && dataProp.acceptedRequest.hasOwnProperty('request') ){
-                isCHatAvailable(  dataProp.acceptedRequest.request.id  );
+            if (dataProp.acceptedRequest !== null && dataProp.acceptedRequest.hasOwnProperty('request')) {
+                isCHatAvailable(dataProp.acceptedRequest.request.id);
             }
 
         }
@@ -145,7 +140,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             isUnMount = true;
         }
 
-    }, [ dataProp ]);
+    }, [dataProp]);
 
     const screenWidth = Math.round(windowWidth);
 
@@ -185,28 +180,31 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             if (returnedData !== undefined && returnedData.success) {
                 setSaved(returnedData.data.status);
                 setSaves(returnedData.data.totalSaved);
-                setSaveInProgress( false );
+                setSaveInProgress(false);
             } else if (returnedData !== undefined && !returnedData.success) {
                 if (returnedData.tokenExpired) {
                     logout();
-                    setSaveInProgress( false );
+                    setSaveInProgress(false);
                 }
             }
         }
     }
 
-    async function editPost(data){
+    async function editPost(data) {
         let postUploads = data.postUploads;
 
-        let newUploads = [] ;
-        for (let upload in postUploads){
-            newUploads.push( { key:  postUploads[upload].replace('https://altruist-project.s3.us-west-2.amazonaws.com/','') , objectUrl:postUploads[upload] } );
+        let newUploads = [];
+        for (let upload in postUploads) {
+            newUploads.push({
+                key: postUploads[upload].replace('https://altruist-project.s3.us-west-2.amazonaws.com/', ''),
+                objectUrl: postUploads[upload]
+            });
         }
 
         navigation.navigate(
-            'CreatePost' , {
-                screen :'PostTypeSelection',
-                params : {
+            'CreatePost', {
+                screen: 'PostTypeSelection',
+                params: {
 
                     idProp: data.id,
                     postTypeIdProp: data.postType.id,
@@ -224,18 +222,18 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             });
     }
 
-    async function deletePost( id ){
+    async function deletePost(id) {
         //console.log( postDeleteInProcess );
-        if( !postDeleteInProcess ){
-            setPostDeleteInProcess( true );
+        if (!postDeleteInProcess) {
+            setPostDeleteInProcess(true);
             let returnedData = await API.Post.delete(id);
             //console.log( returnedData );
             if (returnedData !== undefined && returnedData.success) {
                 //console.log( returnedData );
-                setPostDeleteInProcess( false );
-                removeItem( id );
+                setPostDeleteInProcess(false);
+                removeItem(id);
             } else if (returnedData !== undefined && !returnedData.success) {
-                setPostDeleteInProcess( false );
+                setPostDeleteInProcess(false);
                 if (returnedData.tokenExpired) {
                     logout();
                 }
@@ -243,8 +241,8 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
         }
     }
 
-    function startChat( id ){
-        navigation.navigate("ChatSingleScreen",{"requestIdProp": id , title: dataProp.title });
+    function startChat(id) {
+        navigation.navigate("ChatSingleScreen", {"requestIdProp": id, title: dataProp.title});
     }
 
     return (
@@ -253,9 +251,9 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
             ]}>
 
-            { postDeleteInProcess ?
-                <View style={styles.absoluteCenterLoader} >
-                    <Loading />
+            {postDeleteInProcess ?
+                <View style={styles.absoluteCenterLoader}>
+                    <Loading/>
                 </View>
                 : null
             }
@@ -275,7 +273,11 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                 <View style={{flex: 1}}>
                     <Text style={styles.userName}>{data.user.fullName}</Text>
                     <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{data.city_name}</Text>
-                    <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( data.created_at ).fromNow() }</Text>
+                    <Text style={{
+                        ...styles.locationLabel,
+                        textAlign: "left",
+                        fontSize: 8
+                    }}>{moment.unix(data.created_at).fromNow()}</Text>
                 </View>
 
                 {!user.isSignout && user.id === data.user.id ?
@@ -284,7 +286,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                             editPost(data)
                         }}>
                             <MaterialIcons style={styles.bottomButtonContainerIcon} name={"edit"}
-                                                    size={25} color={colors.primary}/>
+                                           size={25} color={colors.primary}/>
                         </TouchableOpacity>
                     </View>
                     : null}
@@ -314,13 +316,16 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                         style={{
                                             width: 20,
                                             height: 20,
-                                            marginRight:10,
-                                            marginLeft:5,
-                                            marginTop:10
+                                            marginRight: 10,
+                                            marginLeft: 5,
+                                            marginTop: 10
                                         }}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ ...styles.innerFlexContainerText , fontSize:18 }}>{saves > 0 ? saves : null}</Text>
+                                <Text style={{
+                                    ...styles.innerFlexContainerText,
+                                    fontSize: 18
+                                }}>{saves > 0 ? saves : null}</Text>
                             </View>
                             :
                             <View style={styles.innerFlexContainer}>
@@ -334,13 +339,16 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                         style={{
                                             width: 20,
                                             height: 20,
-                                            marginRight:10,
-                                            marginLeft:5,
-                                            marginTop: Platform.OS === 'ios'  ? 0 : 10
+                                            marginRight: 10,
+                                            marginLeft: 5,
+                                            marginTop: Platform.OS === 'ios' ? 0 : 10
                                         }}
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ ...styles.innerFlexContainerText , fontSize:18 }}>{saves > 0 ? saves : null}</Text>
+                                <Text style={{
+                                    ...styles.innerFlexContainerText,
+                                    fontSize: 18
+                                }}>{saves > 0 ? saves : null}</Text>
                             </View>
                         }
                     </View> : null}
@@ -349,7 +357,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
             </View>
 
             <TouchableOpacity onPress={() => {
-                navigation.navigate('SingleHelpScreen', { postId: data.id, postTitle: data.title })
+                navigation.navigate('SingleHelpScreen', {postId: data.id, postTitle: data.title})
             }}>
 
 
@@ -374,11 +382,11 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                         marginBottom: 10,
                         fontSize: 14,
                         paddingRight: 20
-                    }}>{data.description.length >85 ? data.description.substring(0, 80) + "..." : data.description}</Text>
+                    }}>{data.description.length > 85 ? data.description.substring(0, 80) + "..." : data.description}</Text>
 
                 </View>
 
-                <View styles={{flex:1,display: "flex",width: windowWidth-20}} >
+                <View styles={{flex: 1, display: "flex", width: windowWidth - 20}}>
                     {getImagesArray().length > 0 ? (getImagesArray().length > 1 ?
                         <FlatListSlider
                             style={
@@ -394,13 +402,13 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                             separator={0}
                             loop={false}
                             autoscroll={false}
-                            currentIndexCallback={index =>  console.log('Index', index)}
+                            currentIndexCallback={index => console.log('Index', index)}
                             indicator
                             animation
                         />
                         :
                         <LoadableImage
-                            styleData={[imageStyles.image, {width: windowWidth-20}]}
+                            styleData={[imageStyles.image, {width: windowWidth - 20}]}
                             source={{uri: getImagesArray()[0]['image']}}
                         />) : null
                     }
@@ -410,7 +418,7 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
             {!user.isSignout ?
                 <View style={styles.bottomButtonContainer}>
-                    <View style={{ ...styles.innerFlexContainer , width: getWindowWidth( 5 , 2.4 ) }}>
+                    <View style={{...styles.innerFlexContainer, width: getWindowWidth(5, 2.4)}}>
                         {liked ?
                             <View style={styles.innerFlexContainer}>
                                 <TouchableOpacity onPress={() => {
@@ -433,13 +441,13 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                             </View>
                         }
                     </View>
-                    { postStatus === 1 ?
+                    {postStatus === 1 ?
                         <View style={styles.innerFlexContainer}>
                             {
                                 user.id === data.user.id ?
-                                    <UserIsPostOwnerMenu dataProp={data} requestsProp={requests} />
+                                    <UserIsPostOwnerMenu dataProp={data} requestsProp={requests}/>
                                     :
-                                    <UserIsNotPostOwnerMenu dataProp={data} requestProp={data.request} />
+                                    <UserIsNotPostOwnerMenu dataProp={data} requestProp={data.request}/>
 
                             }
                         </View> : null
@@ -447,17 +455,17 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
 
                 </View> : null}
 
-            {!user.isSignout && requests.length > 0 && postStatus === 1  ?
+            {!user.isSignout && requests.length > 0 && postStatus === 1 ?
                 <View>
                     {requests.map(function (requestsItem, index) {
                         return (
                             <UserIsPostOwnerMenuRequest key={index}
                                                         dataProp={dataProp}
                                                         requestProp={requestsItem}
-                                                        setAcceptedRequest={ val => setAcceptedRequest(val) }
-                                                        setPostStatus={ val => setPostStatus(val) }
-                                                        setRequests={ val => setRequests(val) }
-                                                        requests={ requests }
+                                                        setAcceptedRequest={val => setAcceptedRequest(val)}
+                                                        setPostStatus={val => setPostStatus(val)}
+                                                        setRequests={val => setRequests(val)}
+                                                        requests={requests}
                             />
                         )
                     })}
@@ -465,15 +473,19 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                 : null}
 
             {!user.isSignout && postStatus === 6 && acceptedRequest !== null ?
-                <View style={styles.requestContainerParent}  >
-                    <View style={{ ...styles.userContainer , marginBottom:0 }} >
-                        <View style={{ ...styles.userPicContainer , width: 25,
+                <View style={styles.requestContainerParent}>
+                    <View style={{...styles.userContainer, marginBottom: 0}}>
+                        <View style={{
+                            ...styles.userPicContainer, width: 25,
                             height: 20,
-                            borderRadius: 12 }}>
+                            borderRadius: 12
+                        }}>
                             <View style={styles.userContainer}>
-                                <View style={{ ...styles.userPicContainer,   width: 20,
+                                <View style={{
+                                    ...styles.userPicContainer, width: 20,
                                     height: 20,
-                                    borderRadius: 12 }}>
+                                    borderRadius: 12
+                                }}>
                                     {
                                         acceptedRequest.user.profile_picture ?
                                             <LoadableImage
@@ -488,35 +500,57 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                             </View>
                         </View>
                         <View style={{flex: 1}}>
-                            <Text style={{ ...styles.userName , fontSize: 12 }}>
+                            <Text style={{...styles.userName, fontSize: 12}}>
                                 {acceptedRequest.user.fullName}
                             </Text>
-                            <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( acceptedRequest.created_at ).fromNow() }</Text>
+                            <Text style={{
+                                ...styles.locationLabel,
+                                textAlign: "left",
+                                fontSize: 8
+                            }}>{moment.unix(acceptedRequest.created_at).fromNow()}</Text>
                         </View>
-                        <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
-                            <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
-                                <Text style={{...styles.tag , fontSize: 8,
+                        <View style={{...styles.innerFlexContainer, alignSelf: "flex-end"}}>
+                            <View style={{...styles.tagsContainer2, padding: 5, paddingTop: 0, marginTop: 0}}>
+                                <Text style={{
+                                    ...styles.tag, fontSize: 8,
                                     borderColor: colors.success,
                                     color: colors.success,
                                     marginRight: 5,
                                     padding: 4,
-                                    borderRadius: 3 }}>Accepted</Text>
+                                    borderRadius: 3
+                                }}>Accepted</Text>
                             </View>
                         </View>
                     </View>
-                    <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
-                        <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
+                    <View style={{...styles.bottomRequestContainer, justifyContent: "space-between"}}>
+                        <View style={{...styles.innerFlexContainer, flexWrap: "wrap"}}>
 
-                            <View style={{ ...styles.requestContainerParent , marginLeft:50, borderWidth:2,  borderTopColor: colors.primary, borderColor: colors.primary, marginTop:10 ,  borderRadius: 10 , padding:10 , paddingTop: 10,
-                                paddingBottom: 10 , paddingLeft:10, paddingRight:10 }}  >
-                                <View style={{ ...styles.userContainer , marginBottom:0 }} >
-                                    <View style={{ ...styles.userPicContainer , width: 25,
+                            <View style={{
+                                ...styles.requestContainerParent,
+                                marginLeft: 50,
+                                borderWidth: 2,
+                                borderTopColor: colors.primary,
+                                borderColor: colors.primary,
+                                marginTop: 10,
+                                borderRadius: 10,
+                                padding: 10,
+                                paddingTop: 10,
+                                paddingBottom: 10,
+                                paddingLeft: 10,
+                                paddingRight: 10
+                            }}>
+                                <View style={{...styles.userContainer, marginBottom: 0}}>
+                                    <View style={{
+                                        ...styles.userPicContainer, width: 25,
                                         height: 20,
-                                        borderRadius: 12 }}>
+                                        borderRadius: 12
+                                    }}>
                                         <View style={styles.userContainer}>
-                                            <View style={{ ...styles.userPicContainer,   width: 20,
+                                            <View style={{
+                                                ...styles.userPicContainer, width: 20,
                                                 height: 20,
-                                                borderRadius: 12 }}>
+                                                borderRadius: 12
+                                            }}>
                                                 {
                                                     acceptedRequest.request.user.profile_picture ?
                                                         <LoadableImage
@@ -531,56 +565,78 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                                         </View>
                                     </View>
                                     <View style={{flex: 1}}>
-                                        <Text style={{ ...styles.userName , fontSize: 12 }}>
+                                        <Text style={{...styles.userName, fontSize: 12}}>
                                             {acceptedRequest.request.user.fullName}
                                         </Text>
-                                        <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( acceptedRequest.request.created_at ).fromNow() }</Text>
+                                        <Text style={{
+                                            ...styles.locationLabel,
+                                            textAlign: "left",
+                                            fontSize: 8
+                                        }}>{moment.unix(acceptedRequest.request.created_at).fromNow()}</Text>
                                     </View>
-                                    <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
-                                        <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
-                                            <Text style={{...styles.tag , fontSize: 8,
+                                    <View style={{...styles.innerFlexContainer, alignSelf: "flex-end"}}>
+                                        <View
+                                            style={{...styles.tagsContainer2, padding: 5, paddingTop: 0, marginTop: 0}}>
+                                            <Text style={{
+                                                ...styles.tag, fontSize: 8,
                                                 marginRight: 5,
                                                 padding: 4,
-                                                borderRadius: 3 }}>Request</Text>
+                                                borderRadius: 3
+                                            }}>Request</Text>
                                         </View>
                                     </View>
                                 </View>
-                                <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
-                                    <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
-                                        <Text >{acceptedRequest.request.text}</Text>
+                                <View style={{...styles.bottomRequestContainer, justifyContent: "space-between"}}>
+                                    <View style={{...styles.innerFlexContainer, flexWrap: "wrap"}}>
+                                        <Text>{acceptedRequest.request.text}</Text>
                                     </View>
                                 </View>
-                                <View style={{ ...styles.bottomRequestContainer, justifyContent:"flex-end" }} >
-                                    <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap" }}>
-                                        <View style={{ ...styles.innerFlexContainer, marginTop:10 , position:"relative"  }} >
 
-                                            <TouchableOpacity onPress={() => {
-                                                startChat(acceptedRequest.request.id)
+                                {(acceptedRequest.request.user.id === user.id || acceptedRequest.user.id === user.id) ?
+                                    <View style={{...styles.bottomRequestContainer, justifyContent: "flex-end"}}>
+                                        <View style={{...styles.innerFlexContainer, flexWrap: "wrap"}}>
+                                            <View style={{
+                                                ...styles.innerFlexContainer,
+                                                marginTop: 10,
+                                                position: "relative"
                                             }}>
-                                                <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
-                                                          name={"ios-chatbubbles"} size={30} color={colors.primary}/>
-                                                {
-                                                    numberOfChats > 0 ?
-                                                        <Text style={{ ...styles.innerFlexContainerText ,
-                                                            position:"absolute" ,
-                                                            color: colors.white ,
-                                                            padding:3,
-                                                            fontSize:10,
-                                                            textAlign: "center" ,
-                                                            borderRadius:20,
-                                                            width: 16,
-                                                            height:16,
-                                                            top:-2,
-                                                            left:12
-                                                        }}
-                                                        >{numberOfChats}</Text>
-                                                        : null
-                                                }
-                                            </TouchableOpacity>
 
+                                                <TouchableOpacity onPress={() => {
+                                                    startChat(acceptedRequest.request.id)
+                                                }}>
+                                                    <Ionicons style={{
+                                                        ...styles.bottomButtonContainerIcon,
+                                                        padding: 5,
+                                                        paddingTop: 0,
+                                                        marginTop: -5
+                                                    }}
+                                                              name={"ios-chatbubbles"} size={30}
+                                                              color={colors.primary}/>
+                                                    {
+                                                        numberOfChats > 0 ?
+                                                            <Text style={{
+                                                                ...styles.innerFlexContainerText,
+                                                                position: "absolute",
+                                                                color: colors.white,
+                                                                padding: 3,
+                                                                fontSize: 10,
+                                                                textAlign: "center",
+                                                                borderRadius: 20,
+                                                                width: 16,
+                                                                height: 16,
+                                                                top: -2,
+                                                                left: 12
+                                                            }}
+                                                            >{numberOfChats}</Text>
+                                                            : null
+                                                    }
+                                                </TouchableOpacity>
+
+                                            </View>
                                         </View>
-                                    </View>
-                                </View>
+                                    </View> : null
+                                }
+
                             </View>
 
 
@@ -589,8 +645,6 @@ export default function PostViewHome({route, dataProp, removeItem , key, dataKey
                 </View>
                 : null
             }
-
-
 
 
         </View>
@@ -613,17 +667,17 @@ const styles = StyleSheet.create({
     bottomButtonContainer: {
         display: "flex",
         paddingTop: 10,
-        marginBottom:10,
+        marginBottom: 10,
         flexDirection: "row",
         flexWrap: "nowrap",
         justifyContent: "space-between"
     },
 
-    requestContainerParent : {
+    requestContainerParent: {
         display: "flex",
         flexDirection: "column",
         flexWrap: "nowrap",
-        marginBottom:0,
+        marginBottom: 0,
         paddingTop: 10,
         paddingBottom: 0,
         borderTopWidth: 2,
@@ -644,8 +698,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "nowrap",
         alignSelf: "flex-end",
-        paddingLeft:3,
-        paddingRight:3
+        paddingLeft: 3,
+        paddingRight: 3
     },
 
     innerFlexContainer: {
@@ -663,7 +717,7 @@ const styles = StyleSheet.create({
 
     tagsContainer2: {
         display: "flex",
-        marginTop:4,
+        marginTop: 4,
         flexDirection: "row",
         flexWrap: "nowrap"
     },
@@ -729,15 +783,15 @@ const styles = StyleSheet.create({
         padding: 10,
         position: "relative"
     },
-    absoluteCenterLoader : {
-        position:'absolute',
-        alignSelf:"center",
-        zIndex:1001,
-        backgroundColor:colors.loadingTransparent,
-        top:0,
-        bottom:0,
-        left:0,
-        right:0
+    absoluteCenterLoader: {
+        position: 'absolute',
+        alignSelf: "center",
+        zIndex: 1001,
+        backgroundColor: colors.loadingTransparent,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
     },
     imgContainer: {
         flexBasis: "100%",

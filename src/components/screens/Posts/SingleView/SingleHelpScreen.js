@@ -1,21 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import {
-    Button,
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TouchableOpacity,
-    RefreshControl,
-    FlatList,
-    ScrollView
-} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native'
 import API from "../../../../services/api"
 import PostViewViewPage from "../View/PostViewViewPage";
 import Loading from "../../../../common/Loading";
-import colors from "../../../../colors/colors";
 import {windowWidth} from "../../../../utils/Dimensions";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 
 const SingleHelp = ({route, navigation}) => {
@@ -67,21 +55,21 @@ const SingleHelp = ({route, navigation}) => {
         <ScrollView style={styles.container}
 
                     refreshControl={
-                        <RefreshControl refreshing={loading} onRefresh={()=>{
+                        <RefreshControl refreshing={loading} onRefresh={() => {
                             getPost();
-                        }} />
+                        }}/>
                     }
 
         >
             {
                 loading ? <Loading/> :
-                    <View style={{display: "flex",flex: 1}}>
+                    <View style={{display: "flex", flex: 1}}>
                         {loadingFailed ?
                             <Text style={styles.textColour2}>Something went wrong! Please try again later!</Text>
                             :
                             <View style={{flex: 1}}>
                                 {post !== null ?
-                                    <PostViewViewPage dataProp={post} removeItem={(id) => removeItem(post.id)} /> :
+                                    <PostViewViewPage dataProp={post} removeItem={(id) => removeItem(post.id)}/> :
                                     <Loading/>}
                             </View>
                         }

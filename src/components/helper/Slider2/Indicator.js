@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 export default function Indicator({
-                                 itemCount,
-                                 currentIndex,
-                                 indicatorStyle,
-                                 indicatorContainerStyle,
-                                 indicatorActiveColor,
-                                 indicatorInActiveColor,
-                                 indicatorActiveWidth = 6,
-                             }){
+                                      itemCount,
+                                      currentIndex,
+                                      indicatorStyle,
+                                      indicatorContainerStyle,
+                                      indicatorActiveColor,
+                                      indicatorInActiveColor,
+                                      indicatorActiveWidth = 6,
+                                  }) {
     return (
         <View style={[styles.container, indicatorContainerStyle]}>
             {renderIndicator(

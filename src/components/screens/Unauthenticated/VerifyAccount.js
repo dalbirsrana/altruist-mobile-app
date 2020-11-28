@@ -1,13 +1,12 @@
-import {Image, Text, TouchableOpacity, View, useEffect } from "react-native";
+import {Image, Text, View} from "react-native";
 import React, {useState} from "react";
 import logo from "../../../../assets/icon.png";
 import FormInput from "../../../common/FormInput";
 import FormButton from "../../../common/FormButton";
 import styles from "../../../Styles/CommonUnauthenticated";
 import API from "../../../services/api";
-import BR from "../../helper/BR";
 
-export default function VerifyAccount( { navigation } ) {
+export default function VerifyAccount({navigation}) {
 
     const [username, setUsername] = useState("");
     const [verification_token, setVerificationToken] = useState("");
@@ -21,7 +20,7 @@ export default function VerifyAccount( { navigation } ) {
         return typeof obj[Symbol.iterator] === 'function';
     }
 
-    const useEffect = ( () => {
+    const useEffect = (() => {
     });
 
     const submitForm = async () => {
@@ -39,13 +38,13 @@ export default function VerifyAccount( { navigation } ) {
         }
     }
 
-    let errorList = [] ;
-    for( const property in errors ){
-            var singleAttributeErrors = errors[property];
-            for (var i = 0; i < singleAttributeErrors.length; i++){
-                errorList.push(<Text>{singleAttributeErrors[i]}</Text>);
-            }
+    let errorList = [];
+    for (const property in errors) {
+        var singleAttributeErrors = errors[property];
+        for (var i = 0; i < singleAttributeErrors.length; i++) {
+            errorList.push(<Text>{singleAttributeErrors[i]}</Text>);
         }
+    }
 
 
     return (
@@ -55,7 +54,7 @@ export default function VerifyAccount( { navigation } ) {
                 style={{width: 200, height: 200, marginBottom: 20}}
             />
 
-            { errorList.length > 0 ?
+            {errorList.length > 0 ?
                 <View>
                     <Text>{errorList}</Text>
                 </View>
@@ -66,7 +65,7 @@ export default function VerifyAccount( { navigation } ) {
             <FormInput
                 value={username}
                 placeholderText="Email"
-                onChangeText={( value ) => setUsername( value )}
+                onChangeText={(value) => setUsername(value)}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoCorrect={false}
@@ -75,7 +74,7 @@ export default function VerifyAccount( { navigation } ) {
             <FormInput
                 value={verification_token}
                 placeholderText="Verification Token"
-                onChangeText={( value ) => setVerificationToken( value )}
+                onChangeText={(value) => setVerificationToken(value)}
                 autoCapitalize="none"
                 autoCorrect={false}
             />

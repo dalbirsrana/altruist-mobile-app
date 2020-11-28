@@ -1,6 +1,6 @@
-import React, {useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import {Image, StyleSheet, Text, View, VirtualizedList} from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import {FlatList, ScrollView} from "react-native-gesture-handler";
 import Loading from "../../../common/Loading"
 
 import colors from "../../../colors/colors";
@@ -8,18 +8,16 @@ import postImage from "../../../../assets/user-avatar.png"
 import HomePageTopSlider from "../../helper/HomePageTopSlider/HomePageTopSlider"
 import TopHelper from "../../screens/partials/home/TopHelpers"
 import API from "../../../services/api";
-import {windowHeight, windowWidth} from "../../../utils/Dimensions";
-import FlatListSlider from '../../helper/Slider/FlatListSlider';
-import { color } from "react-native-reanimated";
+import {windowWidth} from "../../../utils/Dimensions";
 
 const HomeScreen = ({navigation}) => {
 
     const [isLoading, setLoading] = useState(true);
     const [posts, setPosts] = useState([])
 
-    const loadPost = async() => {
+    const loadPost = async () => {
         let postsList = await API.Post.openList()
-        if(postsList !== undefined && postsList.success) {
+        if (postsList !== undefined && postsList.success) {
             console.log(postsList.data)
             setPosts(postsList.data)
             setLoading(false)
@@ -43,26 +41,26 @@ const HomeScreen = ({navigation}) => {
 
             {/* Slider container */}
 
-            <HomePageTopSlider navigation={navigation} />
+            <HomePageTopSlider navigation={navigation}/>
 
             {/* Top Helper container */}
-            <TopHelper />
+            <TopHelper/>
 
             {/* Help Posts container */}
             {
-            isLoading || posts.length == 0 ? <Loading /> :
-            <View style={{flex:1}}>
-                <VirtualizedList
-                    data={posts}
-                    renderItem={({index, item}) => <PostItem index={index} data={item} /> }
-                    keyExtractor={item => item.id.toString()}
-                    getItemCount={(data)=>data.length}
-                    getItem={(data, index)=>data[index]}
-                    style={{marginTop: 10}}
-                />
-            </View>
+                isLoading || posts.length == 0 ? <Loading/> :
+                    <View style={{flex: 1}}>
+                        <VirtualizedList
+                            data={posts}
+                            renderItem={({index, item}) => <PostItem index={index} data={item}/>}
+                            keyExtractor={item => item.id.toString()}
+                            getItemCount={(data) => data.length}
+                            getItem={(data, index) => data[index]}
+                            style={{marginTop: 10}}
+                        />
+                    </View>
             }
- 
+
         </ScrollView>
     )
 }
@@ -70,20 +68,25 @@ const HomeScreen = ({navigation}) => {
 export default HomeScreen;
 
 
-const PostItem = ({ index, data }) => {
+const PostItem = ({index, data}) => {
     return (
-        <View key={index} id={index} style={{flex:1, paddingHorizontal: 5, paddingVertical: 10, backgroundColor: index%2==0 ? colors.primaryTransparent : colors.secondaryTransparent}}>
+        <View key={index} id={index} style={{
+            flex: 1,
+            paddingHorizontal: 5,
+            paddingVertical: 10,
+            backgroundColor: index % 2 == 0 ? colors.primaryTransparent : colors.secondaryTransparent
+        }}>
             <View style={styles.userContainer}>
                 <View style={styles.userPicContainer}>
                     {
                         data.user.profile_picture ?
                             <Image
                                 source={{uri: data.user.profile_picture}}
-                                style={{width: 30, height: 30, borderRadius: 15}} />
+                                style={{width: 30, height: 30, borderRadius: 15}}/>
                             :
                             <Image source={postImage}
-                            style={{width: 30, height: 30, borderRadius: 15}} />
-                    } 
+                                   style={{width: 30, height: 30, borderRadius: 15}}/>
+                    }
                 </View>
                 <View style={{flex: 1}}>
                     <Text style={styles.userName}>{data.user.fullName}</Text>
@@ -91,12 +94,11 @@ const PostItem = ({ index, data }) => {
                 </View>
 
                 <View style={styles.postCatType}>
-                    <Text style={styles.postCatTypeTitle}>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                    <Text
+                        style={styles.postCatTypeTitle}>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
                     <Text style={styles.postCatTypeTitle}>{data.postCategory.title}</Text>
                 </View>
             </View>
-
-
 
 
             <View style={styles.containerReview}>
@@ -105,24 +107,24 @@ const PostItem = ({ index, data }) => {
 
             </View>
 
-                {
-                    data.postUploads.length > 0 ? 
+            {
+                data.postUploads.length > 0 ?
 
                     <FlatList
                         data={data.postUploads}
-                        renderItem={({item})=>(
-                            <Image source={{uri:item}} style={{width:windowWidth-12, height:200}} />
+                        renderItem={({item}) => (
+                            <Image source={{uri: item}} style={{width: windowWidth - 12, height: 200}}/>
                         )}
-                        keyExtractor={(item)=>item.id}
+                        keyExtractor={(item) => item.id}
                         horizontal
                         pagingEnabled={true}
                         showsHorizontalScrollIndicator={false}
                         legacyImplementation={false}
-                        style={{ width:windowWidth-10, height:'100%', }}
+                        style={{width: windowWidth - 10, height: '100%',}}
                     />
-                    
+
                     : null
-                }
+            }
 
 
         </View>

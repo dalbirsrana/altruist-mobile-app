@@ -1,10 +1,10 @@
-import React, { Component, PropTypes } from "react";
-import { Image } from "react-native";
+import React, {Component} from "react";
+import {Image} from "react-native";
 
 export default class ScaledImage extends Component {
     constructor(props) {
         super(props);
-        this.state = { source: { uri: this.props.uri } };
+        this.state = {source: {uri: this.props.uri}};
     }
 
     componentWillMount() {
@@ -20,7 +20,7 @@ export default class ScaledImage extends Component {
                     height: this.props.height
                 });
             } else {
-                this.setState({ width: width, height: height });
+                this.setState({width: width, height: height});
             }
         });
     }
@@ -29,7 +29,7 @@ export default class ScaledImage extends Component {
         return (
             <Image
                 source={this.state.source}
-                style={{ height: this.state.height, width: this.state.width }}
+                style={{height: this.state.height, width: this.state.width}}
             />
         );
     }

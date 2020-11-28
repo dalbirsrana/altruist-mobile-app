@@ -1,4 +1,4 @@
-import {Image, Text, TouchableOpacity, View, useEffect } from "react-native";
+import {Image, Text, View} from "react-native";
 import React, {useState} from "react";
 import logo from "../../../assets/icon.png";
 import FormInput from "../../common/FormInput";
@@ -7,7 +7,7 @@ import styles from "../../Styles/CommonUnauthenticated";
 import API from "../../services/api";
 
 
-export default function UpdateUserProfile( { navigation } ) {
+export default function UpdateUserProfile({navigation}) {
 
     const [username, setUsername] = useState("");
     const [verification_token, setVerificationToken] = useState("");
@@ -21,7 +21,7 @@ export default function UpdateUserProfile( { navigation } ) {
         return typeof obj[Symbol.iterator] === 'function';
     }
 
-    const useEffect = ( () => {
+    const useEffect = (() => {
         // console.log( errors );
     });
 
@@ -40,10 +40,10 @@ export default function UpdateUserProfile( { navigation } ) {
         }
     }
 
-    let errorList = [] ;
-    for( const property in errors ){
+    let errorList = [];
+    for (const property in errors) {
         var singleAttributeErrors = errors[property];
-        for (var i = 0; i < singleAttributeErrors.length; i++){
+        for (var i = 0; i < singleAttributeErrors.length; i++) {
             errorList.push(<Text>{singleAttributeErrors[i]}</Text>);
         }
     }
@@ -56,7 +56,7 @@ export default function UpdateUserProfile( { navigation } ) {
                 style={{width: 200, height: 200, marginBottom: 20}}
             />
 
-            { errorList.length > 0 ?
+            {errorList.length > 0 ?
                 <View>
                     {errorList}
                 </View>
@@ -67,7 +67,7 @@ export default function UpdateUserProfile( { navigation } ) {
             <FormInput
                 value={username}
                 placeholderText="Email"
-               // onChangeText={( value ) => setUsername( value )}
+                // onChangeText={( value ) => setUsername( value )}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoCorrect={false}
@@ -76,7 +76,7 @@ export default function UpdateUserProfile( { navigation } ) {
             <FormInput
                 value={verification_token}
                 placeholderText="Verification Token"
-               // onChangeText={( value ) => setVerificationToken( value )}
+                // onChangeText={( value ) => setVerificationToken( value )}
                 autoCapitalize="none"
                 autoCorrect={false}
             />

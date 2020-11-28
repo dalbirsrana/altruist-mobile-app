@@ -1,35 +1,35 @@
 import React from "react";
-import {StyleSheet, Text, TextInput, View} from "react-native";
+import {StyleSheet, TextInput, View} from "react-native";
 import colors from "../colors/colors";
-import { windowHeight, windowWidth } from "../utils/Dimensions";
+import {windowWidth} from "../utils/Dimensions";
 
-export default function FormInput({ labelValue, placeholderText, error, ...rest }) {
-  return (
-      <View>
-        <TextInput
-            value={labelValue}
-            style={styles.input}
-            multiline = {true}
-            numberOfLines={4}
-            placeholder={placeholderText}
-            placeholderTextColor="#666"
-            {...rest}
-        />
+export default function FormInput({labelValue, placeholderText, error, ...rest}) {
+    return (
+        <View>
+            <TextInput
+                value={labelValue}
+                style={styles.input}
+                multiline={true}
+                numberOfLines={4}
+                placeholder={placeholderText}
+                placeholderTextColor="#666"
+                {...rest}
+            />
 
-      </View>
-  );
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
 
-  input: {
-    padding: 10,
-    height: 80,
-    textAlignVertical: 'top',
-    width: windowWidth/1.4,
-    fontSize: 16,
-    borderRadius: 6,
-    borderColor: colors.black,
-    borderWidth: 1,
-  },
+    input: {
+        padding: 10,
+        height: 80,
+        textAlignVertical: 'top',
+        width: windowWidth / 1.4,
+        fontSize: 16,
+        borderRadius: 6,
+        borderColor: colors.black,
+        borderWidth: 1,
+    },
 });

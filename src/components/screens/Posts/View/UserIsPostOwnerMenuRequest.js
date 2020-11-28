@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {AuthContext} from "../../../navigation/AuthProvider";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -12,48 +12,48 @@ import moment from "moment";
 import {windowWidth} from "../../../../utils/Dimensions";
 import API from "../../../../services/api";
 
-export default function UserIsPostOwnerMenuRequest( { dataProp,  requestProp , setAcceptedRequest , setPostStatus, setRequests , requests } ){
+export default function UserIsPostOwnerMenuRequest({dataProp, requestProp, setAcceptedRequest, setPostStatus, setRequests, requests}) {
 
     const navigation = useNavigation();
     const {user, logout} = useContext(AuthContext);
 
-    const [ requestsItem , setRequestItem ] = useState( requestProp ) ;
+    const [requestsItem, setRequestItem] = useState(requestProp);
     const [requestDecisionInProcess, setRequestDecisionInProcess] = useState(false);
 
-    const [numberOfChats, setNumberOfChats] = useState( 0 );
-    const [userStartedChat, setUserStartedChat] = useState( false );
+    const [numberOfChats, setNumberOfChats] = useState(0);
+    const [userStartedChat, setUserStartedChat] = useState(false);
 
-    async function isCHatAvailable( requestId ){
+    async function isCHatAvailable(requestId) {
 
-        console.log( "requestId" , requestId  );
+        console.log("requestId", requestId);
 
-        if( requestId !== "" ){
+        if (requestId !== "") {
             Fire.shared.requestId = requestId;
-            Fire.shared.doesChatExists( requestId , ( message ) => {
-                if( message !== null ){
-                    setUserStartedChat( true );
+            Fire.shared.doesChatExists(requestId, (message) => {
+                if (message !== null) {
+                    setUserStartedChat(true);
                 }
             });
 
-            Fire.shared.isRequestCHatAvailable( ( message ) => {
-                if( message.key === "request-"+requestId ){
-                    setUserStartedChat( true );
+            Fire.shared.isRequestCHatAvailable((message) => {
+                if (message.key === "request-" + requestId) {
+                    setUserStartedChat(true);
                 }
             });
 
-            let tempChatUpdated = 0 ;
-            Fire.shared.isRequestCHatUpdated( requestId , ( message ) => {
-                setUserStartedChat( true );
+            let tempChatUpdated = 0;
+            Fire.shared.isRequestCHatUpdated(requestId, (message) => {
+                setUserStartedChat(true);
 
-                if( message.val().user._id === user.id ){
+                if (message.val().user._id === user.id) {
                     tempChatUpdated--;
-                }else{
+                } else {
                     tempChatUpdated++;
                 }
-                if( tempChatUpdated < 0 ){
+                if (tempChatUpdated < 0) {
                     tempChatUpdated = 0;
                 }
-                setNumberOfChats( tempChatUpdated );
+                setNumberOfChats(tempChatUpdated);
 
             });
         }
@@ -63,23 +63,23 @@ export default function UserIsPostOwnerMenuRequest( { dataProp,  requestProp , s
     React.useEffect(() => {
         let isUnMount = false;
         if (!isUnMount) {
-            setRequestItem( requestProp );
-            if( requestProp != null ){
-                isCHatAvailable( requestProp.id );
+            setRequestItem(requestProp);
+            if (requestProp != null) {
+                isCHatAvailable(requestProp.id);
             }
         }
         return () => {
             isUnMount = true;
         }
-    } , [ requestProp ])
+    }, [requestProp])
 
     async function acceptRequest(id) {
-        if (!requestDecisionInProcess ) {
+        if (!requestDecisionInProcess) {
             setRequestDecisionInProcess(true);
             let returnedData = await API.Post.accept(id);
             if (returnedData !== undefined && returnedData.success) {
                 setRequestDecisionInProcess(false);
-                setAcceptedRequest( returnedData.data );
+                setAcceptedRequest(returnedData.data);
                 setPostStatus(6);
             } else if (returnedData !== undefined && !returnedData.success) {
                 setRequestDecisionInProcess(false);
@@ -91,19 +91,19 @@ export default function UserIsPostOwnerMenuRequest( { dataProp,  requestProp , s
     }
 
     async function declineRequest(id) {
-        if (!requestDecisionInProcess ) {
+        if (!requestDecisionInProcess) {
             setRequestDecisionInProcess(true);
             let returnedData = await API.Post.decline(id);
             if (returnedData !== undefined && returnedData.success) {
                 setRequestDecisionInProcess(false);
 
-                let newRequests = [] ;
-                for( let request of requests ){
-                    if( request.id !== id ){
-                        newRequests.push( request );
+                let newRequests = [];
+                for (let request of requests) {
+                    if (request.id !== id) {
+                        newRequests.push(request);
                     }
                 }
-                setRequests( newRequests );
+                setRequests(newRequests);
 
             } else if (returnedData !== undefined && !returnedData.success) {
                 setRequestDecisionInProcess(false);
@@ -114,29 +114,33 @@ export default function UserIsPostOwnerMenuRequest( { dataProp,  requestProp , s
         }
     }
 
-    function startChat( id ){
-        navigation.navigate("ChatSingleScreen",{"requestIdProp": id , title: dataProp.title  });
+    function startChat(id) {
+        navigation.navigate("ChatSingleScreen", {"requestIdProp": id, title: dataProp.title});
     }
 
     return (
-        <View style={styles.requestContainerParent}  >
+        <View style={styles.requestContainerParent}>
 
-            { requestDecisionInProcess ?
-                <View style={styles.absoluteCenterLoader} >
-                    <Loading />
+            {requestDecisionInProcess ?
+                <View style={styles.absoluteCenterLoader}>
+                    <Loading/>
                 </View>
                 : null
             }
 
 
-            <View style={{ ...styles.userContainer , marginBottom:0 }} >
-                <View style={{ ...styles.userPicContainer , width: 25,
+            <View style={{...styles.userContainer, marginBottom: 0}}>
+                <View style={{
+                    ...styles.userPicContainer, width: 25,
                     height: 20,
-                    borderRadius: 12 }}>
+                    borderRadius: 12
+                }}>
                     <View style={styles.userContainer}>
-                        <View style={{ ...styles.userPicContainer,   width: 20,
+                        <View style={{
+                            ...styles.userPicContainer, width: 20,
                             height: 20,
-                            borderRadius: 12 }}>
+                            borderRadius: 12
+                        }}>
                             {
                                 requestsItem.user.profile_picture ?
                                     <LoadableImage
@@ -151,66 +155,76 @@ export default function UserIsPostOwnerMenuRequest( { dataProp,  requestProp , s
                     </View>
                 </View>
                 <View style={{flex: 1}}>
-                    <Text style={{ ...styles.userName , fontSize: 12 }}>
+                    <Text style={{...styles.userName, fontSize: 12}}>
                         {requestsItem.user.fullName}
                     </Text>
-                    <Text style={{...styles.locationLabel, textAlign: "left", fontSize: 8}}>{moment.unix( requestsItem.created_at ).fromNow() }</Text>
+                    <Text style={{
+                        ...styles.locationLabel,
+                        textAlign: "left",
+                        fontSize: 8
+                    }}>{moment.unix(requestsItem.created_at).fromNow()}</Text>
                 </View>
-                <View style={{ ...styles.innerFlexContainer , alignSelf: "flex-end"}}>
-                    <View style={{...styles.tagsContainer2 , padding: 5 , paddingTop:0, marginTop:0 }}>
-                        <Text style={{...styles.tag , fontSize: 8,
+                <View style={{...styles.innerFlexContainer, alignSelf: "flex-end"}}>
+                    <View style={{...styles.tagsContainer2, padding: 5, paddingTop: 0, marginTop: 0}}>
+                        <Text style={{
+                            ...styles.tag, fontSize: 8,
                             marginRight: 5,
                             padding: 4,
-                            borderRadius: 3 }}>Request</Text>
+                            borderRadius: 3
+                        }}>Request</Text>
                     </View>
                 </View>
             </View>
-            <View style={{ ...styles.bottomRequestContainer, justifyContent: "space-between" }} >
-                <View style={{ ...styles.innerFlexContainer , flexWrap: "wrap"  }}>
-                    <Text >{requestsItem.text}</Text>
+            <View style={{...styles.bottomRequestContainer, justifyContent: "space-between"}}>
+                <View style={{...styles.innerFlexContainer, flexWrap: "wrap"}}>
+                    <Text>{requestsItem.text}</Text>
                 </View>
             </View>
-            <View style={{ ...styles.bottomRequestContainer, justifyContent: "flex-end" }} >
-                <View style={{ ...styles.innerFlexContainer , marginTop:10 }} >
+            <View style={{...styles.bottomRequestContainer, justifyContent: "flex-end"}}>
+                <View style={{...styles.innerFlexContainer, marginTop: 10}}>
 
                     <TouchableOpacity onPress={() => {
                         acceptRequest(requestsItem.id)
                     }}>
-                        <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 , paddingTop: 0, marginTop : -5}}
-                                  name={"ios-checkmark-circle-outline"} size={30} color={colors.primary}/>
+                        <Ionicons
+                            style={{...styles.bottomButtonContainerIcon, padding: 5, paddingTop: 0, marginTop: -5}}
+                            name={"ios-checkmark-circle-outline"} size={30} color={colors.primary}/>
                     </TouchableOpacity>
 
                 </View>
-                <View style={{ ...styles.innerFlexContainer, marginTop:10  }} >
+                <View style={{...styles.innerFlexContainer, marginTop: 10}}>
 
                     <TouchableOpacity onPress={() => {
                         declineRequest(requestsItem.id)
                     }}>
-                        <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
-                                  name={"ios-close-circle-outline"} size={30} color={colors.primary}/>
+                        <Ionicons
+                            style={{...styles.bottomButtonContainerIcon, padding: 5, paddingTop: 0, marginTop: -5}}
+                            name={"ios-close-circle-outline"} size={30} color={colors.primary}/>
                     </TouchableOpacity>
 
                 </View>
-                <View style={{ ...styles.innerFlexContainer, marginTop:10 , position:"relative"  }} >
+                <View style={{...styles.innerFlexContainer, marginTop: 10, position: "relative"}}>
 
                     <TouchableOpacity onPress={() => {
                         startChat(requestsItem.id)
                     }}>
-                        <Ionicons style={{ ...styles.bottomButtonContainerIcon , padding:5 ,  paddingTop: 0, marginTop : -5}}
-                                  name={"ios-chatbubbles"} size={30} color={colors.primary}/>
+                        <Ionicons
+                            style={{...styles.bottomButtonContainerIcon, padding: 5, paddingTop: 0, marginTop: -5}}
+                            name={"ios-chatbubbles"} size={30} color={colors.primary}/>
                         {
                             numberOfChats > 0 ?
-                                <Text style={{ ...styles.innerFlexContainerText ,
-                                    position:"absolute" ,
-                                    color: colors.white ,
-                                    padding:3,
-                                    fontSize:10,
-                                    textAlign: "center" ,
-                                    borderRadius:20,
+                                <Text style={{
+                                    ...styles.innerFlexContainerText,
+                                    position: "absolute",
+                                    color: colors.white,
+                                    padding: 3,
+                                    fontSize: 10,
+                                    textAlign: "center",
+                                    borderRadius: 20,
                                     width: 16,
-                                    height:16,
-                                    top:-2,
-                                    left:12
+                                    height: 16,
+                                    top: -2,
+                                    left: 12
                                 }}
                                 >{numberOfChats}</Text>
                                 : null
@@ -244,26 +258,26 @@ const styles = StyleSheet.create({
         flexWrap: "nowrap",
     },
 
-    requestContainerParent : {
+    requestContainerParent: {
         display: "flex",
         flexDirection: "column",
         flexWrap: "nowrap",
-        marginBottom:0,
+        marginBottom: 0,
         paddingTop: 10,
         paddingBottom: 0,
         borderTopWidth: 2,
         borderTopColor: colors.primary,
         position: "relative"
     },
-    absoluteCenterLoader : {
-        position:'absolute',
-        alignSelf:"center",
-        zIndex:1001,
-        backgroundColor:colors.loadingTransparent,
-        top:0,
-        bottom:0,
-        left:0,
-        right:0
+    absoluteCenterLoader: {
+        position: 'absolute',
+        alignSelf: "center",
+        zIndex: 1001,
+        backgroundColor: colors.loadingTransparent,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
     },
 
     userContainer: {

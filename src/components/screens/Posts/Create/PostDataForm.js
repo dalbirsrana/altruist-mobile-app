@@ -1,32 +1,15 @@
-import React, {useState, useEffect, useContext} from "react";
-import {
-    Image,
-    Button,
-    StyleSheet,
-    Text,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    ActivityIndicator,
-    TextInput,
-    KeyboardAvoidingView
-} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
+import {KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import InverseButton from "../../../../common/InverseButton";
 import colors from "../../../../colors/colors";
-import BR from "../../../helper/BR";
 import API from "../../../../services/api";
 import FormInput2 from "../../../../common/FormInput2";
-import FormInput from "../../../../common/FormInput";
 import FormButtonSmall from "../../../../common/FormButtonSmall";
 import FormTextArea from "../../../../common/FormTextArea";
-import IconButton from "../../../../common/IconButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import logo from "../../../../../assets/Feature_Icons-03.png";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
-import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
+import {windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Textarea from 'react-native-textarea';
 import getRouteParam from "../../../helper/getRouteParam"
 import LoadableImage from "../../../../common/LoadableImage";
 
@@ -35,39 +18,39 @@ const PostDataForm = ({navigation, route}) => {
 
     const {user, logout} = useContext(AuthContext);
 
-    let idProp = getRouteParam( route , "idProp" , "" );
-    let postTypeIdProp = getRouteParam( route , "postTypeIdProp" , "" );
-    let postCategoryIdProp = getRouteParam( route , "postCategoryIdProp" , "" ) ;
-    let titleProp = getRouteParam( route , "titleProp" , "" ) ;
-    let descriptionProp = getRouteParam( route , "descriptionProp" , "" );
-    let latProp = getRouteParam( route , "latProp" , "" );
-    let cityNameProp = getRouteParam( route , "cityNameProp" , "" );
-    let langProp = getRouteParam( route , "langProp" , "" );
-    let uploadsObjProp = getRouteParam( route , "uploadsObjProp" , [] );
+    let idProp = getRouteParam(route, "idProp", "");
+    let postTypeIdProp = getRouteParam(route, "postTypeIdProp", "");
+    let postCategoryIdProp = getRouteParam(route, "postCategoryIdProp", "");
+    let titleProp = getRouteParam(route, "titleProp", "");
+    let descriptionProp = getRouteParam(route, "descriptionProp", "");
+    let latProp = getRouteParam(route, "latProp", "");
+    let cityNameProp = getRouteParam(route, "cityNameProp", "");
+    let langProp = getRouteParam(route, "langProp", "");
+    let uploadsObjProp = getRouteParam(route, "uploadsObjProp", []);
 
-    const [id, setId] = useState(  idProp );
+    const [id, setId] = useState(idProp);
 
     const [catList, setCatList] = useState([]);
-    const [postTypeId, setPostTypeId] = useState( postTypeIdProp  );
-    const [postCategoryId, setPostCategoryId] = useState( postCategoryIdProp );
+    const [postTypeId, setPostTypeId] = useState(postTypeIdProp);
+    const [postCategoryId, setPostCategoryId] = useState(postCategoryIdProp);
 
     const [title, setTitle] = useState(titleProp);
-    const [description, setDescription] = useState(  descriptionProp );
+    const [description, setDescription] = useState(descriptionProp);
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState( latProp );
-    const [lang, setLang] = useState( langProp );
-    const [cityName, setCityName] = useState(cityNameProp );
+    const [lat, setLat] = useState(latProp);
+    const [lang, setLang] = useState(langProp);
+    const [cityName, setCityName] = useState(cityNameProp);
 
-    const [uploadsObj, setUploadsObj] = useState( uploadsObjProp  );
+    const [uploadsObj, setUploadsObj] = useState(uploadsObjProp);
 
-/*
-    const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ? "27.2046" : "27.2046");
-    const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ? "77.4977" : "77.4977");
-    const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ? "Argyle Street Vancouver" : "Argyle Street Vancouver");
-*/
+    /*
+        const [lat, setLat] = useState(route.params.hasOwnProperty('latProp') ? "27.2046" : "27.2046");
+        const [lang, setLang] = useState(route.params.hasOwnProperty('langProp') ? "77.4977" : "77.4977");
+        const [cityName, setCityName] = useState(route.params.hasOwnProperty('cityNameProp') ? "Argyle Street Vancouver" : "Argyle Street Vancouver");
+    */
 
     const submitForm = async () => {
 
@@ -173,7 +156,7 @@ const PostDataForm = ({navigation, route}) => {
 
     useEffect(() => {
 
-        console.log( "routeInfo" ,route );
+        console.log("routeInfo", route);
 
         let isUnMount = false;
         if (!isUnMount) {
@@ -195,10 +178,10 @@ const PostDataForm = ({navigation, route}) => {
         setErrorList(errorListVar);
     }
 
-    function moveBack(){
-        console.log( title , "title"  );
+    function moveBack() {
+        console.log(title, "title");
 
-        console.log( {
+        console.log({
 
             idProp: id,
 
@@ -213,7 +196,7 @@ const PostDataForm = ({navigation, route}) => {
 
             uploadsObjProp: uploadsObj
 
-        } );
+        });
 
         navigation.navigate('PostCategorySelection', {
 
@@ -243,7 +226,9 @@ const PostDataForm = ({navigation, route}) => {
                 }}
                 >
                     <TouchableOpacity
-                        onPress={() => {  moveBack()  }}
+                        onPress={() => {
+                            moveBack()
+                        }}
                     >
                         <Ionicons name='md-arrow-back' color={"white"} size={32}/>
                     </TouchableOpacity>
@@ -251,7 +236,7 @@ const PostDataForm = ({navigation, route}) => {
             ),
         });
     }, [
-        title , description, lat, lang, cityName
+        title, description, lat, lang, cityName
     ]);
 
     return (
@@ -266,15 +251,15 @@ const PostDataForm = ({navigation, route}) => {
                 : null
             }
 
-            <View style={{marginTop:15}}>
+            <View style={{marginTop: 15}}>
                 {catList.map(function (cat, index) {
                     return (
                         cat.id === postCategoryId ?
-                            <View key={index} style={{display:"flex"}} >
-                                <View style={{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}}>
+                            <View key={index} style={{display: "flex"}}>
+                                <View style={{width: 100, height: 100, marginBottom: 10, alignSelf: "center"}}>
                                     <LoadableImage
-                                        styleData = {[{width: 100, height: 100, marginBottom: 10,alignSelf:"center"}]}
-                                        source={{uri:cat.s3_path}}
+                                        styleData={[{width: 100, height: 100, marginBottom: 10, alignSelf: "center"}]}
+                                        source={{uri: cat.s3_path}}
                                     />
                                 </View>
                                 <Text style={styles.textColour}>{cat.title}</Text>
@@ -295,10 +280,10 @@ const PostDataForm = ({navigation, route}) => {
             <FormTextArea
                 value={description}
                 placeholderText="Description"
-                onChangeText={( value ) => setDescription( value )}
+                onChangeText={(value) => setDescription(value)}
                 autoCapitalize="none"
                 autoCorrect={false}
-                error={ description === "" && errorList2.hasOwnProperty('Description') &&  errorList2["Description"] ? errorList2["Description"] : "" }
+                error={description === "" && errorList2.hasOwnProperty('Description') && errorList2["Description"] ? errorList2["Description"] : ""}
             />
 
             {lat === "" && lang === "" && cityName === "" ?

@@ -6,7 +6,6 @@ import colors from "../../colors/colors";
 import FormButton from "../../common/FormButton"
 import FormTextArea2 from "../../common/FormTextArea2"
 import FormInput3 from "../../common/FormInput3"
-import {windowWidth} from "../../utils/Dimensions";
 import API from "../../services/api";
 import Loading from "../../common/Loading";
 
@@ -19,13 +18,13 @@ const UserSettings = ({navigation}) => {
 
     const getUserData = async () => {
         let N = await API.User.getInfo()
-        if (N !== undefined && N.success ) {
+        if (N !== undefined && N.success) {
             setProfileImage(N.profile_picture);
             setUserData(N.data);
             setLoading(false)
-        }else if( N !== undefined && !N.success ){
+        } else if (N !== undefined && !N.success) {
             setLoading(false)
-            if( N.tokenExpired ){
+            if (N.tokenExpired) {
                 logout();
             }
         }
@@ -45,43 +44,43 @@ const UserSettings = ({navigation}) => {
         <ScrollView style={styles.container}>
 
             {
-                 isLoading ? <Loading /> : <View style={{flex: 1}}>
+                isLoading ? <Loading/> : <View style={{flex: 1}}>
 
-                     <View style={styles.settingsContainers}>
-                         <Text style={styles.txtColor}>First Name</Text>
-                         <FormInput3>{userdata.firstName}</FormInput3>
-                     </View>
+                    <View style={styles.settingsContainers}>
+                        <Text style={styles.txtColor}>First Name</Text>
+                        <FormInput3>{userdata.firstName}</FormInput3>
+                    </View>
 
-                     <View style={styles.settingsContainers}>
-                         <Text style={styles.txtColor}>Last Name</Text>
-                         <FormInput3>{userdata.lastName}</FormInput3>
-                     </View>
+                    <View style={styles.settingsContainers}>
+                        <Text style={styles.txtColor}>Last Name</Text>
+                        <FormInput3>{userdata.lastName}</FormInput3>
+                    </View>
 
-                     <View style={styles.settingsContainers}>
-                         <Text style={styles.txtColor} >Mail</Text>
-                         <FormInput3 disabled >{userdata.email}</FormInput3>
-                     </View>
+                    <View style={styles.settingsContainers}>
+                        <Text style={styles.txtColor}>Mail</Text>
+                        <FormInput3 disabled>{userdata.email}</FormInput3>
+                    </View>
 
-                     <View style={styles.settingsContainers}>
-                         <Text style={styles.txtColor}>Contact</Text>
-                         <FormInput3>{userdata.phone}</FormInput3>
-                     </View>
+                    <View style={styles.settingsContainers}>
+                        <Text style={styles.txtColor}>Contact</Text>
+                        <FormInput3>{userdata.phone}</FormInput3>
+                    </View>
 
-                     <View style={styles.settingsContainerTextArea}>
-                         <Text style={styles.txtColor}>Bio</Text>
-                         <FormTextArea2>{userdata.bio}</FormTextArea2>
-                     </View>
+                    <View style={styles.settingsContainerTextArea}>
+                        <Text style={styles.txtColor}>Bio</Text>
+                        <FormTextArea2>{userdata.bio}</FormTextArea2>
+                    </View>
 
-                     <View style={styles.settingsContainers}>
-                         <Text style={styles.txtColor}> </Text>
-                         <FormButton
-                             buttonTitle="Update"
-                             onPress={() => navigation.navigate('UserProfile')}
-                         />
-                     </View>
+                    <View style={styles.settingsContainers}>
+                        <Text style={styles.txtColor}> </Text>
+                        <FormButton
+                            buttonTitle="Update"
+                            onPress={() => navigation.navigate('UserProfile')}
+                        />
+                    </View>
 
 
-                 </View>
+                </View>
             }
 
         </ScrollView>
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        marginTop:50
+        marginTop: 50
     },
     settingsContainers: {
         flexGrow: 0,
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         justifyContent: "flex-start",
     },
-    settingsContainerTextArea :{
+    settingsContainerTextArea: {
         flexGrow: 0,
         flexBasis: 120,
         flex: 1,

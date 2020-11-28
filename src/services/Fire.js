@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import {InteractionManager, Platform} from 'react-native';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -12,11 +13,9 @@ const firebaseConfig = {
     measurementId: "G-KYGQ3GL5LG"
 };
 
-if( !firebase.apps.length ){
+if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-
-import {Platform, InteractionManager} from 'react-native';
 
 const _setTimeout = global.setTimeout;
 const _clearTimeout = global.clearTimeout;
@@ -66,51 +65,72 @@ if (Platform.OS === 'android') {
 
 class Fire {
 
-    set requestId( id ){
-        this.requestIdData = id;
-    }
-
     constructor() {
         this.checkAuth();
     }
 
-    checkAuth(){
-        firebase.auth().onAuthStateChanged( user => {
-            if( !user ){
+    set requestId(id) {
+        this.requestIdData = id;
+    }
+
+    get requestsDb() {
+        return firebase.database().ref('messages');
+    }
+
+    get db() {
+        return firebase.database().ref('messages/request-' + this.requestIdData);
+    }
+
+    get uid() {
+        return (firebase.auth().currentUser || {}).uid
+    }
+
+
+    // on = callback => {
+    //     this.db.on( "child_added" , snapshot => callback( this.parse( snapshot ) ) );
+    // }
+
+    get timestamp() {
+        return firebase.database.ServerValue.TIMESTAMP;
+    }
+
+    checkAuth() {
+        firebase.auth().onAuthStateChanged(user => {
+            if (!user) {
                 firebase.auth().signInAnonymously()
             }
         });
     }
 
-    send  = messages => {
-        messages.forEach( item => {
+    send = messages => {
+        messages.forEach(item => {
 
-                    const messageToSend = {
-                        text: item.text,
-                        timestamp : firebase.database.ServerValue.TIMESTAMP,
-                        // timestamp: firebase.database.ServerValue.timestamp,
-                        user: item.user
-                    };
+                const messageToSend = {
+                    text: item.text,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    // timestamp: firebase.database.ServerValue.timestamp,
+                    user: item.user
+                };
 
-                     this.db.push( messageToSend );
+                this.db.push(messageToSend);
 
-            // var messageListRef = firebase.database().ref('messages');
-            // var newMessageRef = messageListRef.push();
-            // newMessageRef.set(message);
-            //  // We've appended a new message to the message_list location.
-            //  var path = newMessageRef.toString();
-            //  alert( path );
-            //  // path will be something like
-            // // 'https://sample-app.firebaseio.com/message_list/-IKo28nwJLH0Nc5XeFmj'
+                // var messageListRef = firebase.database().ref('messages');
+                // var newMessageRef = messageListRef.push();
+                // newMessageRef.set(message);
+                //  // We've appended a new message to the message_list location.
+                //  var path = newMessageRef.toString();
+                //  alert( path );
+                //  // path will be something like
+                // // 'https://sample-app.firebaseio.com/message_list/-IKo28nwJLH0Nc5XeFmj'
 
             }
         );
     }
 
     parse = message => {
-        const { user, text, timestamp } = message.val();
-        const { key : _id } = message
-        const createdAt = new Date( timestamp )
+        const {user, text, timestamp} = message.val();
+        const {key: _id} = message
+        const createdAt = new Date(timestamp)
 
         return {
             _id,
@@ -120,52 +140,31 @@ class Fire {
         }
     }
 
+    doesChatExists = (request_id, callback) =>
+        this.requestCheckdb(request_id).once('value')
+            .then(snapshot => callback(snapshot));
 
-    // on = callback => {
-    //     this.db.on( "child_added" , snapshot => callback( this.parse( snapshot ) ) );
-    // }
-
-    doesChatExists = ( request_id , callback )   =>
-        this.requestCheckdb( request_id ).once('value')
-            .then( snapshot => callback( snapshot ) );
-
-    isRequestCHatAvailable =  callback  =>
+    isRequestCHatAvailable = callback =>
         this.requestsDb
-            .on('child_added', snapshot => callback( snapshot ));
+            .on('child_added', snapshot => callback(snapshot));
 
-    isRequestCHatUpdated =  ( requestIdForThisFun , callback )  =>
-        this.requestCheckdb( requestIdForThisFun )
+    isRequestCHatUpdated = (requestIdForThisFun, callback) =>
+        this.requestCheckdb(requestIdForThisFun)
             .on('child_added', snapshot => {
 
-                callback( snapshot );
+                callback(snapshot);
             });
 
     on = callback =>
         this.db
             .on('child_added', snapshot => callback(this.parse(snapshot)));
 
-    off(){
+    off() {
         this.db.off()
     }
 
-    get requestsDb () {
-        return firebase.database().ref('messages');
-    }
-
-    get db () {
-        return firebase.database().ref('messages/request-'+this.requestIdData);
-    }
-
-    requestCheckdb ( idT ) {
-        return firebase.database().ref('messages/request-'+idT);
-    }
-
-    get uid(){
-        return ( firebase.auth().currentUser || {} ).uid
-    }
-
-    get timestamp() {
-        return firebase.database.ServerValue.TIMESTAMP;
+    requestCheckdb(idT) {
+        return firebase.database().ref('messages/request-' + idT);
     }
 
 }

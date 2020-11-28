@@ -1,14 +1,7 @@
-import React, {useState, useEffect} from "react";
-import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import FormButton from "../../../../common/FormButton";
+import React, {useState} from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../../../colors/colors";
-import BR from "../../../helper/BR";
-import API from "../../../../services/api";
-import PostCategorySelection from "./PostCategorySelection";
 import PostTypeSelection from "./PostTypeSelection";
-import PostDataForm from "./PostDataForm";
-import {useIsFocused} from "@react-navigation/native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import getRouteParam from "../../../helper/getRouteParam";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
 import Loading from "../../../../common/Loading";
@@ -45,7 +38,7 @@ const Create = ({route, navigation}) => {
     }, []);
 
 
-    function handleNavigation(){
+    function handleNavigation() {
         setTimeout(function () {
 
             setTimeout(function () {
@@ -98,15 +91,15 @@ const Create = ({route, navigation}) => {
 
                         <TouchableOpacity id={"post"} style={styles.button} onPress={() => {
                             navigation.navigate('PostTypeSelection', {
-                                postTypeIdProp : "",
+                                postTypeIdProp: "",
                                 idProp: "",
-                                postCategoryIdProp: "" ,
-                                titleProp: "" ,
-                                descriptionProp: "" ,
-                                cityNameProp: "" ,
-                                latProp: "" ,
-                                langProp: "" ,
-                                uploadsObjProp : []
+                                postCategoryIdProp: "",
+                                titleProp: "",
+                                descriptionProp: "",
+                                cityNameProp: "",
+                                latProp: "",
+                                langProp: "",
+                                uploadsObjProp: []
                             })
                         }} ref={input => setHomeBut(input)}>
                             <Text style={styles.buttonText}>Create New Post</Text>

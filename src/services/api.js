@@ -36,8 +36,8 @@ async function makeRequest(path, data, method = "POST") {
         options.body = JSON.stringify(data);
     }
 
-     // console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
-     // console.log(options);
+    // console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
+    // console.log(options);
 
     await fetch(`${api_server}${path}?XDEBUG_SESSION_START=12744`, options)
         .then(response => response.json())
@@ -114,17 +114,17 @@ const API =
             create: (data) => {
                 return makeRequest('/posts', {Posts: data})
             },
-            update: ( id , data ) => {
-                return makeRequest('/posts/'+id, {Posts: data} )
+            update: (id, data) => {
+                return makeRequest('/posts/' + id, {Posts: data})
             },
             delete: (id) => {
-                return makeRequest('/delete/'+id, {Posts: {id: id}}, POST)
+                return makeRequest('/delete/' + id, {Posts: {id: id}}, POST)
             },
             getCityName: (data) => {
                 return makeRequest('/city-name', {Posts: data})
             },
-            list: (lastPostId = 0 ) => {
-                return makeRequest('/posts?offset='+lastPostId, {}, GET)
+            list: (lastPostId = 0) => {
+                return makeRequest('/posts?offset=' + lastPostId, {}, GET)
             },
             view: (id) => {
                 return makeRequest('/posts/' + id, {}, GET)

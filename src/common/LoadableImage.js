@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
+import React, {Component} from 'react';
+import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
 
 export default class LoadableImage extends Component {
     state = {
@@ -7,11 +7,11 @@ export default class LoadableImage extends Component {
     }
 
     render() {
-        const { source , styleData } = this.props
+        const {source, styleData} = this.props
         return (
             <View style={styles.container}>
                 <Image
-                    style={ styleData }
+                    style={styleData}
                     onLoadEnd={this._onLoadEnd}
                     source={source}
                 />

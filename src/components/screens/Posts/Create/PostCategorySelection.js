@@ -1,10 +1,7 @@
-import React, {useState, useEffect, useContext} from "react";
-import {Image, Button, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import FormButton from "../../../../common/FormButton";
+import React, {useContext, useEffect, useState} from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../../../colors/colors";
-import BR from "../../../helper/BR";
 import API from "../../../../services/api";
-import logo from "../../../../../assets/icon.png";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorageHelper from "../../../../services/AsyncStorageHelper";
 import {windowHeight, windowWidth} from "../../../../utils/Dimensions";
@@ -13,86 +10,86 @@ import getRouteParam from "../../../helper/getRouteParam"
 import LoadableImage from "../../../../common/LoadableImage";
 
 
-const PostCategorySelection = ({navigation, route }) => {
+const PostCategorySelection = ({navigation, route}) => {
 
     const {user, logout} = useContext(AuthContext);
 
-    let idProp = getRouteParam( route , "idProp" , "" );
-    let postTypeIdProp = getRouteParam( route , "postTypeIdProp" , "" );
-    let postCategoryIdProp = getRouteParam( route , "postCategoryIdProp" , "" ) ;
-    let titleProp = getRouteParam( route , "titleProp" , "" ) ;
-    let descriptionProp = getRouteParam( route , "descriptionProp" , "" );
-    let latProp = getRouteParam( route , "latProp" , "" );
-    let cityNameProp = getRouteParam( route , "cityNameProp" , "" );
-    let langProp = getRouteParam( route , "langProp" , "" );
-    let uploadsObjProp = getRouteParam( route , "uploadsObjProp" , [] );
+    let idProp = getRouteParam(route, "idProp", "");
+    let postTypeIdProp = getRouteParam(route, "postTypeIdProp", "");
+    let postCategoryIdProp = getRouteParam(route, "postCategoryIdProp", "");
+    let titleProp = getRouteParam(route, "titleProp", "");
+    let descriptionProp = getRouteParam(route, "descriptionProp", "");
+    let latProp = getRouteParam(route, "latProp", "");
+    let cityNameProp = getRouteParam(route, "cityNameProp", "");
+    let langProp = getRouteParam(route, "langProp", "");
+    let uploadsObjProp = getRouteParam(route, "uploadsObjProp", []);
 
-    const [id, setId] = useState(  idProp );
+    const [id, setId] = useState(idProp);
 
     const [catList, setCatList] = useState([]);
-    const [postTypeId, setPostTypeId] = useState( postTypeIdProp  );
-    const [postCategoryId, setPostCategoryId] = useState( postCategoryIdProp );
+    const [postTypeId, setPostTypeId] = useState(postTypeIdProp);
+    const [postCategoryId, setPostCategoryId] = useState(postCategoryIdProp);
 
     const [title, setTitle] = useState(titleProp);
-    const [description, setDescription] = useState(  descriptionProp );
+    const [description, setDescription] = useState(descriptionProp);
     const [errors, setErrors] = useState({});
     const [errorList, setErrorList] = useState([]);
     const [errorList2, setErrorList2] = useState({});
 
-    const [lat, setLat] = useState( latProp );
-    const [lang, setLang] = useState( langProp );
-    const [cityName, setCityName] = useState(cityNameProp );
+    const [lat, setLat] = useState(latProp);
+    const [lang, setLang] = useState(langProp);
+    const [cityName, setCityName] = useState(cityNameProp);
 
-    const [uploadsObj, setUploadsObj] = useState( uploadsObjProp  );
+    const [uploadsObj, setUploadsObj] = useState(uploadsObjProp);
 
-    function move( forward , postCategoryIdSelected = null ){
-        navigation.navigate( forward ?  "PostDataForm" : "PostTypeSelection" , {
+    function move(forward, postCategoryIdSelected = null) {
+        navigation.navigate(forward ? "PostDataForm" : "PostTypeSelection", {
 
             idProp: id,
 
-            postTypeIdProp: postTypeId ,
-            postCategoryIdProp: postCategoryIdSelected ,
+            postTypeIdProp: postTypeId,
+            postCategoryIdProp: postCategoryIdSelected,
 
-            titleProp: title ,
-            descriptionProp: description ,
-            cityNameProp: cityName ,
-            latProp: lat ,
-            langProp: lang ,
+            titleProp: title,
+            descriptionProp: description,
+            cityNameProp: cityName,
+            latProp: lat,
+            langProp: lang,
 
-            uploadsObjProp : uploadsObj
+            uploadsObjProp: uploadsObj
         })
     }
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight : () => <Text/>,
+            headerRight: () => <Text/>,
             headerLeft: () => (
                 <View style={{
-                    left:20
+                    left: 20
                 }}
                 >
                     <TouchableOpacity
-                        onPress={() => move( false ) }
+                        onPress={() => move(false)}
                     >
-                        <Ionicons name='md-arrow-back' color={"white"} size={32} />
+                        <Ionicons name='md-arrow-back' color={"white"} size={32}/>
                     </TouchableOpacity>
                 </View>
             ),
         });
-    }, [ navigation ]);
+    }, [navigation]);
 
-    async function getCatList( ){
+    async function getCatList() {
         let list = await AsyncStorageHelper.getCatList();
-         console.log( "list" , list);
-        if( Array.isArray( list ) ){
-            setCatList( list );
-        }else{
+        console.log("list", list);
+        if (Array.isArray(list)) {
+            setCatList(list);
+        } else {
             let catListData = await API.PostCategories.list();
-            if( catListData.success === true ){
+            if (catListData.success === true) {
                 // console.log( catListData.data );
-                setCatList( catListData.data );
-                AsyncStorageHelper.setObjectValue( 'catList' ,catListData.data );
-            }else if (  catListData.success === false && catListData.tokenExpired === true  ){
+                setCatList(catListData.data);
+                AsyncStorageHelper.setObjectValue('catList', catListData.data);
+            } else if (catListData.success === false && catListData.tokenExpired === true) {
                 logout();
             }
         }
@@ -102,58 +99,65 @@ const PostCategorySelection = ({navigation, route }) => {
         console.log('Hello getCatList');
 
         let isUnMount = false;
-        if( !isUnMount  ){
+        if (!isUnMount) {
             getCatList();
         }
 
-        setId( idProp );
-        setPostTypeId( postTypeIdProp );
-        setPostCategoryId( postCategoryIdProp );
-        setTitle( titleProp );
-        setDescription( descriptionProp );
-        setLat( latProp );
-        setLang( langProp );
-        setCityName( cityNameProp );
-        setUploadsObj( uploadsObjProp );
+        setId(idProp);
+        setPostTypeId(postTypeIdProp);
+        setPostCategoryId(postCategoryIdProp);
+        setTitle(titleProp);
+        setDescription(descriptionProp);
+        setLat(latProp);
+        setLang(langProp);
+        setCityName(cityNameProp);
+        setUploadsObj(uploadsObjProp);
 
         return () => {
-            isUnMount = true ;
+            isUnMount = true;
         }
 
-    } ,  [ navigation , route.params ]  );
+    }, [navigation, route.params]);
 
     return (
 
-        <View style={{display: "flex",flex:1}} >
+        <View style={{display: "flex", flex: 1}}>
 
             <View style={styles.container}>
 
-                { catList.map( function ( cat , index ) {
+                {catList.map(function (cat, index) {
                     return (
 
-                        <View  key={index} style={{ ...styles.catBox , borderColor : ( postCategoryId === cat.id ) ? colors.secondary : "white" , borderRadius:10 , borderWidth: 5  }}  >
+                        <View key={index} style={{
+                            ...styles.catBox,
+                            borderColor: (postCategoryId === cat.id) ? colors.secondary : "white",
+                            borderRadius: 10,
+                            borderWidth: 5
+                        }}>
                             <TouchableOpacity style={styles.imgContainer}
                                               onPress={
-                                                  async ( event ) => {
-                                                      await setPostCategoryId( cat.id );
-                                                      move( true , cat.id);
+                                                  async (event) => {
+                                                      await setPostCategoryId(cat.id);
+                                                      move(true, cat.id);
                                                   }
                                               }
                             >
-                                <View style={{width: windowWidth/5, height: windowWidth/5, marginBottom:10}}>
+                                <View style={{width: windowWidth / 5, height: windowWidth / 5, marginBottom: 10}}>
                                     <LoadableImage
-                                        styleData = {[{width: windowWidth/5, height: windowWidth/5, marginBottom:10  }]}
-                                        source={{uri:cat.s3_path}}
+                                        styleData={[{
+                                            width: windowWidth / 5,
+                                            height: windowWidth / 5,
+                                            marginBottom: 10
+                                        }]}
+                                        source={{uri: cat.s3_path}}
                                     />
                                 </View>
-                                <Text style={styles.textColour} >{cat.title}</Text>
+                                <Text style={styles.textColour}>{cat.title}</Text>
                             </TouchableOpacity>
                         </View>
 
                     )
-                } ) }
-
-
+                })}
 
 
             </View>
@@ -166,15 +170,15 @@ const PostCategorySelection = ({navigation, route }) => {
 export default PostCategorySelection;
 
 const styles = StyleSheet.create({
-    headerViewText:{
-        color:"white",
-        fontSize:18,
-        fontWeight:"bold",
+    headerViewText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: "bold",
     },
     headerView: {
         backgroundColor: "rgb(232, 155, 141)",
-        minHeight:50,
-        display:"flex",
+        minHeight: 50,
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         flexBasis: "100%",
@@ -193,10 +197,10 @@ const styles = StyleSheet.create({
     catBox: {
         flexBasis: "33%",
         height: 130,
-        marginTop:10,
-        marginBottom:10,
-        padding:10,
-        paddingTop:20,
+        marginTop: 10,
+        marginBottom: 10,
+        padding: 10,
+        paddingTop: 20,
         paddingBottom: 20,
         backgroundColor: colors.white,
         alignItems: "center",
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     },
     imgContainer: {
         flex: 1,
-        height: windowHeight/4,
+        height: windowHeight / 4,
         backgroundColor: colors.white,
         justifyContent: "center",
         textAlign: "center",
@@ -220,6 +224,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         alignItems: "center",
 
-        alignSelf:"center",
+        alignSelf: "center",
     },
 });

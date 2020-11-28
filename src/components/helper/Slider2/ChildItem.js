@@ -1,35 +1,35 @@
-import React, { useEffect, useContext } from 'react';
-import {TouchableOpacity, Image, StyleSheet, View, Text} from 'react-native';
-import {windowHeight, windowWidth} from "../../../utils/Dimensions";
+import React, {useContext, useEffect} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {windowWidth} from "../../../utils/Dimensions";
 import colors from "../../../colors/colors";
 import LoadableImage from "../../../common/LoadableImage";
 
 import {AuthContext} from "../../navigation/AuthProvider";
 
 export default function ChildItem({
-                                    navigation,
-                                    item,
-                                    style,
-                                    onPress,
-                                    index,
-                                    imageKey,
-                                    buttonLable,
-                                    local,
-                                    height,
-                                    active
-                                }) {
+                                      navigation,
+                                      item,
+                                      style,
+                                      onPress,
+                                      index,
+                                      imageKey,
+                                      buttonLable,
+                                      local,
+                                      height,
+                                      active
+                                  }) {
 
-        const {user, dispatch} = useContext(AuthContext)
+    const {user, dispatch} = useContext(AuthContext)
 
-        function stateChanged(user) {
-            dispatch(user);
+    function stateChanged(user) {
+        dispatch(user);
+    }
+
+    useEffect(() => {
+        return () => {
+            stateChanged(user)
         }
-
-        useEffect(() => {
-            return () => {
-                stateChanged(user)
-            }
-        }, [])
+    }, [])
 
     return (
 
@@ -40,11 +40,11 @@ export default function ChildItem({
             />
 
             <TouchableOpacity style={buttonStyles.buttonContainer}
-                              onPress={()=>{
+                              onPress={() => {
                                   // alert('Hi');
                                   (typeof user !== "undefined" && user !== null && !user.isSignout) ?
-                                  navigation.navigate('CreatePost') :
-                                  navigation.navigate('SignIn')
+                                      navigation.navigate('CreatePost') :
+                                      navigation.navigate('SignIn')
                               }}
             >
                 <Text style={buttonStyles.buttonText}
@@ -70,21 +70,21 @@ const styles = StyleSheet.create({
         color: 'white',
         padding: 10,
         position: 'absolute',
-        top:10,
-        left:10
+        top: 10,
+        left: 10
     }
 });
 
 const buttonStyles = StyleSheet.create({
     buttonContainer: {
         position: 'absolute',
-        bottom:20,
+        bottom: 20,
         marginBottom: 20,
         width: windowWidth / 2.5,
         height: 'auto',
         borderColor: colors.primary,
         backgroundColor: colors.transparent,
-        borderWidth:2,
+        borderWidth: 2,
         padding: 5,
         alignItems: "center",
         justifyContent: "center",
@@ -92,7 +92,7 @@ const buttonStyles = StyleSheet.create({
         borderRadius: 4,
     },
     buttonText: {
-        fontWeight:'bold',
+        fontWeight: 'bold',
         fontSize: 12,
         color: colors.white,
     },

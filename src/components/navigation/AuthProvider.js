@@ -1,4 +1,4 @@
-import React, {createContext, useReducer, useEffect} from 'react';
+import React, {createContext, useEffect, useReducer} from 'react';
 import API from '../../services/api';
 import AsyncStorageHelper from "../../services/AsyncStorageHelper";
 
@@ -9,13 +9,13 @@ import AsyncStorageHelper from "../../services/AsyncStorageHelper";
 
 export const AuthContext = createContext({});
 
-export const AuthProvider = ({children , navigation}) => {
+export const AuthProvider = ({children, navigation}) => {
 
-    let newLogOutMessage = false ;
+    let newLogOutMessage = false;
 
     const [user, dispatch] = useReducer(
         (prevState, ...actions) => {
-            if( typeof actions !== "undefined" && Array.isArray( actions ) && actions.length > 0 && typeof actions[0] !== "undefined" ){
+            if (typeof actions !== "undefined" && Array.isArray(actions) && actions.length > 0 && typeof actions[0] !== "undefined") {
                 let action = actions[0];
                 // console.log( 'action' , action );
                 switch (action.type) {
@@ -32,7 +32,7 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: action.profileImage,
                             isLoading: false,
                             isSignout: false,
-                            logoutMsg:false
+                            logoutMsg: false
                         };
                     case 'STATE_UPDATED':
                         return {
@@ -47,7 +47,7 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: action.profileImage,
                             isLoading: false,
                             isSignout: false,
-                            logoutMsg:false
+                            logoutMsg: false
                         };
                     case 'SIGN_IN':
                         return {
@@ -62,7 +62,7 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: action.profileImage,
                             isLoading: false,
                             isSignout: false,
-                            logoutMsg:false
+                            logoutMsg: false
                         };
                     case 'SIGN_OUT':
                         return {
@@ -76,7 +76,7 @@ export const AuthProvider = ({children , navigation}) => {
                             phone: null,
                             profileImage: null,
                             picture: null,
-                            logoutMsg:newLogOutMessage
+                            logoutMsg: newLogOutMessage
                         };
                 }
             }
@@ -106,13 +106,13 @@ export const AuthProvider = ({children , navigation}) => {
                 signIn = await AsyncStorageHelper.getMyObject('user');
                 // console.log( signIn );
 
-                if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true ) {
+                if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success === true) {
 
                     let validateToken = signIn;
                     //Validate the userToken before restore
                     //let validateToken = await API.validateToken( { username: signIn.data.email , token : signIn.data.token } );
                     // console.log( validateToken );
-                    if( validateToken.success ){
+                    if (validateToken.success) {
                         //dispatch({ type: 'RESTORE_TOKEN', token: userToken });
                         dispatch({
                             type: 'RESTORE_TOKEN',
@@ -128,9 +128,9 @@ export const AuthProvider = ({children , navigation}) => {
                         })
 
                         //console.log( "RESTORE_TOKEN" );
-                        newLogOutMessage = "" ;
-                        await AsyncStorageHelper.setObjectValue('user',validateToken)
-                    }else{
+                        newLogOutMessage = "";
+                        await AsyncStorageHelper.setObjectValue('user', validateToken)
+                    } else {
                         newLogOutMessage = "Token has been expired. Please re-login!";
                         dispatch({
                             type: 'SIGN_OUT',
@@ -167,7 +167,7 @@ export const AuthProvider = ({children , navigation}) => {
                     try {
                         let signIn = await API.signIn(data);
                         //console.log( signIn );
-                        if ( typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
+                        if (typeof signIn !== "undefined" && signIn.hasOwnProperty('success') && signIn.success) {
                             // console.log( 'signIn' , signIn.data.profile_picture );
                             dispatch({
                                 type: 'SIGN_IN',
@@ -182,7 +182,7 @@ export const AuthProvider = ({children , navigation}) => {
                                 picture: signIn.data.profile_picture,
                                 profileImage: signIn.data.profile_picture
                             })
-                            newLogOutMessage = "" ;
+                            newLogOutMessage = "";
                             AsyncStorageHelper.setObjectValue('user', signIn);
                         }
                         return signIn
@@ -192,16 +192,16 @@ export const AuthProvider = ({children , navigation}) => {
                 },
                 register: (data) => {
                     try {
-                        newLogOutMessage = "" ;
+                        newLogOutMessage = "";
                         return API.signUp(data)
                     } catch (e) {
                         console.log(e)
                     }
                 },
-                logout: async ( hasLogOutMessage = false ) => {
+                logout: async (hasLogOutMessage = false) => {
                     try {
-                        newLogOutMessage = hasLogOutMessage ;
-                        await AsyncStorageHelper.removeValue('user' )
+                        newLogOutMessage = hasLogOutMessage;
+                        await AsyncStorageHelper.removeValue('user')
                         let newUserdata = {
                             type: 'SIGN_OUT',
                             token: null,
@@ -216,13 +216,13 @@ export const AuthProvider = ({children , navigation}) => {
                             profileImage: null,
                             logoutMsg: newLogOutMessage
                         };
-                        dispatch( newUserdata );
+                        dispatch(newUserdata);
                         return newUserdata;
                     } catch (e) {
                         console.error(e)
                     }
                 },
-                pictureUploaded : async ( user ) => {
+                pictureUploaded: async (user) => {
                     let newUserdata = {
                         type: 'STATE_UPDATED',
                         isSignout: false,
@@ -236,13 +236,13 @@ export const AuthProvider = ({children , navigation}) => {
                         picture: user.profile_picture,
                         profileImage: user.profile_picture
                     };
-                    dispatch( newUserdata );
+                    dispatch(newUserdata);
                     // console.log( newUserdata );
                     return newUserdata;
                 },
                 userStateChanged: () => {
                     try {
-                        newLogOutMessage = "" ;
+                        newLogOutMessage = "";
                         return user
                     } catch (e) {
                         console.error(e)

@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react"
-import {StyleSheet, Text, View, Image, FlatList} from "react-native"
+import React, {useEffect, useState} from "react"
+import {FlatList, Image, StyleSheet, Text, View} from "react-native"
 import Loading from "../../../../common/Loading";
 import API from "../../../../services/api"
 import {windowWidth} from "../../../../utils/Dimensions";
@@ -15,21 +15,22 @@ export default function TopHelpers() {
     const [isLoading, setLoading] = useState(true);
 
 
-    useEffect( () => {
+    useEffect(() => {
         let isUnMount = false
         if (!isUnMount) {
-            async function loadPost(){
+            async function loadPost() {
                 let P = await API.topHelper()
-                if( !isUnMount ){
+                if (!isUnMount) {
                     if (P !== undefined && P.success) {
                         setTopHelper(P.data)
                         setLoading(false)
-                    }else{
+                    } else {
                         setTopHelper([])
                         setLoading(false)
                     }
                 }
             }
+
             loadPost()
         }
         return () => {
@@ -53,7 +54,7 @@ export default function TopHelpers() {
                         <FlatList
                             horizontal
                             data={DATA}
-                            keyExtractor={ ( item , index ) => index.toString() }
+                            keyExtractor={(item, index) => index.toString()}
                             renderItem={({item, index}) => (
                                 <View style={styles.card} key={index}>
                                     <Text style={styles.name}>{item.name}</Text>

@@ -1,20 +1,14 @@
 import React from 'react'
-import { Image } from "react-native";
+import {Image} from "react-native";
 
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen'
 import HelpScreen from '../screens/Posts/SingleView/SingleHelpScreen'
 
 import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
-
-import UserActivityScreen from '../screens/UserActivityScreen'
 import ChatSingleScreen from '../screens/ChatScreen/Chat'
 
 import UserNotificationScreen from '../screens/userNotificationsScreen'
@@ -25,7 +19,6 @@ import PostDataForm from "../screens/Posts/Create/PostDataForm";
 import PostUploads from "../screens/Posts/Create/PostUploads";
 import PostReview from "../screens/Posts/Create/PostReview";
 import Create from "../screens/Posts/Create/Create";
-import colors from "../../colors/colors";
 
 
 const CreatePostStack = createStackNavigator();
@@ -44,17 +37,19 @@ function createPostStack() {
                 }
             }}
         >
-            <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes":"no"}} component={PostTypeSelection}  options={{
-                title: 'Select type'
-            }} />
-            <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection}  options={{
+            <CreatePostStack.Screen name='PostTypeSelection' initialParams={{"yes": "no"}} component={PostTypeSelection}
+                                    options={{
+                                        title: 'Select type'
+                                    }}/>
+            <CreatePostStack.Screen name='PostCategorySelection' component={PostCategorySelection} options={{
                 title: 'Select Category'
-            }} />
-            <CreatePostStack.Screen name='PostDataForm' component={PostDataForm}  options={{ title: 'Fill Info' }} />
-            <CreatePostStack.Screen name='PostUploads' component={PostUploads}  options={{ title: 'Add Photos' }} />
-            <CreatePostStack.Screen name='PostReview' component={PostReview}  options={{ title: 'Review Info' }} />
+            }}/>
+            <CreatePostStack.Screen name='PostDataForm' component={PostDataForm} options={{title: 'Fill Info'}}/>
+            <CreatePostStack.Screen name='PostUploads' component={PostUploads} options={{title: 'Add Photos'}}/>
+            <CreatePostStack.Screen name='PostReview' component={PostReview} options={{title: 'Review Info'}}/>
 
-            <CreatePostStack.Screen name='Create'  initialParams={{"comingFromTabButton":true}}  component={Create}  options={{ title: 'Creating Post' }} />
+            <CreatePostStack.Screen name='Create' initialParams={{"comingFromTabButton": true}} component={Create}
+                                    options={{title: 'Creating Post'}}/>
 
 
         </CreatePostStack.Navigator>
@@ -78,9 +73,9 @@ function HomeStackScreens() {
                 }
             }}
         >
-            <HomeStack.Screen name="Home" component={HomeScreen}  options={{ title: 'ALTRUIST' }} />
-            <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen} />
-            <HomeStack.Screen name="ChatSingleScreen" component={ChatSingleScreen}  options={{ title: 'ALTRUIST' }} />
+            <HomeStack.Screen name="Home" component={HomeScreen} options={{title: 'ALTRUIST'}}/>
+            <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen}/>
+            <HomeStack.Screen name="ChatSingleScreen" component={ChatSingleScreen} options={{title: 'ALTRUIST'}}/>
         </HomeStack.Navigator>
     )
 }
@@ -101,9 +96,11 @@ function UserProfileScreens() {
                 }
             }}
         >
-            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen} options={{ title: 'User Profile'}} />
-            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{ title: 'Your Posts' }} />
-            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen} options={{ title: 'Edit Profile'}} />
+            <UserProfileStack.Screen name="UserProfile" component={UserProfileScreen}
+                                     options={{title: 'User Profile'}}/>
+            <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{title: 'Your Posts'}}/>
+            <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen}
+                                     options={{title: 'Edit Profile'}}/>
         </UserProfileStack.Navigator>
     )
 }
@@ -115,202 +112,205 @@ function getRandomInt() {
 }
 
 export default function HomeTabs() {
+
+
     return (
-    <Tab.Navigator
+        <Tab.Navigator
 
 
-        screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
+            screenOptions={({route}) => ({
+                tabBarIcon: ({focused, color, size}) => {
+                    let iconName;
 
-                if (route.name === 'HomeStack') {
-                    if( focused ){
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Home_filled.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-                               // backgroundColor:colors.secondary,
+                    if (route.name === 'HomeStack') {
+                        if (focused) {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Home_filled.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+                                    // backgroundColor:colors.secondary,
 
-                            }}
+                                }}
 
-                        />
-                            ;
+                            />
+                                ;
 
-                        }else{
-                        return <Image
-                            source={
-                               require('../../../assets/Icons_svg/Icons_Altruist_Home.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12, marginBottom:0
-                            }}
+                        } else {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Home.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12, marginBottom: 0
+                                }}
 
-                        />;
+                            />;
+                        }
+                    } else if (route.name === 'ChatList') {
+
+                        if (focused) {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Message_filled.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+
+                        } else {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Message.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+                        }
+
+                    } else if (route.name === 'CreatePost') {
+
+
+                        if (focused) {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Add_Post_filled.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+
+                        } else {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Add_Post.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+                        }
+
+
+
+                    } else if (route.name === 'Notifications') {
+                        if (focused) {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Notification_filled.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+
+                        } else {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_Notification.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+                        }
+
+
+
+                    } else if (route.name === 'UserProfile') {
+                        if (focused) {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_User_filled.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+
+                        } else {
+                            return <Image
+                                source={
+                                    require('../../../assets/Icons_svg/Icons_Altruist_User.png')
+                                }
+                                style={{
+                                    width: size,
+                                    height: size,
+                                    marginTop: 12,
+                                    marginBottom: 0,
+
+                                }}
+
+                            />;
+                        }
+
+
+
                     }
-                } else if (route.name === 'ChatList') {
-
-                    if( focused ){
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Message_filled.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-
-                    }else{
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Message.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-                    };
-                } else if (route.name === 'CreatePost') {
-
-
-                    if( focused ){
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Add_Post_filled.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-
-                    }else{
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Add_Post.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-                    };
-
-
-
-                } else if (route.name === 'Notifications') {
-                    if( focused ){
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Notification_filled.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-
-                    }else{
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_Notification.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-                    };
-
-
-
-                } else if (route.name === 'UserProfile') {
-                    if( focused ){
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_User_filled.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-
-                    }else{
-                        return <Image
-                            source={
-                                require('../../../assets/Icons_svg/Icons_Altruist_User.png')
-                            }
-                            style={{
-                                width: size,
-                                height: size,
-                                marginTop:12,
-                                marginBottom:0,
-
-                            }}
-
-                        />;
-                    };
-
-
-
-
+                },
+            })}
+            tabBarOptions={
+                {
+                    paddingTop: 105,
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'gray',
+                    showIcon: true,
                 }
-            },
-        })}
-        tabBarOptions={
-            {
-                paddingTop:105,
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
-                showIcon: true,
             }
-        }
-    >
-        <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt() }}  component={HomeStackScreens}  options={{ title: '', header: () => null }} />
-        <Tab.Screen name='ChatList' component={UserNotificationScreen} options={{ title: '', header: () => null }} />
-        <Tab.Screen name='CreatePost' component={createPostStack} options={{
-            tabBarVisible : false,
-            title: '',
-        }} />
-        <Tab.Screen name='Notifications' component={UserNotificationScreen} options={{ title: '' }} />
-        <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{ title: '' }} />
-    </Tab.Navigator>
+        >
+            <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt()}} component={HomeStackScreens}
+                        options={{title: '', header: () => null}}/>
+            <Tab.Screen name='ChatList' component={UserNotificationScreen} options={{title: '', header: () => null}}/>
+            <Tab.Screen name='CreatePost' component={createPostStack} options={{
+                tabBarVisible: false,
+                title: '',
+            }}/>
+            <Tab.Screen name='Notifications' component={UserNotificationScreen} options={{title: ''}}/>
+            <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{title: ''}}/>
+        </Tab.Navigator>
     );
 }

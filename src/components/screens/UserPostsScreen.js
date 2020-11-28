@@ -1,27 +1,25 @@
-import React, { useState, useEffect } from 'react'
-import { Image, StyleSheet, Text, View, TouchableWithoutFeedback, VirtualizedList } from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {Image, StyleSheet, Text, TouchableWithoutFeedback, View, VirtualizedList} from 'react-native'
 import API from "../../services/api"
 import Loading from "../../common/Loading"
-import { ScrollView } from 'react-native-gesture-handler'
-import { windowWidth } from '../../utils/Dimensions'
+import {windowWidth} from '../../utils/Dimensions'
 import colors from '../../colors/colors'
-import { color } from 'react-native-reanimated'
 
-const userPosts = ( {navigation} ) => {
+const userPosts = ({navigation}) => {
 
     const [posts, setPosts] = useState([])
     const [isLoading, setLoading] = useState(true)
 
     const [activeLink, setActiveLink] = useState(true)
     const [savedLink, setSavedLink] = useState(false)
-    
+
     const loadActivePosts = async () => {
         let Posts = await API.User.getPosts()
 
         if (Posts != undefined) {
             setLoading(false)
             // console.log(Posts)
-            if(Posts.success) {
+            if (Posts.success) {
                 setPosts(Posts.data)
 
                 setActiveLink(true)
@@ -36,7 +34,7 @@ const userPosts = ( {navigation} ) => {
         if (Posts != undefined) {
             setLoading(false)
             // console.log(Posts)
-            if(Posts.success) {
+            if (Posts.success) {
                 setPosts(Posts.data)
 
                 setActiveLink(false)
@@ -45,7 +43,7 @@ const userPosts = ( {navigation} ) => {
         }
     }
 
-    useEffect( ()=> {
+    useEffect(() => {
         let isUnMount = false
         if (!isUnMount) {
             loadActivePosts()
@@ -59,43 +57,43 @@ const userPosts = ( {navigation} ) => {
     return (
         <View style={styles.container}>
             <View style={styles.headLinks}>
-                <TouchableWithoutFeedback onPress={()=> { 
-                    setLoading(true) 
-                    return loadActivePosts() 
-                    }}>
+                <TouchableWithoutFeedback onPress={() => {
+                    setLoading(true)
+                    return loadActivePosts()
+                }}>
                     <Text style={
                         activeLink ? btnStyle.highlighted : btnStyle.normal
                     }>Active</Text>
                 </TouchableWithoutFeedback>
                 <Text style={styles.headSeprator}> | </Text>
-                <TouchableWithoutFeedback onPress={()=> {
+                <TouchableWithoutFeedback onPress={() => {
                     setLoading(true)
-                    return loadSavedPosts() 
-                    }}>
+                    return loadSavedPosts()
+                }}>
                     <Text style={
                         savedLink ? btnStyle.highlighted : btnStyle.normal
                     }>Saved</Text>
                 </TouchableWithoutFeedback>
             </View>
-            <ScrollView>
-            {
-                isLoading 
-                ?
-                <Loading />
-                :
-                (
-                    <VirtualizedList
-                        data={posts}
-                        renderItem={({item, index}) => (
-                            <Item index={index} post={item} />
-                        )}
-                        keyExtractor={item => item.id.toString()}
-                        getItemCount={(data) => data.length }
-                        getItem={ (data, index) => data[index] }
-                    />
-                )
-            }
-            </ScrollView>
+            <View>
+                {
+                    isLoading
+                        ?
+                        <Loading/>
+                        :
+                        (
+                            <VirtualizedList
+                                data={posts}
+                                renderItem={({item, index}) => (
+                                    <Item key={index} index={index} post={item}/>
+                                )}
+                                keyExtractor={item => item.id.toString()}
+                                getItemCount={(data) => data.length}
+                                getItem={(data, index) => data[index]}
+                            />
+                        )
+                }
+            </View>
         </View>
     )
 }
@@ -104,11 +102,11 @@ export default userPosts
 
 const Item = ({index, post}) => (
     <View style={
-     index%2==0 ? 
-     {backgroundColor: colors.secondaryTransparent, ...styles.postCard } : 
-     {backgroundColor: colors.primaryTransparent, ...styles.postCard} 
-     }>
-        <Image source={{uri: post.postUploads[0]}} style={styles.postImage} />
+        index % 2 == 0 ?
+            {backgroundColor: colors.secondaryTransparent, ...styles.postCard} :
+            {backgroundColor: colors.primaryTransparent, ...styles.postCard}
+    }>
+        <Image source={{uri: post.postUploads[0]}} style={styles.postImage}/>
         <View style={styles.textContent}>
             <Text style={styles.category}>{post.postCategory.title}</Text>
             <Text style={styles.title}>{post.title}</Text>
@@ -120,10 +118,10 @@ const Item = ({index, post}) => (
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
     },
     postCard: {
         padding: 4,
@@ -163,7 +161,7 @@ const styles = StyleSheet.create({
     headSeprator: {
         marginHorizontal: 8,
     }
-  });
+});
 
 
 const btnStyle = StyleSheet.create({
@@ -177,4 +175,4 @@ const btnStyle = StyleSheet.create({
         fontSize: 20,
         color: colors.primary,
     },
-  })
+})

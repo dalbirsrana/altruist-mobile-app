@@ -1,14 +1,7 @@
-import React, { Component } from 'react';
-import { Platform } from 'react-native';
-import {
-    ActivityIndicator,
-    Image,
-    StatusBar,
-    StyleSheet,
-    View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {ActivityIndicator, Image, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Button } from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import API from './api';
 import AsyncStorageHelper from "./AsyncStorageHelper";
@@ -24,7 +17,7 @@ export default class SingleFileUpload extends Component {
     componentDidMount() {
         (async () => {
             if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                const {status} = await ImagePicker.requestCameraRollPermissionsAsync();
                 if (status !== 'granted') {
                     alert('Sorry, we need camera roll permissions to make this work!');
                 }
@@ -39,7 +32,7 @@ export default class SingleFileUpload extends Component {
 
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="default" />
+                <StatusBar barStyle="default"/>
 
                 <Button
                     buttonStyle={
@@ -67,7 +60,7 @@ export default class SingleFileUpload extends Component {
             return (
                 <View
                     style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
-                    <ActivityIndicator color="#fff" size="large" />
+                    <ActivityIndicator color="#fff" size="large"/>
                 </View>
             );
         }
@@ -87,14 +80,14 @@ export default class SingleFileUpload extends Component {
                 style={styles.maybeRenderContainer}>
                 <View
                     style={styles.maybeRenderImageContainer}>
-                    <Image source={{ uri: image }} style={styles.maybeRenderImage} />
+                    <Image source={{uri: image}} style={styles.maybeRenderImage}/>
                 </View>
             </View>
         );
     };
 
     _pickImage = async () => {
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        const {status} = await ImagePicker.requestCameraRollPermissionsAsync();
 
         // only if user allows permission to camera roll
         if (status === 'granted') {
@@ -122,28 +115,28 @@ export default class SingleFileUpload extends Component {
                 uploadResult = await uploadResponse.json();
 
                 console.log(uploadResult);
-                if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
+                if (uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl')) {
                     let key = this.props['location'];
 
                     try {
                         console.log(key);
-                        await AsyncStorageHelper.setObjectValue( key , uploadResult['data'] );
+                        await AsyncStorageHelper.setObjectValue(key, uploadResult['data']);
                     } catch (error) {
                         // Error saving data
-                        console.log( error );
+                        console.log(error);
                     }
 
                     this.setState({
                         image: uploadResult['data']['objectUrl']
                     });
-                }else{
+                } else {
                     alert('Please try again later!');
                 }
             }
         } catch (e) {
-            console.log({ uploadResponse });
-            console.log({ uploadResult });
-            console.log({ e });
+            console.log({uploadResponse});
+            console.log({uploadResult});
+            console.log({e});
             alert('Please try again later!');
         } finally {
             this.setState({
@@ -157,9 +150,9 @@ export default class SingleFileUpload extends Component {
 const styles = StyleSheet.create({
 
     imageUploadButton: {
-        minHeight : 150,
-        minWidth : 125,
-        borderRadius:10
+        minHeight: 150,
+        minWidth: 125,
+        borderRadius: 10
     },
 
     container: {

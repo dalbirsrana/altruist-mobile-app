@@ -42,7 +42,8 @@
     "react-native-textarea": "^1.0.4",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "expo-notifications": "~0.7.2"
   },
   "resolutions": {
     "styled-components": "^5"

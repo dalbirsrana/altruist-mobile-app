@@ -1,5 +1,5 @@
-import React, {useContext, useState, useEffect} from "react";
-import {Image, StyleSheet, Text, View, TouchableOpacity, ScrollView} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {AuthContext} from "../navigation/AuthProvider";
 
 
@@ -8,17 +8,14 @@ import colors from "../../colors/colors";
 
 import editPostIcon from "../../../assets/Icons_Altruist_Edit.png";
 import settingIcon from "../../../assets/Icons_Altruist_Settings.png";
-import contactIcon from "../../../assets/Icons_Altruist_Help.png";
 import logoutIcon from "../../../assets/Icons_Altruist_Logout.png";
-import nextIcon from "../../../assets/Icons_Altruist_next.png";
-import {windowWidth} from "../../utils/Dimensions";
 import FileUploadExampleScreen from "./FileUploadExampleScreen";
 import API from "../../services/api";
 
 
 const UserProfile = ({navigation}) => {
 
-    const {user, logout, pictureUploaded} = useContext(AuthContext)
+    const {user, logout, pictureUploaded, dispatch} = useContext(AuthContext)
     const [profileImage, setProfileImage] = useState("");
     const [loading, setLoading] = useState(true);
 
@@ -26,13 +23,13 @@ const UserProfile = ({navigation}) => {
 
     const getUserData = async () => {
         let N = await API.User.getInfo()
-        if (N !== undefined && N.success ) {
+        if (N !== undefined && N.success) {
             setProfileImage(N.data.profile_picture);
             setUserData(N.data);
             setLoading(false);
-        }else if( N !== undefined && !N.success ){
+        } else if (N !== undefined && !N.success) {
             setLoading(false)
-            if( N.tokenExpired ){
+            if (N.tokenExpired) {
                 logout();
             }
         }
@@ -51,15 +48,16 @@ const UserProfile = ({navigation}) => {
 
     const changeProfilePicture = async (uploadObject) => {
         setLoading(true);
-        setProfileImage( uploadObject.objectUrl );
+        setProfileImage(uploadObject.objectUrl);
         let data = {
             profile_picture: uploadObject.key
         };
         let changePicture = await API.User.updateProfile(data);
-        console.log( "changePicture" , changePicture );
+        console.log("changePicture", changePicture);
         if (changePicture.success) {
             pictureUploaded(changePicture.data);
-            console.log( "changeProfilePicture" , changePicture.data );
+            console.log("changeProfilePicture", changePicture.data);
+            dispatch(changePicture.data);
 
             setProfileImage(changePicture.data.profile_picture);
             setLoading(false);
@@ -81,7 +79,7 @@ const UserProfile = ({navigation}) => {
                                         style={buttonStyles.buttonContainer}>
                                         <FileUploadExampleScreen location={"ChangeProfilePicture"}
                                                                  imageUploaded={(event) => {
-                                                                     console.log( event );
+                                                                     console.log(event);
                                                                      changeProfilePicture(event);
                                                                  }}/>
                                     </View>
@@ -97,7 +95,7 @@ const UserProfile = ({navigation}) => {
                                         style={buttonStyles.buttonContainer}>
                                         <FileUploadExampleScreen location={"AddProfilePicture"}
                                                                  imageUploaded={(event) => {
-                                                                     console.log( event );
+                                                                     console.log(event);
                                                                      changeProfilePicture(event);
                                                                  }}/>
                                     </View>
@@ -132,12 +130,12 @@ const UserProfile = ({navigation}) => {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('UserSettings')}>
-                    <View style={styles.option}>
-                        <Image source={settingIcon} style={styles.optionIcon}/>
-                        <Text style={styles.optionTitle}>
-                            Settings
-                        </Text>
-                    </View>
+                        <View style={styles.option}>
+                            <Image source={settingIcon} style={styles.optionIcon}/>
+                            <Text style={styles.optionTitle}>
+                                Settings
+                            </Text>
+                        </View>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => logout()}>

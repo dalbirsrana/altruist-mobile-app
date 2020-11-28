@@ -1,19 +1,11 @@
-import React, {Component, useContext} from 'react';
-import {AsyncStorage, Platform, TouchableOpacity} from 'react-native';
-import {
-    ActivityIndicator,
-    StatusBar,
-    StyleSheet,
-    View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {ActivityIndicator, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Button } from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import API from '../../services/api';
 import colors from "../../colors/colors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import {windowHeight, windowWidth} from "../../utils/Dimensions";
-import {AuthContext} from "../navigation/AuthProvider";
+import {windowWidth} from "../../utils/Dimensions";
 
 export default class FileUploadExampleScreen extends Component {
 
@@ -26,7 +18,7 @@ export default class FileUploadExampleScreen extends Component {
     componentDidMount() {
         (async () => {
             if (Platform.OS !== 'web') {
-                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                const {status} = await ImagePicker.requestCameraRollPermissionsAsync();
                 if (status !== 'granted') {
                     alert('Sorry, we need camera roll permissions to make this work!');
                 }
@@ -39,19 +31,19 @@ export default class FileUploadExampleScreen extends Component {
             image
         } = this.state;
 
-        let location = this.props.location ;
+        let location = this.props.location;
         let iconUploadName = 'plus';
-        if( location == "PostUpload" ){
+        if (location == "PostUpload") {
             iconUploadName = 'plus';
-        }else if( location == "ChangeProfilePicture" ){
+        } else if (location == "ChangeProfilePicture") {
             iconUploadName = 'pencil';
-        }else if( location == "AddProfilePicture" ){
+        } else if (location == "AddProfilePicture") {
             iconUploadName = 'plus-circle';
         }
 
         return (
             <View>
-                <StatusBar barStyle="default" />
+                <StatusBar barStyle="default"/>
                 <Button
                     buttonStyle={
                         styles.imageUploadButton
@@ -77,7 +69,7 @@ export default class FileUploadExampleScreen extends Component {
             return (
                 <View
                     style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
-                    <ActivityIndicator color="#fff" size="large" />
+                    <ActivityIndicator color="#fff" size="large"/>
                 </View>
             );
         }
@@ -85,7 +77,7 @@ export default class FileUploadExampleScreen extends Component {
 
     _pickImage = async () => {
         // console.log('Yes');
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        const {status} = await ImagePicker.requestCameraRollPermissionsAsync();
 
         // only if user allows permission to camera roll
         if (status === 'granted') {
@@ -112,20 +104,20 @@ export default class FileUploadExampleScreen extends Component {
                 uploadResponse = await API.uploadImageAsync(pickerResult.uri);
                 uploadResult = await uploadResponse.json();
 
-                 //console.log("uploadResult",uploadResult);
-                if( uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl') ){
+                //console.log("uploadResult",uploadResult);
+                if (uploadResult.success === true && uploadResult.hasOwnProperty('data') && uploadResult['data'].hasOwnProperty('objectUrl')) {
 
                     try {
-                        this.props.imageUploaded( uploadResult['data'] );
+                        this.props.imageUploaded(uploadResult['data']);
                     } catch (error) {
                         // Error saving data
-                         console.log( error );
+                        console.log(error);
                     }
 
                     this.setState({
                         image: uploadResult['data']['objectUrl']
                     });
-                }else{
+                } else {
                     alert('Please choose small size picture!');
                 }
             }
@@ -145,16 +137,16 @@ export default class FileUploadExampleScreen extends Component {
 
 const styles = StyleSheet.create({
     imageUploadButton: {
-        width:windowWidth-40,
-        borderRadius:20,
-        borderWidth:0
+        width: windowWidth - 40,
+        borderRadius: 20,
+        borderWidth: 0
     },
     maybeRenderUploading: {
-        marginTop:-5,
-        borderRadius:20,
-        height:50,
+        marginTop: -5,
+        borderRadius: 20,
+        height: 50,
         alignItems: 'center',
-        backgroundColor: "rgba(232,155,141,0.6)" ,
+        backgroundColor: "rgba(232,155,141,0.6)",
         justifyContent: 'center',
     }
 });

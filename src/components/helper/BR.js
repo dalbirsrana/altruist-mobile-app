@@ -1,7 +1,7 @@
 import React from 'react'
-import { Text } from 'react-native'
+import {Text} from 'react-native'
 
-const BR = ( {navigation} ) => (
+const BR = ({navigation}) => (
     <Text>{"\n"}</Text>
 )
 

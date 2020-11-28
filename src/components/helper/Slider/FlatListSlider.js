@@ -1,19 +1,9 @@
 import React, {Component, createRef} from 'react';
-import {
-    FlatList,
-    View,
-    StyleSheet,
-    LayoutAnimation,
-    Platform,
-    UIManager,
-    Dimensions,
-} from 'react-native';
+import {Dimensions, FlatList, LayoutAnimation, Platform, StyleSheet, UIManager, View,} from 'react-native';
 import Indicator from './Indicator';
 import ChildItem from './ChildItem';
 
 export default class FlatListSlider extends Component {
-    
-    slider = createRef();
 
     static defaultProps = {
         data: [],
@@ -25,7 +15,7 @@ export default class FlatListSlider extends Component {
         loop: true,
         indicator: true,
         indicatorStyle: {},
-        indicatorContainerStyle:{position:'absolute',bottom:10},
+        indicatorContainerStyle: {position: 'absolute', bottom: 10},
         indicatorActiveColor: '#3498db',
         indicatorInActiveColor: '#bdc3c7',
         indicatorActiveWidth: 6,
@@ -33,8 +23,12 @@ export default class FlatListSlider extends Component {
         autoscroll: true,
         timer: 1000,
         onPress: {},
-        contentContainerStyle: {position:'relative'},
+        contentContainerStyle: {position: 'relative'},
         component: <ChildItem/>,
+    };
+    slider = createRef();
+    viewabilityConfig = {
+        viewAreaCoveragePercentThreshold: 50,
     };
 
     constructor(props) {
@@ -77,7 +71,7 @@ export default class FlatListSlider extends Component {
                     contentContainerStyle={this.props.contentContainerStyle}
                     data={this.state.data}
                     showsHorizontalScrollIndicator={false}
-                    renderItem={({item, index}) =>(
+                    renderItem={({item, index}) => (
 
                         // console.log( item ),
 
@@ -97,7 +91,7 @@ export default class FlatListSlider extends Component {
 
                     }
                     ItemSeparatorComponent={() => (
-                        <View style={{width: this.props.separatorWidth}} />
+                        <View style={{width: this.props.separatorWidth}}/>
                     )}
                     keyExtractor={(item, index) => item.toString() + index}
                     onViewableItemsChanged={this.onViewableItemsChanged}
@@ -155,16 +149,12 @@ export default class FlatListSlider extends Component {
         }
     };
 
-    viewabilityConfig = {
-        viewAreaCoveragePercentThreshold: 50,
-    };
-
     changeSliderListIndex = () => {
         if (this.props.animation) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeIn);
         }
         let newIndex = this.state.index;
-        if( newIndex > (this.state.data.length-1) ){
+        if (newIndex > (this.state.data.length - 1)) {
             newIndex = 0;
         }
         this.setState({index: newIndex + 1});
