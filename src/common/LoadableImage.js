@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {ActivityIndicator, AppRegistry, StyleSheet, View} from 'react-native';
 import ResponsiveImage from "react-native-responsive-image";
 import colors from "../colors/colors";
-import {windowWidth} from "../utils/Dimensions";
-import Loading from "./Loading";
 
 
 export default class LoadableImage extends Component {

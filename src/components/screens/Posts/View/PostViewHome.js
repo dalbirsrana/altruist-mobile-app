@@ -20,8 +20,6 @@ import Fire from "../../../../services/Fire";
 import UserIsPostOwnerMenuRequest from "./UserIsPostOwnerMenuRequest";
 
 import * as Notifications from "expo-notifications";
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 
 
 const StyledTextButton = styled.Text`

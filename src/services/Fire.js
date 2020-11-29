@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import firebase from "firebase";
 import {InteractionManager, Platform} from 'react-native';
 import * as Notifications from "expo-notifications";

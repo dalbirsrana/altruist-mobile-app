@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native'
+import {ScrollView, StyleSheet, Text, View} from 'react-native'
 import {AuthContext} from "../navigation/AuthProvider"
 
 import colors from "../../colors/colors";
@@ -9,7 +9,6 @@ import FormInput3 from "../../common/FormInput3"
 import API from "../../services/api";
 import Loading from "../../common/Loading";
 import {windowWidth} from "../../utils/Dimensions";
-
 
 
 const UserSettings = ({navigation}) => {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';

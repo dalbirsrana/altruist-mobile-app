@@ -1,18 +1,11 @@
 import React, {useContext, useState} from 'react'
-import {Image, Platform, RefreshControl, StyleSheet, Text, TouchableOpacity, View, VirtualizedList} from 'react-native'
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
+import {RefreshControl, StyleSheet, Text, TouchableOpacity, View, VirtualizedList} from 'react-native'
 import API from "../../../services/api"
-import postImage from "../../../../assets/user-avatar.png";
 import {windowHeight, windowWidth} from '../../../utils/Dimensions';
 import color from '../../../colors/colors'
 import colors from '../../../colors/colors'
 import {AuthContext} from "../../navigation/AuthProvider";
-import moment from "moment";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import Item from "./ChatListItem";
 
 const ChatList = ({navigation}) => {

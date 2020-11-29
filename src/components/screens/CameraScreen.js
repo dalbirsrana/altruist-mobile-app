@@ -8,7 +8,6 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import colors from "../../colors/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import API from "../../services/api";
-import Loading from "../../common/Loading";
 import FileUploadExampleScreen from "./FileUploadExampleScreen";
 
 const CameraScreen = ({navigation  }) => {

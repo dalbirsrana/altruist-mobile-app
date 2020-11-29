@@ -4,10 +4,9 @@ import {Bubble, GiftedChat} from "react-native-gifted-chat";
 import Fire from "./../../../services/Fire";
 import {AuthContext} from "../../navigation/AuthProvider";
 import colors from "../../../colors/colors";
-import getRouteParam from "../../helper/getRouteParam";
-import * as Notifications from "expo-notifications";
-import {windowHeight} from "../../../utils/Dimensions";
 import color from "../../../colors/colors";
+import getRouteParam from "../../helper/getRouteParam";
+import {windowHeight} from "../../../utils/Dimensions";
 
 export default function Chat({navigation, route, title}) {
 

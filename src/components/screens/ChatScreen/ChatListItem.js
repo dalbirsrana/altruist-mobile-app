@@ -1,13 +1,12 @@
 import color from "../../../colors/colors";
-import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import postImage from "../../../../assets/user-avatar.png";
 import colors from "../../../colors/colors";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import postImage from "../../../../assets/user-avatar.png";
 import moment from "moment";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import Fire from "../../../services/Fire";
 import {windowHeight, windowWidth} from "../../../utils/Dimensions";
 import {AuthContext} from "../../navigation/AuthProvider";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 
 const ChatListItem = ( {index, post: chatRequest , navigation, popOutChat} ) => {

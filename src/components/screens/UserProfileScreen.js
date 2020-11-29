@@ -1,19 +1,13 @@
 import React, {useContext, useEffect, useState} from "react";
-import {FlatList, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {AuthContext} from "../navigation/AuthProvider";
-
-import { Camera } from 'expo-camera';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
-
-import {windowWidth, windowHeight} from "../../utils/Dimensions";
 import postImage from "../../../assets/user-avatar.png";
 import colors from "../../colors/colors";
 
 import editPostIcon from "../../../assets/Icons_Altruist_Edit.png";
 import settingIcon from "../../../assets/Icons_Altruist_Settings.png";
 import logoutIcon from "../../../assets/Icons_Altruist_Logout.png";
-import FileUploadExampleScreen from "./FileUploadExampleScreen";
 import API from "../../services/api";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import getRouteParam from "../helper/getRouteParam";

@@ -1,11 +1,15 @@
-import React, {useContext, useState, useEffect, useRef} from "react";
-import {SafeAreaView, StyleSheet, View } from "react-native";
+import React, {useContext, useRef, useState} from "react";
+import {Platform, SafeAreaView, StyleSheet, View} from "react-native";
 import {useIsFocused} from '@react-navigation/native'
 import {AuthContext} from "../navigation/AuthProvider";
 import colors from "../../colors/colors";
 import Loading from "../../common/Loading";
 import HomePagePostListView from "./Posts/List/HomePagePostListView";
 import getRouteParam from "../helper/getRouteParam";
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import API from "../../services/api";
 
 
 const wait = (timeout) => {
@@ -17,12 +21,6 @@ const wait = (timeout) => {
 function getRandomInt() {
     return Math.floor(Math.random() * Math.floor(100000));
 }
-
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
-import { Text, Button, Platform } from 'react-native';
-import API from "../../services/api";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({

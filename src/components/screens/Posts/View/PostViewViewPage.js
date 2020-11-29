@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {Image, Platform, StyleSheet, Text, TouchableOpacity, View, AppRegistry} from "react-native";
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowWidth} from "../../../../utils/Dimensions";
 import {AuthContext} from "../../../navigation/AuthProvider";
@@ -19,8 +19,6 @@ import UserIsNotPostOwnerMenu from "./UserIsNotPostOwnerMenu";
 import Fire from "../../../../services/Fire";
 import UserIsPostOwnerMenuRequest from "./UserIsPostOwnerMenuRequest";
 import * as Notifications from "expo-notifications";
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 
 
 const StyledTextButton = styled.Text`
