@@ -193,45 +193,35 @@ const HomePagePostListView = ({navigation, askComponentToLoadMorePostsProp, load
 
     return (
         <SafeAreaView style={{flex: 1}}>
-            {
-                isLoading
-                    ?
-                    <Loading/>
-                    :
-                    (
-                        <FlatList
-                            ListHeaderComponentStyle={{flex: 1}}
-                            ListHeaderComponent={renderBody(navigation)}
 
-                            refreshControl={
-                                <RefreshControl refreshing={isLoading} onRefresh={() => {
-                                    loadPost();
-                                }}/>
+            <FlatList
+                ListHeaderComponentStyle={{flex: 1}}
+                ListHeaderComponent={renderBody(navigation)}
+
+                refreshControl={
+                    <RefreshControl refreshing={isLoading} onRefresh={() => {
+                        loadPost();
+                    }}/>
+                }
+
+                data={posts}
+                renderItem={({item, index}) => <Item index={index} post={item}
+                                                     removeItem={(id) => removeItem(id)}/>}
+                keyExtractor={item => item.id.toString()}
+                ListFooterComponent={
+                    isLoading ? null :
+                        <View style={{display: "flex"}}>
+                            {appendingPostsProcess ?
+                                <Loading/>
+                                :
+                                <View style={{display: "flex", justifyContent: "center", marginBottom: 30}}>
+                                    <InverseButton onPress={() => loadMorePosts()} buttonTitle={"Load More"}
+                                                   iconName={"add-circle"}/>
+                                </View>
                             }
-
-                            data={posts}
-                            renderItem={({item, index}) => <Item index={index} post={item}
-                                                                 removeItem={(id) => removeItem(id)}/>}
-                            keyExtractor={item => item.id.toString()}
-                            ListFooterComponent={
-                                isLoading ? null :
-                                    <View style={{display: "flex"}}>
-                                        {appendingPostsProcess ?
-                                            <Loading/>
-                                            :
-                                            <View style={{display: "flex", justifyContent: "center", marginBottom: 30}}>
-                                                <InverseButton onPress={() => loadMorePosts()} buttonTitle={"Load More"}
-                                                               iconName={"add-circle"}/>
-                                            </View>
-                                        }
-                                    </View>
-                            }
-
-
-                        />
-                    )
-            }
-
+                        </View>
+                }
+            />
 
         </SafeAreaView>
 

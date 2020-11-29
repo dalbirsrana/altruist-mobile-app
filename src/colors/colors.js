@@ -9,12 +9,16 @@ export default {
 
     success: "#516237",
 
+    secondaryStrong: "#ffbe69",
+
 
     secondaryTransparent: "rgba(255,231,194,0.1)",
     secondaryTransparent2: "rgba(255,231,194,0.6)",
     primaryTransparent: "rgba(232,155,141,0.1)",
 
     loadingTransparent: "rgba(255,255,255,0.8)",
+
+    secondaryTransparentDisabled: "rgba(90,90,90,0.1)",
 
 
     // secondaryTransparent: "rgb(241,241,241)",

@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import API from '../../services/api';
 import colors from "../../colors/colors";
 import {windowWidth} from "../../utils/Dimensions";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export default class FileUploadExampleScreen extends Component {
 
@@ -33,43 +34,86 @@ export default class FileUploadExampleScreen extends Component {
 
         let location = this.props.location;
         let iconUploadName = 'plus';
+
+        let imageUploadButton = {
+            width: windowWidth - 40,
+            borderRadius: 20,
+            borderWidth: 0
+        }
+
         if (location == "PostUpload") {
             iconUploadName = 'plus';
         } else if (location == "ChangeProfilePicture") {
             iconUploadName = 'pencil';
+
+            imageUploadButton = {
+                width:  40,
+                borderRadius: 20,
+                borderWidth: 0
+            }
+
         } else if (location == "AddProfilePicture") {
             iconUploadName = 'plus-circle';
+
+            imageUploadButton = {
+                width: 40,
+                borderRadius: 20,
+                borderWidth: 0
+            }
         }
 
         return (
             <View>
-                <StatusBar barStyle="default"/>
-                <Button
-                    buttonStyle={
-                        styles.imageUploadButton
-                    }
-                    onPress={this._pickImage}
-                    type="outline"
-                    icon={
-                        <Icon
-                            name={iconUploadName}
-                            size={26}
-                            color={colors.primary}
-                        />
-                    }
-                />
-                {this._maybeRenderUploadingOverlay()}
+                {
+                    !this.state.uploading ?
+                        <Button
+                            buttonStyle={
+                                styles.imageUploadButton
+                            }
+                            onPress={this._pickImage}
+                            type="outline"
+                            icon={
+
+                                location == "ChangeProfilePicture" || location == "AddProfilePicture" ?
+
+                                    <MaterialIcons name={"photo-library"}
+                                                   size={35} color={colors.white}/>
+                                    :
+                                    <Icon
+                                        name={iconUploadName}
+                                        size={26}
+                                        color={colors.primary}
+                                    />
+                            }
+                        /> : <View  >
+                            {this._maybeRenderUploadingOverlay()}
+                        </View>
+                }
+
 
             </View>
         );
     }
 
     _maybeRenderUploadingOverlay = () => {
+
+        let location = this.props.location;
+        let styleData = [StyleSheet.absoluteFill, styles.maybeRenderUploading]
+        let style= { styleData};
+
+        let colour = colors.primary ;
+        if (location == "ChangeProfilePicture" || location == "AddProfilePicture") {
+            let styleData = [StyleSheet.absoluteFill]
+            style={styleData}
+            colour = "#fff" ;
+        }
+
         if (this.state.uploading) {
             return (
                 <View
-                    style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
-                    <ActivityIndicator color="#fff" size="large"/>
+                    style={style}
+                    >
+                    <ActivityIndicator color={colour} size="large"/>
                 </View>
             );
         }

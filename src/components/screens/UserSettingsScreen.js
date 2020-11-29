@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {ScrollView, StyleSheet, Text, View} from 'react-native'
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native'
 import {AuthContext} from "../navigation/AuthProvider"
 
 import colors from "../../colors/colors";
@@ -8,6 +8,8 @@ import FormTextArea2 from "../../common/FormTextArea2"
 import FormInput3 from "../../common/FormInput3"
 import API from "../../services/api";
 import Loading from "../../common/Loading";
+import {windowWidth} from "../../utils/Dimensions";
+
 
 
 const UserSettings = ({navigation}) => {
@@ -19,7 +21,6 @@ const UserSettings = ({navigation}) => {
     const getUserData = async () => {
         let N = await API.User.getInfo()
         if (N !== undefined && N.success) {
-            setProfileImage(N.profile_picture);
             setUserData(N.data);
             setLoading(false)
         } else if (N !== undefined && !N.success) {
@@ -38,13 +39,13 @@ const UserSettings = ({navigation}) => {
         return () => {
             isUnMount = true;
         }
-    });
+    } , [] );
 
     return (
         <ScrollView style={styles.container}>
 
             {
-                isLoading ? <Loading/> : <View style={{flex: 1}}>
+                loading ? <Loading/> : <View style={{flex: 1, width: windowWidth , padding:20 , justifyContent: "center", alignContent:"center"}}>
 
                     <View style={styles.settingsContainers}>
                         <Text style={styles.txtColor}>First Name</Text>
@@ -56,13 +57,21 @@ const UserSettings = ({navigation}) => {
                         <FormInput3>{userdata.lastName}</FormInput3>
                     </View>
 
-                    <View style={styles.settingsContainers}>
+                    <View style={{ ...styles.settingsContainers }}>
                         <Text style={styles.txtColor}>Mail</Text>
-                        <FormInput3 disabled>{userdata.email}</FormInput3>
+                        <FormInput3 editable={false} style={{
+                            margin: 0,
+                            padding: 12,
+                            width: windowWidth / 1.4,
+                            fontSize: 16,
+                            borderRadius: 6,
+                            borderColor: colors.black,
+                            borderWidth: 1,
+                            backgroundColor : colors.secondaryTransparentDisabled }} >{userdata.email}</FormInput3>
                     </View>
 
                     <View style={styles.settingsContainers}>
-                        <Text style={styles.txtColor}>Contact</Text>
+                        <Text style={styles.txtColor}>Phone number</Text>
                         <FormInput3>{userdata.phone}</FormInput3>
                     </View>
 
@@ -75,7 +84,25 @@ const UserSettings = ({navigation}) => {
                         <Text style={styles.txtColor}> </Text>
                         <FormButton
                             buttonTitle="Update"
-                            onPress={() => navigation.navigate('UserProfile')}
+                            onPress={ async () => {
+
+                                let N = await API.User.updateProfile( {
+                                    firstName : userdata.firstName,
+                                    lastName : userdata.lastName ,
+                                    bio : userdata.bio ,
+                                    phone : userdata.phone
+                                } )
+                                if (N !== undefined && N.success) {
+                                    setUserData(N.data);
+                                    setLoading(false)
+                                } else if (N !== undefined && !N.success) {
+                                    setLoading(false)
+                                    if (N.tokenExpired) {
+                                        logout();
+                                    }
+                                }
+
+                            }}
                         />
                     </View>
 
@@ -93,23 +120,25 @@ export default UserSettings
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        marginTop: 50
+        backgroundColor: '#fff'
     },
     settingsContainers: {
         flexGrow: 0,
         flexBasis: 90,
         flex: 1,
         flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom:10
     },
     settingsContainerTextArea: {
         flexGrow: 0,
         flexBasis: 120,
         flex: 1,
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingBottom:10
     },
     txtColor: {
         flexBasis: 24,
@@ -117,6 +146,11 @@ const styles = StyleSheet.create({
         flexShrink: 0,
         fontSize: 16,
         color: colors.primary,
+        textAlign:"left",
+        alignSelf:"flex-start",
+        paddingLeft:40,
+        marginBottom:5,
+        marginTop:10
     },
 
 });

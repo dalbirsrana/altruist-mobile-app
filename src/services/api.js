@@ -4,13 +4,13 @@ import AsyncStorageHelper from "./AsyncStorageHelper";
 // const api_server = 'http://34.208.106.207'
 
 // PROD SERVER OLD
-const api_server = 'https://cmetric-app.com'
+// const api_server = 'https://cmetric-app.com'
 
 // PROD SERVER 
 // const api_server = 'http://3.138.80.213'
 
 // Jaimin Local MAMP Server
-// const api_server = 'http://192.168.0.124/capstone/capstone-api'
+const api_server = 'http://192.168.0.124/capstone/capstone-api'
 
 const GET = "GET";
 const POST = "POST";
@@ -36,8 +36,8 @@ async function makeRequest(path, data, method = "POST") {
         options.body = JSON.stringify(data);
     }
 
-    // console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
-    // console.log(options);
+    console.log(`${api_server}${path}?XDEBUG_SESSION_START=12744`);
+     // console.log(options);
 
     await fetch(`${api_server}${path}?XDEBUG_SESSION_START=12744`, options)
         .then(response => response.json())
@@ -165,11 +165,17 @@ const API =
             getNotifications: () => {
                 return makeRequest('/notifications', {}, GET)
             },
+            getChatList: () => {
+                return makeRequest('/chats-list', {}, GET)
+            },
             updateProfile: async (data) => {
                 return await makeRequest('/update-profile', {StudentAppUser: data})
             },
             getInfo: () => {
                 return makeRequest('/user', {}, GET)
+            },
+            setNotificationToken: (userData) => {
+                return makeRequest('/device-token', {StudentAppUser: userData})
             },
         },
 

@@ -41,11 +41,11 @@ export default function UserIsPostOwnerMenu({dataProp, requestProp}) {
             });
 
             let tempChatUpdated = 0;
-            Fire.shared.isRequestCHatUpdated(requestId, (message) => {
+            Fire.shared.isRequestCHatUpdated(requestId, user, data.title ,(message) => {
                 setUserStartedChat(true);
 
                 if (message.val().user._id === user.id) {
-                    tempChatUpdated--;
+                    tempChatUpdated = 0;
                 } else {
                     tempChatUpdated++;
                 }
@@ -91,11 +91,11 @@ export default function UserIsPostOwnerMenu({dataProp, requestProp}) {
                         setNumberOfChats(1);
 
                         let tempChatUpdated = 0;
-                        Fire.shared.isRequestCHatUpdated(returnedData.data.id, (message) => {
+                        Fire.shared.isRequestCHatUpdated(returnedData.data.id, user, data.title ,(message) => {
                             setUserStartedChat(true);
 
                             if (message.val().user._id === user.id) {
-                                tempChatUpdated--;
+                                tempChatUpdated = 0;
                             } else {
                                 tempChatUpdated++;
                             }
@@ -120,7 +120,11 @@ export default function UserIsPostOwnerMenu({dataProp, requestProp}) {
 
     function startChat(id) {
         setNumberOfChats(0);
-        return navigation.navigate("ChatSingleScreen", {"requestIdProp": id, title: dataProp.title});
+        // return navigation.navigate("ChatSingleScreen", {"requestIdProp": id, title: dataProp.title});
+
+        navigation.navigate( "ChatList", {
+            screen:"ChatSingleScreen", params: {"requestIdProp": id, title: dataProp.title}
+        });
     }
 
     return (

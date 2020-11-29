@@ -5,7 +5,9 @@ import Fire from "./../../../services/Fire";
 import {AuthContext} from "../../navigation/AuthProvider";
 import colors from "../../../colors/colors";
 import getRouteParam from "../../helper/getRouteParam";
-
+import * as Notifications from "expo-notifications";
+import {windowHeight} from "../../../utils/Dimensions";
+import color from "../../../colors/colors";
 
 export default function Chat({navigation, route, title}) {
 
@@ -126,5 +128,18 @@ export default function Chat({navigation, route, title}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    header: {
+        paddingBottom: 15,
+        height: windowHeight / 10,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: color.primary,
+        color: '#ffffff',
+    },
+    headerText: {
+        fontSize: 18,
+        color: 'white',
+        fontWeight: 'bold'
     },
 });

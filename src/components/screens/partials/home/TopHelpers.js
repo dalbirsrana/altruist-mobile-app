@@ -30,7 +30,6 @@ export default function TopHelpers() {
                     }
                 }
             }
-
             loadPost()
         }
         return () => {
@@ -82,8 +81,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.primary,
         marginLeft: windowWidth / 20,
-        marginTop: 5,
         marginBottom: 5,
+        paddingTop: 10
     },
     name: {
         fontSize: 16,

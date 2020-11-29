@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import colors from "../../../../colors/colors";
 import {windowWidth} from "../../../../utils/Dimensions";
@@ -18,6 +18,10 @@ import UserIsPostOwnerMenu from "./UserIsPostOwnerMenu";
 import UserIsNotPostOwnerMenu from "./UserIsNotPostOwnerMenu";
 import Fire from "../../../../services/Fire";
 import UserIsPostOwnerMenuRequest from "./UserIsPostOwnerMenuRequest";
+
+import * as Notifications from "expo-notifications";
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
 
 
 const StyledTextButton = styled.Text`
@@ -76,6 +80,33 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
     const [numberOfChats, setNumberOfChats] = useState(0);
     const [userStartedChat, setUserStartedChat] = useState(false);
 
+    const notificationListener = useRef();
+    const responseListener = useRef();
+
+    const getPost = async () => {
+        try {
+            let P = await API.Post.single( dataProp.id );
+            if (P !== undefined && P.success) {
+
+                let dataPValue = P.data;
+
+                setData( dataPValue );
+                setPostStatus( dataPValue.status );
+                setLikes( dataPValue.totalLikes );
+                setLiked( dataPValue.likedPost );
+                setSaves( dataPValue.totalSaved );
+                setSaved( dataPValue.savedPost );
+                setLikeString( dataPValue.likeString );
+                setRequests( dataPValue.requests );
+                setRequest( dataPValue.request );
+                setAcceptedRequest( dataPValue.acceptedRequest );
+
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     async function isCHatAvailable(requestId) {
 
         console.log("requestId", requestId);
@@ -95,11 +126,11 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
             });
 
             let tempChatUpdated = 0;
-            Fire.shared.isRequestCHatUpdated(requestId, (message) => {
+            Fire.shared.isRequestCHatUpdated(requestId, user, data.title ,(message) => {
                 setUserStartedChat(true);
 
                 if (message.val().user._id === user.id) {
-                    tempChatUpdated--;
+                    tempChatUpdated = 0;
                 } else {
                     tempChatUpdated++;
                 }
@@ -135,9 +166,36 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
                 isCHatAvailable(dataProp.acceptedRequest.request.id);
             }
 
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                console.log( "notification recieved" , notification );
+                if( notification &&
+                    typeof notification !== "undefined" &&
+                    notification.hasOwnProperty('request') &&
+                    typeof notification.request !== "undefined" &&
+                    notification.request.hasOwnProperty('content') &&
+                    typeof notification.request.content !== "undefined" &&
+                    notification.request.content.hasOwnProperty('data') &&
+                    typeof notification.request.content.data !== "undefined" &&
+                    notification.request.content.data.hasOwnProperty('updatePostData') &&
+                    notification.request.content.data.updatePostData !== null &&
+                    notification.request.content.data.updatePostData !== "" &&
+                    notification.request.content.data.updatePostData === data.id
+                ){
+                    getPost();
+                }
+            });
+
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                console.log( "responseListener" ,response);
+            });
+
         }
         return () => {
             isUnMount = true;
+
+            Notifications.removeNotificationSubscription(notificationListener);
+            Notifications.removeNotificationSubscription(responseListener);
+
         }
 
     }, [dataProp]);
@@ -242,7 +300,9 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
     }
 
     function startChat(id) {
-        navigation.navigate("ChatSingleScreen", {"requestIdProp": id, title: dataProp.title});
+        navigation.navigate( "ChatList", {
+            screen:"ChatSingleScreen", params: {"requestIdProp": id, title: dataProp.title}
+        });
     }
 
     return (
@@ -363,7 +423,12 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
 
                 <View style={{...styles.tagsContainer, paddingRight: 20}}>
                     <Text
-                        style={{...styles.tag}}>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
+                        style={{...styles.tag ,
+                            // color : data.postType.title === "Help Needed" ?  colors.primary : colors.secondaryStrong,
+                            // borderColor: data.postType.title === "Help Needed" ?  colors.primary : colors.secondaryStrong ,
+                            color : 'white',
+                            backgroundColor: data.postType.title === "Help Needed" ?  colors.primary : colors.secondaryStrong ,
+                        }}>{data.postType.title === "Help Needed" ? "wants help" : "want to help"}</Text>
                     <Text style={{...styles.tag}}>{data.postCategory.title}</Text>
                 </View>
 
@@ -408,7 +473,7 @@ export default function PostViewHome({route, dataProp, removeItem, key, dataKey}
                         />
                         :
                         <LoadableImage
-                            styleData={[imageStyles.image, {width: windowWidth - 20}]}
+                            styleData={[imageStyles.image, {width: windowWidth - 20, borderRadius:20 }]}
                             source={{uri: getImagesArray()[0]['image']}}
                         />) : null
                     }
@@ -781,6 +846,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         marginBottom: 10,
         padding: 10,
+        paddingTop:20,
+        paddingBottom:20,
         position: "relative"
     },
     absoluteCenterLoader: {

@@ -1,5 +1,7 @@
+import React, { Component } from "react"
 import firebase from "firebase";
 import {InteractionManager, Platform} from 'react-native';
+import * as Notifications from "expo-notifications";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -62,10 +64,33 @@ if (Platform.OS === 'android') {
     };
 }
 
+async function schedulePushNotification( userName , text ,  requestIdForThisFun , title  ) {
 
-class Fire {
+    await Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: false,
+        })
 
-    constructor() {
+    });
+
+    await Notifications.scheduleNotificationAsync({
+        content: {
+            title: userName,
+            body: text,
+            data: { data:{ screen: 'ChatSingleScreen' , params : {"requestIdProp": requestIdForThisFun, title: title } }  },
+        },
+        trigger: { seconds: 1 },
+    });
+
+
+}
+
+class Fire extends Component {
+
+    constructor( props ) {
+        super( props );
         this.checkAuth();
     }
 
@@ -148,12 +173,40 @@ class Fire {
         this.requestsDb
             .on('child_added', snapshot => callback(snapshot));
 
-    isRequestCHatUpdated = (requestIdForThisFun, callback) =>
+    isRequestCHatUpdated = (requestIdForThisFun, user, title,  callback) =>
+    {
+        let self = this;
         this.requestCheckdb(requestIdForThisFun)
             .on('child_added', snapshot => {
 
+                if( typeof self.props !== "undefined" &&
+                    self.props.hasOwnProperty('navigation') &&
+                    typeof self.props.navigation !== "undefined" &&
+                    self.props.navigation.hasOwnProperty('state') &&
+                    typeof self.props.navigation.state !== "undefined" &&
+                    self.props.navigation.state !== null &&
+                    self.props.navigation.state !== ""
+                ){
+                    let { routeName } = self.props.navigation.state;
+                    alert( routeName );
+                }else{
+                    console.log( "props Jaimin MosLake" ,self.props );
+                }
+
+                let currentTimestamp = new Date().getTime();
+                let msgTimestamp = snapshot.val().timestamp;
+                if(
+                    snapshot.val().user._id !== user.id
+                    && window.notificationAlreadyFired.indexOf( snapshot.key  ) === -1 &&
+                    ( currentTimestamp-msgTimestamp ) < 10000
+                ){
+                    window.notificationAlreadyFired.push( snapshot.key );
+                    schedulePushNotification(  snapshot.val().user.name , snapshot.val().text , requestIdForThisFun , title );
+                }
+
                 callback(snapshot);
             });
+    }
 
     on = callback =>
         this.db

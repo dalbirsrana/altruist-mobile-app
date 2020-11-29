@@ -34,7 +34,7 @@ let images = [
 const screenWidth = Math.round(windowWidth);
 const HomePageTopSlider = ({navigation}) => (
 
-    <View style={{height: 240}}>
+    <View style={{height: 230}}>
 
         <FlatListSlider
             data={images}

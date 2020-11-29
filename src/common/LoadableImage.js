@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Image, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, AppRegistry, StyleSheet, View} from 'react-native';
+import ResponsiveImage from "react-native-responsive-image";
+import colors from "../colors/colors";
+import {windowWidth} from "../utils/Dimensions";
+import Loading from "./Loading";
+
 
 export default class LoadableImage extends Component {
     state = {
@@ -10,15 +15,27 @@ export default class LoadableImage extends Component {
         const {source, styleData} = this.props
         return (
             <View style={styles.container}>
-                <Image
+
+                <ResponsiveImage
                     style={styleData}
                     onLoadEnd={this._onLoadEnd}
                     source={source}
                 />
-                <ActivityIndicator
-                    style={styles.activityIndicator}
-                    animating={this.state.loading}
-                />
+                {
+                    this.state.loading ?
+                        <View style={
+                            {
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginTop: -20
+                            }
+                        }>
+                            <ActivityIndicator size='large' color={colors.primary}/>
+                        </View>
+                        : null
+                }
+
             </View>
         )
     }
@@ -32,13 +49,15 @@ export default class LoadableImage extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     activityIndicator: {
         position: 'absolute',
         left: 0,
         right: 0,
         top: 0,
-        bottom: 0,
+        bottom: 0
     }
 })
+
+AppRegistry.registerComponent("ResponsiveImageExample", () => App);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React  from 'react'
 import {Image} from "react-native";
 
 import {createStackNavigator} from '@react-navigation/stack';
@@ -10,6 +10,8 @@ import UserProfileScreen from '../screens/UserProfileScreen'
 import UserPostsScreen from '../screens/UserPostsScreen'
 import UserSettingsScreen from '../screens/UserSettingsScreen'
 import ChatSingleScreen from '../screens/ChatScreen/Chat'
+import ChatList from '../screens/ChatScreen/ChatList'
+import CameraScreen from '../screens/CameraScreen'
 
 import UserNotificationScreen from '../screens/userNotificationsScreen'
 
@@ -75,7 +77,6 @@ function HomeStackScreens() {
         >
             <HomeStack.Screen name="Home" component={HomeScreen} options={{title: 'ALTRUIST'}}/>
             <HomeStack.Screen name="SingleHelpScreen" component={HelpScreen}/>
-            <HomeStack.Screen name="ChatSingleScreen" component={ChatSingleScreen} options={{title: 'ALTRUIST'}}/>
         </HomeStack.Navigator>
     )
 }
@@ -101,7 +102,35 @@ function UserProfileScreens() {
             <UserProfileStack.Screen name="UserPosts" component={UserPostsScreen} options={{title: 'Your Posts'}}/>
             <UserProfileStack.Screen name="UserSettings" component={UserSettingsScreen}
                                      options={{title: 'Edit Profile'}}/>
+
+            <UserProfileStack.Screen name="CameraScreen" component={CameraScreen}
+                                     options={{  header: () => null }}/>
         </UserProfileStack.Navigator>
+    )
+}
+
+
+const ChatScreenStack = createStackNavigator();
+
+function ChatScreens() {
+    return (
+        <ChatScreenStack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#e89b8d',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    textAlign: 'center'
+                }
+            }}
+        >
+            <ChatScreenStack.Screen name="ChatList" component={ChatList} options={{title: 'Chats'}}/>
+            <ChatScreenStack.Screen name="ChatSingleScreen" component={ChatSingleScreen}
+                                    options={{ title: '', tabBarVisible: false }}
+            />
+        </ChatScreenStack.Navigator>
     )
 }
 
@@ -111,9 +140,9 @@ function getRandomInt() {
     return Math.floor(Math.random() * Math.floor(100000));
 }
 
+
+
 export default function HomeTabs() {
-
-
     return (
         <Tab.Navigator
 
@@ -304,13 +333,16 @@ export default function HomeTabs() {
         >
             <Tab.Screen name='HomeStack' initialParams={{postCreatedProp: getRandomInt()}} component={HomeStackScreens}
                         options={{title: '', header: () => null}}/>
-            <Tab.Screen name='ChatList' component={UserNotificationScreen} options={{title: '', header: () => null}}/>
+            <Tab.Screen name='ChatList' component={ChatScreens} options={{
+                title: '',
+                tabBarVisible: false
+            }}/>
             <Tab.Screen name='CreatePost' component={createPostStack} options={{
                 tabBarVisible: false,
                 title: '',
             }}/>
             <Tab.Screen name='Notifications' component={UserNotificationScreen} options={{title: ''}}/>
-            <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{title: ''}}/>
+            <Tab.Screen name="UserProfile" component={UserProfileScreens} options={{title: '', tabBarVisible: false}}/>
         </Tab.Navigator>
     );
 }

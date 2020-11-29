@@ -1,8 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {FlatList, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {AuthContext} from "../navigation/AuthProvider";
 
+import { Camera } from 'expo-camera';
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
+
+import {windowWidth, windowHeight} from "../../utils/Dimensions";
 import postImage from "../../../assets/user-avatar.png";
 import colors from "../../colors/colors";
 
@@ -11,13 +15,18 @@ import settingIcon from "../../../assets/Icons_Altruist_Settings.png";
 import logoutIcon from "../../../assets/Icons_Altruist_Logout.png";
 import FileUploadExampleScreen from "./FileUploadExampleScreen";
 import API from "../../services/api";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import getRouteParam from "../helper/getRouteParam";
 
-
-const UserProfile = ({navigation}) => {
+const UserProfile = ({ navigation , route }) => {
 
     const {user, logout, pictureUploaded, dispatch} = useContext(AuthContext)
     const [profileImage, setProfileImage] = useState("");
     const [loading, setLoading] = useState(true);
+
+    let photoChanged = getRouteParam(route, "photoChanged", false);
+
+    const [openCamera, setOpenCamera] = useState(false);
 
     const [userdata, setUserData] = useState({});
 
@@ -35,16 +44,33 @@ const UserProfile = ({navigation}) => {
         }
     }
 
-
     useEffect(() => {
         let isUnMount = false;
         if (!isUnMount) {
             getUserData();
+            navigation.setOptions({
+                headerRight: () => <Text/>,
+                headerLeft: () => (
+                    <View style={{
+                        left: 20
+                    }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate("HomeStack");
+                            }
+                            }
+                        >
+                            <Ionicons name='md-arrow-back' color={"white"} size={32}/>
+                        </TouchableOpacity>
+                    </View>
+                ),
+            });
         }
         return () => {
             isUnMount = true;
         }
-    });
+    }, [ photoChanged ] );
 
     const changeProfilePicture = async (uploadObject) => {
         setLoading(true);
@@ -65,7 +91,15 @@ const UserProfile = ({navigation}) => {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={() => {
+                            getUserData();
+                        }}/>
+                    }
+
+        >
             <View style={styles.thumbnail}>
                 {
                     profileImage
@@ -73,16 +107,20 @@ const UserProfile = ({navigation}) => {
                         (
                             <View opacity={loading ? 0.5 : 1}>
                                 <View style={styles.thumbnail}>
+
                                     <Image source={{uri: profileImage}}
                                            style={{height: 200, width: 200, borderRadius: 100}}/>
-                                    <View
-                                        style={buttonStyles.buttonContainer}>
-                                        <FileUploadExampleScreen location={"ChangeProfilePicture"}
-                                                                 imageUploaded={(event) => {
-                                                                     console.log(event);
-                                                                     changeProfilePicture(event);
-                                                                 }}/>
+                                    <View style={{ marginTop:20, height: 40}} >
+                                        <TouchableOpacity style={{}}
+                                                          onPress={() => {
+                                                              navigation.navigate('CameraScreen',{})
+                                                          }}
+                                        >
+                                            <MaterialIcons style={styles.icon} name={"add-a-photo"}
+                                                      size={40} color={colors.white}/>
+                                        </TouchableOpacity>
                                     </View>
+
                                 </View>
                             </View>
                         )
@@ -91,20 +129,24 @@ const UserProfile = ({navigation}) => {
                             <View opacity={loading ? 0.5 : 1}>
                                 <View style={styles.thumbnail}>
                                     <Image source={postImage} style={{height: 200, width: 200, borderRadius: 100}}/>
-                                    <View
-                                        style={buttonStyles.buttonContainer}>
-                                        <FileUploadExampleScreen location={"AddProfilePicture"}
-                                                                 imageUploaded={(event) => {
-                                                                     console.log(event);
-                                                                     changeProfilePicture(event);
-                                                                 }}/>
+                                    <View style={{ marginTop:20, height: 40}} >
+                                        <TouchableOpacity style={{}}
+                                                          onPress={() => {
+                                                              navigation.navigate('CameraScreen',{})
+                                                          }}
+                                        >
+                                            <Ionicons style={styles.icon} name={"ios-camera"}
+                                                      size={40} color={colors.white}/>
+                                        </TouchableOpacity>
                                     </View>
+
                                 </View>
                             </View>
                         )
                 }
             </View>
             <View style={styles.detailContainer}>
+
                 <Text style={styles.userName}>
                     {userdata.firstName} {userdata.lastName}
                 </Text>

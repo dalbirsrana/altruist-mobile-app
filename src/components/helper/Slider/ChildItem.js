@@ -20,7 +20,7 @@ export default function ChildItem({
             style={styles.container}
             onPress={() => onPress(index)}>
             <LoadableImage
-                styleData={[styles.image, style, {height: height}]}
+                styleData={[styles.image, style, {height: height, borderRadius:20 }]}
                 source={local ? item[imageKey] : {uri: item[imageKey]}}
             />
         </TouchableOpacity>
